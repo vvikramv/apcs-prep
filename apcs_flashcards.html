@@ -450,6 +450,279 @@ const CARDS = [
     id: 'crd-05', cat: 'crd',
     q: 'What does it mean for a program to be "correct"?',
     a: 'A program is correct when it produces the expected output for all valid inputs — not just the test cases the programmer thought of.<br><br>Testing can show the presence of bugs but cannot prove their complete absence. This is why thorough testing (including edge cases) is essential.'
+  },
+
+  // ══ AAP: PSEUDOCODE SYNTAX (additional) ══
+  // Source: CB AP CSP CED Appendix — Pseudocode Reference
+  {
+    id: 'syn-13', cat: 'aap-syn',
+    q: 'What does <code>RANDOM(a, b)</code> return?',
+    a: 'A random integer between <code>a</code> and <code>b</code>, <strong>inclusive</strong> — meaning both a and b are possible results.<br><br>Example: <code>RANDOM(1, 6)</code> simulates rolling a 6-sided die, returning 1, 2, 3, 4, 5, or 6 with equal probability.'
+  },
+  {
+    id: 'syn-14', cat: 'aap-syn',
+    q: 'What is the difference between a parameter and an argument?',
+    a: '<strong>Parameter</strong>: the variable name defined in the procedure header — it\'s a placeholder.<br><br><strong>Argument</strong>: the actual value passed in when the procedure is called.<br><br>Example:<br><code>PROCEDURE double(n)</code> — n is the <em>parameter</em><br><code>double(5)</code> — 5 is the <em>argument</em>; inside the procedure, n = 5'
+  },
+  {
+    id: 'syn-15', cat: 'aap-syn',
+    q: 'How do you access the <em>last</em> element of a list in CB pseudocode?',
+    a: '<code>list[LENGTH(list)]</code><br><br>Since indices start at 1 and go up to LENGTH(list), the last item is always at position LENGTH(list).<br><br><span class="note">Common mistake: using <code>list[LENGTH(list) - 1]</code> (that\'s the second-to-last, which would be correct in 0-based languages).</span>'
+  },
+  {
+    id: 'syn-16', cat: 'aap-syn',
+    q: 'What happens to a variable defined inside a procedure once the procedure finishes?',
+    a: 'Variables defined inside a procedure are <strong>local</strong> — they only exist while the procedure is running. Once it returns, those variables are gone and cannot be accessed from outside the procedure.<br><br><span class="note">Parameters are also local — they don\'t exist outside the procedure.</span>'
+  },
+  {
+    id: 'syn-17', cat: 'aap-syn',
+    q: 'What does a procedure without a <code>RETURN</code> statement do?',
+    a: 'It executes its body and then returns <strong>nothing</strong> — it cannot be used in an expression or assigned to a variable.<br><br>Such procedures are used purely for their side effects (e.g., displaying output, modifying a list).<br><br><span class="note">In CB pseudocode, only procedures with RETURN can be used like: <code>x ← myProc(5)</code></span>'
+  },
+  {
+    id: 'syn-18', cat: 'aap-syn',
+    q: 'What does <code>NOT (x > 5)</code> simplify to?',
+    a: '<code>x ≤ 5</code><br><br>NOT flips the comparison:<br>• NOT (x > 5) → x ≤ 5<br>• NOT (x = 5) → x ≠ 5<br>• NOT (x ≥ 5) → x < 5<br><br><span class="note">Exam questions often ask you to identify the equivalent condition without NOT.</span>'
+  },
+  {
+    id: 'syn-19', cat: 'aap-syn',
+    q: 'What happens if the condition in <code>REPEAT UNTIL</code> is never true?',
+    a: 'The loop runs <strong>forever</strong> — an infinite loop.<br><br>This is a logic error. The programmer must ensure that something inside the loop will eventually make the condition true.<br><br>Example: <code>REPEAT UNTIL (x = 10)</code> will loop forever if x never reaches 10.'
+  },
+  {
+    id: 'syn-20', cat: 'aap-syn',
+    q: 'In CB pseudocode, what does <code>a AND b OR c</code> evaluate — does order matter?',
+    a: '<code>AND</code> has higher precedence than <code>OR</code>, so this is read as <code>(a AND b) OR c</code>.<br><br>It is TRUE if either:<br>• Both a AND b are true, OR<br>• c is true<br><br><span class="note">Use parentheses on the exam to avoid ambiguity — CB questions are usually explicit about grouping.</span>'
+  },
+
+  // ══ AAP: CODE TRACING (additional) ══
+  // Original problems using official CB pseudocode syntax (CED Appendix).
+  {
+    id: 'trace-13', cat: 'aap-trace',
+    q: 'What does this display?\n\nnums ← [8, 3, 7, 1, 5]\nmin ← nums[1]\nFOR EACH n IN nums\n{\n   IF (n < min)\n   {\n      min ← n\n   }\n}\nDISPLAY(min)',
+    a: '<strong>1</strong><br><br>This is the "find minimum" algorithm. min starts at 8, then updates when a smaller value is found: 8 → 3 → 1. After all elements, min = 1.'
+  },
+  {
+    id: 'trace-14', cat: 'aap-trace',
+    q: 'What does this display?\n\nnums ← [1, 4, 2, 4, 3, 4]\ncount ← 0\nFOR EACH n IN nums\n{\n   IF (n = 4)\n   {\n      count ← count + 1\n   }\n}\nDISPLAY(count)',
+    a: '<strong>3</strong><br><br>The loop counts how many times 4 appears in the list. It appears at positions 2, 4, and 6 → count = 3.'
+  },
+  {
+    id: 'trace-15', cat: 'aap-trace',
+    q: 'What does this display?\n\nx ← 1\ny ← 2\ntemp ← x\nx ← y\ny ← temp\nDISPLAY(x)\nDISPLAY(y)',
+    a: '<strong>2</strong> then <strong>1</strong><br><br>This is the classic swap using a temp variable:<br>temp = 1, x = 2, y = 1<br><br><span class="note">Without temp, you\'d lose one of the values. This pattern appears frequently on the exam.</span>'
+  },
+  {
+    id: 'trace-16', cat: 'aap-trace',
+    q: 'What does this display?\n\ni ← 1\nresult ← 0\nREPEAT UNTIL (i > 5)\n{\n   result ← result + i\n   i ← i + 1\n}\nDISPLAY(result)',
+    a: '<strong>15</strong><br><br>Sums 1 + 2 + 3 + 4 + 5 = 15. Loop runs while i ≤ 5, stopping when i = 6 (6 > 5 is TRUE).'
+  },
+  {
+    id: 'trace-17', cat: 'aap-trace',
+    q: 'What does this display?\n\nnums ← [2, 4, 6, 8]\ntotal ← 0\nFOR EACH n IN nums\n{\n   IF (n MOD 4 = 0)\n   {\n      total ← total + n\n   }\n}\nDISPLAY(total)',
+    a: '<strong>12</strong><br><br>Checks which values are divisible by 4:<br>2 MOD 4 = 2 (skip) · 4 MOD 4 = 0 (add) · 6 MOD 4 = 2 (skip) · 8 MOD 4 = 0 (add)<br>total = 4 + 8 = 12'
+  },
+  {
+    id: 'trace-18', cat: 'aap-trace',
+    q: 'What is the value of nums after this runs?\n\nnums ← [5, 10, 15]\nAPPEND(nums, 20)\nINSERT(nums, 1, 0)\nREMOVE(nums, 3)',
+    a: '<strong>[0, 5, 20]</strong> — wait, let\'s trace carefully:<br><br>Start: [5, 10, 15]<br>APPEND(nums, 20) → [5, 10, 15, 20]<br>INSERT(nums, 1, 0) → [0, 5, 10, 15, 20]<br>REMOVE(nums, 3) removes index 3 (value 10) → <strong>[0, 5, 15, 20]</strong>'
+  },
+  {
+    id: 'trace-19', cat: 'aap-trace',
+    q: 'What does this display?\n\nPROCEDURE isEven(n)\n{\n   IF (n MOD 2 = 0)\n   {\n      RETURN true\n   }\n   ELSE\n   {\n      RETURN false\n   }\n}\n\nDISPLAY(isEven(7))',
+    a: '<strong>false</strong><br><br>7 MOD 2 = 1, which is not 0, so the ELSE branch runs and returns false.'
+  },
+  {
+    id: 'trace-20', cat: 'aap-trace',
+    q: 'What does this display?\n\nx ← 10\nIF (x > 5 AND x < 8)\n{\n   DISPLAY("A")\n}\nELSE IF (x > 8 AND x < 12)\n{\n   DISPLAY("B")\n}\nELSE\n{\n   DISPLAY("C")\n}',
+    a: '<strong>"B"</strong><br><br>x = 10:<br>First condition: (10 > 5) AND (10 < 8) → TRUE AND FALSE → FALSE<br>Second condition: (10 > 8) AND (10 < 12) → TRUE AND TRUE → TRUE → display "B"'
+  },
+  {
+    id: 'trace-21', cat: 'aap-trace',
+    q: 'What does this display?\n\nPROCEDURE sumList(lst)\n{\n   total ← 0\n   FOR EACH item IN lst\n   {\n      total ← total + item\n   }\n   RETURN total\n}\n\nDISPLAY(sumList([3, 3, 3]))',
+    a: '<strong>9</strong><br><br>The procedure sums all items: 3 + 3 + 3 = 9, then returns 9. DISPLAY shows 9.'
+  },
+  {
+    id: 'trace-22', cat: 'aap-trace',
+    q: 'What does this display?\n\ncount ← 0\nnum ← 32\nREPEAT UNTIL (num = 1)\n{\n   num ← num / 2\n   count ← count + 1\n}\nDISPLAY(count)',
+    a: '<strong>5</strong><br><br>32→16→8→4→2→1 (5 divisions). Each iteration halves num and increments count. Stops when num = 1.'
+  },
+
+  // ══ IOC: IMPACT OF COMPUTING (additional) ══
+  // Source: CB AP CSP CED — Big Idea 5 (IOC-1, IOC-2)
+  {
+    id: 'ioc-13', cat: 'ioc',
+    q: 'What is crowdsourcing? Give an example.',
+    a: 'Obtaining input, data, or services from a large group of people (usually via the internet) rather than from a small team or company.<br><br>Examples: Wikipedia (crowd-written encyclopedia), reCAPTCHA (users identify images), Waze (users report traffic), open-source software.<br><br><span class="note">CB frames crowdsourcing as a benefit of computing — it enables tasks that no small group could accomplish alone.</span>'
+  },
+  {
+    id: 'ioc-14', cat: 'ioc',
+    q: 'What is the Internet of Things (IoT)?',
+    a: 'The network of physical devices (beyond traditional computers) that are connected to the internet and can collect and exchange data.<br><br>Examples: smart thermostats, fitness trackers, connected refrigerators, self-driving car sensors, smart city infrastructure.<br><br>IoT creates massive amounts of new data and raises new privacy/security concerns — devices may collect data without users fully realizing it.'
+  },
+  {
+    id: 'ioc-15', cat: 'ioc',
+    q: 'What is a browser cookie? Is it always harmful?',
+    a: 'A small piece of data stored in your browser by a website, used to remember information between visits.<br><br><strong>Beneficial uses</strong>: staying logged in, remembering shopping cart contents, saving preferences.<br><strong>Privacy concern</strong>: third-party tracking cookies can follow users across many websites and build detailed behavioral profiles.<br><br>Not inherently harmful, but raises consent and transparency concerns.'
+  },
+  {
+    id: 'ioc-16', cat: 'ioc',
+    q: 'What is data mining?',
+    a: 'The process of analyzing large datasets to discover patterns, correlations, and insights that weren\'t explicitly known in advance.<br><br>Examples: finding that customers who buy X tend to also buy Y, detecting fraud patterns in credit card transactions.<br><br><strong>Privacy concern</strong>: data mining can reveal sensitive information about individuals — even from data that seems anonymous — through inference and combination.'
+  },
+  {
+    id: 'ioc-17', cat: 'ioc',
+    q: 'What is a distributed denial of service (DDoS) attack?',
+    a: 'An attack that overwhelms a server or network by flooding it with a massive volume of requests simultaneously from many compromised computers (a botnet).<br><br>The server cannot handle legitimate requests and becomes unavailable to real users.<br><br><span class="note">DDoS is different from a regular DoS (denial of service) — DDoS uses many machines, making it harder to block.</span>'
+  },
+  {
+    id: 'ioc-18', cat: 'ioc',
+    q: 'What is a keylogger?',
+    a: 'Malware that secretly records every keystroke a user makes and sends the log to an attacker.<br><br>Used to steal passwords, credit card numbers, and other sensitive information — even without accessing encrypted data, because it captures input before it\'s encrypted.'
+  },
+  {
+    id: 'ioc-19', cat: 'ioc',
+    q: 'What is citizen science? How does computing enable it?',
+    a: 'Scientific research that involves volunteers (non-professional scientists) collecting or analyzing data.<br><br>Computing enables citizen science at scale: apps can collect observations from millions of people worldwide simultaneously — far more data than a small research team could gather.<br><br>Examples: bird migration tracking, galaxy classification (Galaxy Zoo), protein folding (Foldit).'
+  },
+  {
+    id: 'ioc-20', cat: 'ioc',
+    q: 'What is net neutrality?',
+    a: 'The principle that internet service providers (ISPs) should treat all internet traffic equally — not prioritizing, throttling, or blocking specific websites, services, or content.<br><br>Without net neutrality, an ISP could slow down streaming services from competitors or charge more for access to certain sites.<br><br><span class="note">CB frames this as a policy debate around access and equity — not a right/wrong question.</span>'
+  },
+  {
+    id: 'ioc-21', cat: 'ioc',
+    q: 'Give two ways computing has benefited medicine or science.',
+    a: 'Examples (any two):<br>• Genome sequencing: analyzing billions of DNA base pairs to identify disease genes — only possible with computing power<br>• Medical imaging (MRI, CT): computer algorithms enhance and interpret scans<br>• Drug discovery: simulating molecular interactions to find drug candidates faster<br>• Epidemiology: modeling disease spread (e.g., COVID-19 forecasting)<br>• Telescope data analysis: processing petabytes of astronomy data to find exoplanets'
+  },
+  {
+    id: 'ioc-22', cat: 'ioc',
+    q: 'What is a rogue access point (evil twin attack)?',
+    a: 'A fake Wi-Fi hotspot set up by an attacker to mimic a legitimate network (e.g., "Coffee Shop WiFi").<br><br>When users connect, the attacker can intercept all unencrypted traffic — capturing passwords, session tokens, and sensitive data.<br><br>Defense: use HTTPS always, verify network names, avoid public Wi-Fi for sensitive tasks, use a VPN.'
+  },
+
+  // ══ DAT: DATA (additional) ══
+  // Source: CB AP CSP CED — Big Idea 2 (DAT-1, DAT-2)
+  {
+    id: 'dat-09', cat: 'dat',
+    q: 'Convert binary <strong>1010</strong> to decimal.',
+    a: '<strong>10</strong><br><br>Read right to left (position 0, 1, 2, 3):<br>0 × 1 = 0<br>1 × 2 = 2<br>0 × 4 = 0<br>1 × 8 = 8<br>Total: 8 + 2 = <strong>10</strong>'
+  },
+  {
+    id: 'dat-10', cat: 'dat',
+    q: 'Convert binary <strong>11001</strong> to decimal.',
+    a: '<strong>25</strong><br><br>1×16 + 1×8 + 0×4 + 0×2 + 1×1 = 16 + 8 + 1 = <strong>25</strong>'
+  },
+  {
+    id: 'dat-11', cat: 'dat',
+    q: 'What is run-length encoding? Give an example.',
+    a: 'A simple lossless compression technique that replaces consecutive repeated values with a count and the value.<br><br>Example: <code>AAAABBBCCDDDDDD</code> → <code>4A3B2C6D</code><br><br>Effective when data has long runs of the same value (e.g., simple images with large solid areas). Inefficient for random or varied data.'
+  },
+  {
+    id: 'dat-12', cat: 'dat',
+    q: 'What is the difference between analog and digital data?',
+    a: '<strong>Analog</strong>: continuous values with infinite precision — like sound waves, temperature, or light. Can take any value in a range.<br><br><strong>Digital</strong>: discrete values represented as binary numbers. Computers only process digital data.<br><br>Converting analog to digital (sampling) introduces some information loss — the resolution depends on how many bits are used per sample.'
+  },
+  {
+    id: 'dat-13', cat: 'dat',
+    q: 'Why is binary search faster than linear search? When can you use it?',
+    a: '<strong>Linear search</strong>: checks every element in order — O(n), must check up to all n items.<br><br><strong>Binary search</strong>: compares the middle element and eliminates half the list each step — O(log n). Much faster for large lists.<br><br><strong>Requirement</strong>: the list must be <strong>sorted</strong>. Binary search cannot be used on unsorted data.'
+  },
+  {
+    id: 'dat-14', cat: 'dat',
+    q: 'What is sampling in the context of digitizing audio?',
+    a: 'Measuring the amplitude (height) of a sound wave at regular intervals and storing each measurement as a binary number.<br><br>Higher <strong>sampling rate</strong> = more measurements per second = better audio quality but larger file size.<br>More <strong>bits per sample</strong> = finer amplitude precision = better dynamic range.<br><br>CD quality: 44,100 samples/sec, 16 bits/sample.'
+  },
+  {
+    id: 'dat-15', cat: 'dat',
+    q: 'What is "big data"? What makes it challenging?',
+    a: 'Datasets so large or complex that traditional data processing tools cannot handle them effectively.<br><br>Characterized by the "3 Vs":<br>• <strong>Volume</strong>: massive size (terabytes to petabytes)<br>• <strong>Velocity</strong>: generated at high speed (real-time streams)<br>• <strong>Variety</strong>: many formats (text, images, sensor data)<br><br>Requires distributed computing (many machines working together) to process.'
+  },
+  {
+    id: 'dat-16', cat: 'dat',
+    q: 'How many bits are needed to represent 1,000 unique values?',
+    a: 'At least <strong>10 bits</strong>.<br><br>2<sup>10</sup> = 1,024 ≥ 1,000<br>2<sup>9</sup>  = 512 < 1,000 (not enough)<br><br>General rule: you need ⌈log₂(N)⌉ bits to represent N unique values. Always round <em>up</em>.'
+  },
+
+  // ══ CSN: COMPUTING SYSTEMS & NETWORKS (additional) ══
+  // Source: CB AP CSP CED — Big Idea 4 (CSN-1, CSN-2)
+  {
+    id: 'csn-09', cat: 'csn',
+    q: 'What is the difference between the internet and the World Wide Web?',
+    a: '<strong>Internet</strong>: the global physical network of interconnected computers — the infrastructure (cables, routers, protocols).<br><br><strong>World Wide Web</strong>: a service that runs <em>on top of</em> the internet — web pages and hyperlinks accessed via HTTP/HTTPS using a browser.<br><br>The web is one application of the internet. Email, video calls, and file transfers also use the internet but are not the web.'
+  },
+  {
+    id: 'csn-10', cat: 'csn',
+    q: 'What does a router do?',
+    a: 'A router forwards packets between networks, directing each packet toward its destination based on its IP address.<br><br>Routers read the destination IP, consult a routing table, and send the packet to the next best hop on the path to the destination.<br><br><span class="note">The internet\'s ability to route around failed nodes is possible because routers continuously update their routing tables to find working paths.</span>'
+  },
+  {
+    id: 'csn-11', cat: 'csn',
+    q: 'What is a firewall?',
+    a: 'A security system that monitors and controls incoming and outgoing network traffic based on predetermined rules.<br><br>It acts as a barrier between a trusted internal network and untrusted external networks (like the internet), blocking traffic that matches known threat patterns or doesn\'t meet security rules.<br><br>Can be hardware-based, software-based, or both.'
+  },
+  {
+    id: 'csn-12', cat: 'csn',
+    q: 'What is cloud computing?',
+    a: 'Using remote servers hosted on the internet (instead of local hardware) to store, manage, and process data.<br><br>Benefits: accessible from anywhere, scalable on demand, no hardware maintenance, lower upfront cost.<br><br>Examples: Google Drive, iCloud, AWS, Microsoft Azure.<br><br><span class="note">CB frames cloud computing as enabling new capabilities — especially for individuals and small organizations that couldn\'t afford large computing infrastructure before.</span>'
+  },
+  {
+    id: 'csn-13', cat: 'csn',
+    q: 'What is a VPN (Virtual Private Network)?',
+    a: 'A service that encrypts all traffic between a device and a VPN server, creating a secure "tunnel" over the public internet.<br><br>Benefits:<br>• Hides internet activity from ISPs and local network observers<br>• Masks IP address from websites<br>• Secures traffic on public Wi-Fi<br><br>The VPN server sees the traffic, so trust in the VPN provider matters.'
+  },
+  {
+    id: 'csn-14', cat: 'csn',
+    q: 'What is the difference between a DoS and a DDoS attack on a network?',
+    a: '<strong>DoS (Denial of Service)</strong>: one machine floods a target with traffic to make it unavailable. Easier to block (single source IP).<br><br><strong>DDoS (Distributed DoS)</strong>: many machines (often a botnet of infected computers) simultaneously flood the target. Much harder to defend against because traffic comes from thousands of different IPs.<br><br>Both aim to exhaust server resources so legitimate users cannot connect.'
+  },
+  {
+    id: 'csn-15', cat: 'csn',
+    q: 'What is redundancy in computing systems, and why is it used?',
+    a: 'Redundancy means having duplicate components (extra servers, multiple network paths, backup power) so that if one fails, others continue working.<br><br>Purpose: <strong>fault tolerance</strong> — the system keeps operating despite failures.<br><br>Examples:<br>• Multiple network paths between cities<br>• RAID storage (data copied across multiple drives)<br>• Data centers in multiple geographic regions'
+  },
+  {
+    id: 'csn-16', cat: 'csn',
+    q: 'What is Moore\'s Law, and is it still accurate?',
+    a: 'The observation (by Gordon Moore, 1965) that the number of transistors on a chip roughly <strong>doubles every two years</strong>, leading to exponential growth in computing power at roughly constant cost.<br><br>It held remarkably well for decades, driving the computing revolution.<br><br>Today it is slowing — physical limits of silicon make further miniaturization increasingly difficult and expensive. Alternative approaches (GPUs, parallel processing, new materials) are compensating.'
+  },
+
+  // ══ CRD: CREATIVE DEVELOPMENT (additional) ══
+  // Source: CB AP CSP CED — Big Idea 1 (CRD-1, CRD-2)
+  {
+    id: 'crd-06', cat: 'crd',
+    q: 'What is an API? Why is it useful in program development?',
+    a: 'An <strong>Application Programming Interface</strong> — a set of specifications that allows one program to use the functionality of another without needing to know its internal implementation.<br><br>Why useful: enables reuse of complex functionality (maps, payments, weather data) without rebuilding it. Programs can be composed from existing APIs, reducing development time and errors.<br><br>Example: a weather app uses a weather service API rather than building its own forecasting system.'
+  },
+  {
+    id: 'crd-07', cat: 'crd',
+    q: 'What is a computing artifact?',
+    a: 'Anything created by a human using a computer.<br><br>Examples: programs, images, audio, video, presentations, websites, data visualizations, digital art.<br><br><span class="note">The CB AP CSP Create Performance Task asks students to create a computing artifact (a program). The definition is intentionally broad — it doesn\'t have to be software.</span>'
+  },
+  {
+    id: 'crd-08', cat: 'crd',
+    q: 'What is a software library? How does it support abstraction?',
+    a: 'A collection of pre-written, reusable procedures and functions that a programmer can call without knowing how they are implemented internally.<br><br>It supports <strong>abstraction</strong> by hiding implementation complexity behind a simple interface — the programmer only needs to know what a function does, not how.<br><br>Examples: a math library provides <code>SQRT()</code>, <code>ABS()</code>; a graphics library provides <code>drawCircle()</code>.'
+  },
+  {
+    id: 'crd-09', cat: 'crd',
+    q: 'What is the benefit of collaboration in program development?',
+    a: 'CB identifies collaboration as essential to computing because:<br>• Multiple perspectives catch more bugs and edge cases<br>• Different people bring different skills (design, logic, testing)<br>• Large programs are too complex for one person<br>• Reviewing each other\'s code improves quality<br><br><span class="note">The CB CPT can be developed collaboratively, but each student must independently write their own code section and PPR.</span>'
+  },
+  {
+    id: 'crd-10', cat: 'crd',
+    q: 'What is the purpose of program documentation?',
+    a: 'Documentation explains what code does, why decisions were made, and how to use or modify it.<br><br>Benefits:<br>• Helps other programmers (and your future self) understand the code<br>• Makes debugging easier<br>• Required for professional and team software development<br><br>Forms: inline comments, function descriptions, README files, API docs.'
+  },
+  {
+    id: 'crd-11', cat: 'crd',
+    q: 'What is modularity in program design?',
+    a: 'Breaking a program into smaller, independent, reusable components (modules or procedures), each responsible for one specific task.<br><br>Benefits:<br>• Easier to test and debug (isolate each part)<br>• Easier to modify (change one module without affecting others)<br>• Promotes reuse (a module can be used in multiple programs)<br>• Manages complexity — each piece is small enough to understand'
+  },
+  {
+    id: 'crd-12', cat: 'crd',
+    q: 'What is the difference between a general-purpose and a special-purpose computing device?',
+    a: '<strong>General-purpose</strong>: can run many different programs for many tasks — laptop, smartphone, desktop.<br><br><strong>Special-purpose</strong>: designed and optimized for one specific task — GPS device, calculator, embedded controller in a microwave, ASIC chip for Bitcoin mining.<br><br>Special-purpose devices are typically faster and more efficient for their specific task but cannot do other things.'
   }
 ];
 
@@ -488,7 +761,7 @@ function updateOverall() {
   const done = CARDS.filter(c => getMastered(c.id)).length;
   const pct = Math.round(done / total * 100);
   document.getElementById('overall-fill').style.width = pct + '%';
-  document.getElementById('overall-label').textContent = done + ' / ' + total + ' mastered';
+  document.getElementById('overall-label').textContent = done + ' / ' + CARDS.length + ' mastered';
 }
 
 function updateCatCounts() {
