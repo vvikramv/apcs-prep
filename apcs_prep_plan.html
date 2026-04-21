@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP CSP Prep Plan — May 14, 2026</title>
+<style>
+:root {
+  --blue: #2563eb; --blue-light: #eff6ff; --blue-mid: #bfdbfe;
+  --amber: #d97706; --amber-light: #fffbeb; --amber-mid: #fde68a;
+  --green: #059669; --green-light: #ecfdf5; --green-mid: #a7f3d0;
+  --indigo: #4f46e5; --indigo-light: #eef2ff; --indigo-mid: #c7d2fe;
+  --red: #dc2626; --red-light: #fef2f2; --red-mid: #fecaca;
+  --teal: #0d9488; --teal-light: #f0fdfa; --teal-mid: #99f6e4;
+  --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+  --gray-400: #9ca3af; --gray-600: #4b5563; --gray-700: #374151; --gray-900: #111827;
+  --radius: 12px; --shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--gray-50); color: var(--gray-900); line-height: 1.6; }
+
+/* ── Header ── */
+.site-header { background: white; border-bottom: 1px solid var(--gray-200); padding: 14px 24px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.site-header h1 { font-size: 17px; font-weight: 700; flex-shrink: 0; }
+.overall-progress { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 160px; }
+.progress-bar { flex: 1; height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--teal); border-radius: 4px; transition: width 0.3s ease; }
+.progress-label { font-size: 13px; color: var(--gray-600); white-space: nowrap; }
+.name-field { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--gray-600); }
+.name-field input { border: 1px solid var(--gray-200); border-radius: 6px; padding: 4px 8px; font-size: 13px; width: 130px; outline: none; }
+.name-field input:focus { border-color: var(--teal); }
+
+/* ── Layout ── */
+.container { max-width: 860px; margin: 0 auto; padding: 24px 16px 80px; }
+
+/* ── CPT Urgency Banner ── */
+.cpt-banner { background: #fef2f2; border: 2px solid var(--red); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 14px; }
+.cpt-banner.dismissed { display: none; }
+.cpt-banner-icon { font-size: 22px; flex-shrink: 0; line-height: 1; }
+.cpt-banner-body { flex: 1; }
+.cpt-banner-body strong { color: var(--red); font-size: 15px; }
+.cpt-banner-body p { font-size: 13px; color: var(--gray-700); margin-top: 4px; line-height: 1.5; }
+.cpt-banner-body .cpt-deadline { display: inline-block; background: var(--red); color: white; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-top: 6px; }
+.cpt-dismiss { background: none; border: 1px solid var(--red-mid); color: var(--red); font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 6px; cursor: pointer; flex-shrink: 0; margin-top: 2px; }
+.cpt-dismiss:hover { background: var(--red-light); }
+
+/* ── Intro Card ── */
+.intro-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden; }
+.intro-header { background: linear-gradient(135deg, #134e4a 0%, #0d9488 100%); padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.intro-header-text h2 { color: white; font-size: 16px; font-weight: 700; }
+.intro-header-text .intro-meta { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 2px; }
+.intro-scores { display: flex; gap: 0; border-bottom: 1px solid var(--gray-100); flex-wrap: wrap; }
+.intro-score-block { flex: 1; padding: 14px 20px; text-align: center; min-width: 100px; }
+.intro-score-block + .intro-score-block { border-left: 1px solid var(--gray-100); }
+.intro-score-block .isb-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-400); margin-bottom: 4px; }
+.intro-score-block .isb-value { font-size: 24px; font-weight: 800; line-height: 1; }
+.intro-score-block .isb-sub { font-size: 11px; color: var(--gray-400); margin-top: 3px; }
+.intro-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.intro-col { padding: 16px 24px; }
+.intro-col + .intro-col { border-left: 1px solid var(--gray-100); }
+.intro-col h3 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+.intro-col.focus h3 { color: var(--red); }
+.intro-col.strengths h3 { color: var(--green); }
+.intro-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; font-size: 13px; color: var(--gray-700); line-height: 1.4; }
+.intro-item .ii-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.ii-dot.red { background: var(--red); }
+.ii-dot.amber { background: var(--amber); }
+.ii-dot.green { background: var(--green); }
+.ii-pct { font-size: 11px; color: var(--gray-400); white-space: nowrap; margin-left: 2px; font-weight: 700; }
+.intro-insight { margin: 0 24px 20px; padding: 12px 16px; background: var(--amber-light); border-left: 3px solid var(--amber); border-radius: 6px; font-size: 13px; color: var(--gray-700); line-height: 1.6; }
+.intro-insight strong { color: #92400e; }
+
+/* ── Big Ideas Profile ── */
+.profile-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px 24px; margin-bottom: 20px; }
+.profile-card h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-400); margin-bottom: 12px; }
+.bi-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.bi-table th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gray-400); padding: 3px 6px 6px; border-bottom: 1px solid var(--gray-200); }
+.bi-table td { padding: 7px 6px; border-bottom: 1px solid var(--gray-100); vertical-align: middle; }
+.bi-table tr:last-child td { border-bottom: none; }
+.bi-bar-wrap { width: 120px; }
+.bi-bar { height: 7px; border-radius: 3px; background: var(--gray-200); overflow: hidden; }
+.bi-bar-fill { height: 100%; border-radius: 3px; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+.tag-red { background: #fee2e2; color: #b91c1c; }
+.tag-amber { background: #fef3c7; color: #92400e; }
+.tag-green { background: #d1fae5; color: #065f46; }
+.tag-blue { background: #dbeafe; color: #1e40af; }
+.tag-gray { background: var(--gray-100); color: var(--gray-600); }
+
+/* ── Routine ── */
+.routine-card { background: var(--teal-light); border: 1px solid var(--teal-mid); border-radius: var(--radius); padding: 16px 24px; margin-bottom: 20px; }
+.routine-card h2 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--teal); margin-bottom: 10px; }
+.routine-grid { display: grid; grid-template-columns: auto 1fr; gap: 3px 14px; align-items: baseline; font-size: 14px; }
+.routine-time { font-weight: 700; color: var(--teal); font-size: 13px; white-space: nowrap; }
+
+/* ── Strategy / Cheat Sheet ── */
+.strategy-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden; }
+.strategy-header { padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+.strategy-header:hover { background: var(--gray-50); }
+.strategy-header.open { border-bottom: 1px solid var(--gray-200); }
+.strategy-header h2 { font-size: 15px; font-weight: 700; }
+.chevron { font-size: 11px; color: var(--gray-400); transition: transform 0.2s; }
+.chevron.open { transform: rotate(180deg); }
+.strategy-body { display: none; padding: 20px 24px; }
+.strategy-body.open { display: block; }
+.strat-section { margin-bottom: 20px; }
+.strat-section:last-child { margin-bottom: 0; }
+.strat-section h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--teal); margin-bottom: 8px; }
+.strat-section ul { padding-left: 18px; }
+.strat-section li { font-size: 13px; color: var(--gray-700); margin-bottom: 4px; line-height: 1.5; }
+.code-block { background: var(--gray-900); color: #86efac; font-family: 'Courier New', monospace; font-size: 12px; padding: 12px 14px; border-radius: 8px; margin: 8px 0; line-height: 1.8; overflow-x: auto; }
+.code-comment { color: #6b7280; }
+.code-keyword { color: #93c5fd; }
+.pseudo-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 6px; }
+.pseudo-table th { background: var(--gray-100); text-align: left; padding: 5px 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--gray-600); }
+.pseudo-table td { padding: 5px 8px; border-bottom: 1px solid var(--gray-100); vertical-align: top; }
+.pseudo-table td:first-child { font-family: 'Courier New', monospace; font-size: 11px; color: var(--indigo); white-space: nowrap; }
+.trap-box { background: #fef3c7; border-left: 3px solid var(--amber); border-radius: 6px; padding: 10px 12px; font-size: 13px; color: var(--gray-700); margin-top: 8px; }
+.trap-box strong { color: #92400e; }
+
+/* ── Week Cards ── */
+.week-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden; }
+.week-card.current-week { box-shadow: 0 0 0 2px var(--indigo), var(--shadow); }
+.week-header { padding: 16px 24px; display: flex; align-items: center; gap: 12px; border-bottom: 3px solid var(--gray-200); }
+.week-header.urgent { border-bottom-color: var(--red); }
+.week-header.prog  { border-bottom-color: var(--blue); }
+.week-header.concept { border-bottom-color: var(--amber); }
+.week-header.wind  { border-bottom-color: var(--gray-400); }
+.week-header.exam-day { border-bottom-color: var(--teal); }
+.week-num-wrap { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.week-num { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray-400); }
+.now-badge { font-size: 10px; font-weight: 700; background: var(--indigo); color: white; padding: 2px 7px; border-radius: 10px; letter-spacing: 0.04em; }
+.week-info { flex: 1; }
+.week-title { font-size: 16px; font-weight: 700; }
+.week-dates { font-size: 12px; color: var(--gray-400); }
+.week-goal { font-size: 13px; color: var(--gray-600); font-style: italic; margin-top: 1px; }
+.week-prog { text-align: right; flex-shrink: 0; }
+.week-prog-bar { width: 80px; height: 6px; background: var(--gray-200); border-radius: 3px; overflow: hidden; margin-bottom: 3px; }
+.week-prog-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+.week-header.urgent .week-prog-fill  { background: var(--red); }
+.week-header.prog .week-prog-fill    { background: var(--blue); }
+.week-header.concept .week-prog-fill { background: var(--amber); }
+.week-header.wind .week-prog-fill    { background: var(--gray-400); }
+.week-header.exam-day .week-prog-fill { background: var(--teal); }
+.week-prog-label { font-size: 11px; color: var(--gray-400); }
+
+/* ── Tasks ── */
+.task-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 24px; border-bottom: 1px solid var(--gray-100); transition: background 0.1s; }
+.task-item:last-child { border-bottom: none; }
+.task-item:hover { background: var(--gray-50); }
+.task-day { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--gray-400); width: 32px; flex-shrink: 0; padding-top: 2px; }
+.task-check { width: 17px; height: 17px; flex-shrink: 0; cursor: pointer; margin-top: 3px; accent-color: var(--teal); }
+.task-content { flex: 1; }
+.task-text { font-size: 14px; color: var(--gray-700); line-height: 1.4; }
+.task-item.done .task-text { text-decoration: line-through; color: var(--gray-400); }
+.task-links { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.task-link { display: inline-block; font-size: 12px; color: var(--teal); text-decoration: none; padding: 2px 8px; background: var(--teal-light); border-radius: 4px; }
+.task-link:hover { background: var(--teal-mid); }
+.task-link.red { color: var(--red); background: var(--red-light); }
+.task-link.red:hover { background: var(--red-mid); }
+.task-note { font-size: 12px; color: var(--gray-400); font-style: italic; margin-top: 2px; }
+.task-item.today-task { background: var(--indigo-light) !important; border-left: 3px solid var(--indigo); padding-left: 21px; }
+.task-item.today-task .task-day { color: var(--indigo); font-weight: 800; }
+.task-item.urgent-task { background: #fff7ed; border-left: 3px solid var(--amber); padding-left: 21px; }
+
+/* ── Score Panel ── */
+.score-panel { background: white; border: 2px solid var(--indigo-mid); border-radius: var(--radius); margin-bottom: 20px; overflow: hidden; }
+.score-panel-header { background: var(--indigo-light); padding: 14px 24px; border-bottom: 1px solid var(--indigo-mid); display: flex; align-items: center; justify-content: space-between; }
+.score-panel-header h3 { font-size: 15px; font-weight: 700; color: var(--indigo); }
+.score-panel-header span { font-size: 12px; color: var(--gray-400); }
+.score-panel-body { padding: 20px 24px; }
+.sp-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.sp-group label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gray-600); margin-bottom: 5px; }
+.sp-group input[type="number"] { width: 100%; border: 1px solid var(--gray-200); border-radius: 8px; padding: 8px 12px; font-size: 24px; font-weight: 700; text-align: center; outline: none; color: var(--gray-900); }
+.sp-group input[type="number"]:focus { border-color: var(--indigo); }
+.sp-group .input-hint { font-size: 11px; color: var(--gray-400); text-align: center; margin-top: 3px; }
+.sp-computed { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.computed-item { background: var(--gray-50); border-radius: 8px; padding: 10px 12px; text-align: center; }
+.computed-item .c-label { font-size: 11px; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em; }
+.computed-item .c-value { font-size: 20px; font-weight: 800; margin-top: 2px; }
+.c-value.good { color: var(--green); }
+.c-value.ok   { color: var(--amber); }
+.c-value.low  { color: var(--red); }
+.sp-divider { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--indigo); margin: 14px 0 8px; }
+.bi-check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+.bi-check-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid var(--gray-200); border-radius: 8px; cursor: pointer; font-size: 13px; color: var(--gray-700); transition: all 0.1s; }
+.bi-check-item:hover { border-color: var(--indigo); background: var(--indigo-light); }
+.bi-check-item input { accent-color: var(--indigo); cursor: pointer; width: 15px; height: 15px; }
+.bi-check-item.selected { border-color: var(--indigo); background: var(--indigo-light); font-weight: 600; color: var(--indigo); }
+.recommendation-box { background: var(--indigo-light); border: 1px solid var(--indigo-mid); border-radius: 8px; padding: 14px 16px; font-size: 14px; }
+.recommendation-box .rec-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--indigo); margin-bottom: 6px; }
+.recommendation-box .rec-body { color: var(--gray-700); font-size: 13px; line-height: 1.6; }
+
+/* ── Exam Day Card ── */
+.exam-card { background: linear-gradient(135deg, #134e4a 0%, #0d9488 100%); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; text-align: center; color: white; }
+.exam-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.exam-card p { font-size: 14px; opacity: 0.85; }
+.exam-tips { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 16px; }
+.exam-tip { background: rgba(255,255,255,0.12); border-radius: 8px; padding: 10px 12px; font-size: 12px; text-align: left; line-height: 1.5; }
+.exam-tip strong { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.75; margin-bottom: 3px; }
+
+/* ── Date Awareness ── */
+.today-strip { background: var(--indigo); color: white; text-align: center; font-size: 13px; font-weight: 600; padding: 7px 24px; letter-spacing: 0.01em; }
+
+/* ── Flex note ── */
+.flex-note { background: var(--indigo-light); border: 1px solid var(--indigo-mid); border-radius: var(--radius); padding: 12px 20px; margin-bottom: 20px; font-size: 13px; color: var(--gray-700); display: flex; align-items: flex-start; gap: 10px; }
+.flex-note .fn-icon { font-size: 16px; flex-shrink: 0; }
+
+@media (max-width: 600px) {
+  .intro-columns { grid-template-columns: 1fr; }
+  .intro-col + .intro-col { border-left: none; border-top: 1px solid var(--gray-100); }
+  .intro-scores { flex-wrap: wrap; }
+  .sp-row { grid-template-columns: 1fr; }
+  .sp-computed { grid-template-columns: 1fr 1fr; }
+  .bi-check-grid { grid-template-columns: 1fr; }
+  .exam-tips { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>AP CSP Prep — May 14, 2026</h1>
+  <div class="overall-progress">
+    <div class="progress-bar"><div class="progress-fill" id="overall-fill" style="width:0%"></div></div>
+    <span class="progress-label" id="overall-label">0 / 24 tasks</span>
+  </div>
+  <div class="name-field">
+    &#128100; <input type="text" id="user-name" placeholder="Your name" maxlength="20">
+  </div>
+</header>
+<div class="today-strip" id="today-strip" style="display:none"></div>
+
+<main class="container">
+
+  <!-- ── CPT Urgency Banner ── -->
+  <div class="cpt-banner" id="cpt-banner">
+    <div class="cpt-banner-icon">&#9888;</div>
+    <div class="cpt-banner-body">
+      <strong>Action Required: Create Performance Task not yet submitted</strong>
+      <p>Your AP Digital Portfolio shows all 3 CPT components (Program Code, Video, PPR) as <strong>Draft In</strong> — not submitted. This is 30% of your AP score. You must finalize and lock in the submission before the deadline.</p>
+      <span class="cpt-deadline">Deadline: April 30, 2026</span>
+      <div style="margin-top:8px">
+        <a href="https://digitalportfolio.collegeboard.org" target="_blank" style="display:inline-block;font-size:12px;font-weight:700;color:var(--red);text-decoration:underline">AP Digital Portfolio &rarr;</a>
+      </div>
+    </div>
+    <button class="cpt-dismiss" onclick="dismissCPT()">Mark submitted</button>
+  </div>
+
+  <!-- ── Intro Card ── -->
+  <div class="intro-card">
+    <div class="intro-header">
+      <div class="intro-header-text">
+        <h2>Ajay's AP CSP Exam Prep — May 14, 2026</h2>
+        <div class="intro-meta">24 days out &nbsp;·&nbsp; 70 MC questions, 120 min &nbsp;·&nbsp; Course: UC Scout</div>
+      </div>
+    </div>
+
+    <div class="intro-scores">
+      <div class="intro-score-block">
+        <div class="isb-label">Exam Format</div>
+        <div class="isb-value" style="color:var(--teal);font-size:18px">70 MC</div>
+        <div class="isb-sub">120 minutes</div>
+      </div>
+      <div class="intro-score-block">
+        <div class="isb-label">CPT Weight</div>
+        <div class="isb-value" style="color:var(--red)">30%</div>
+        <div class="isb-sub">Submit by Apr 30</div>
+      </div>
+      <div class="intro-score-block">
+        <div class="isb-label">Exam Weight</div>
+        <div class="isb-value" style="color:var(--teal)">70%</div>
+        <div class="isb-sub">Multiple choice only</div>
+      </div>
+      <div class="intro-score-block">
+        <div class="isb-label">Days Out</div>
+        <div class="isb-value" style="color:var(--indigo)" id="days-out">24</div>
+        <div class="isb-sub">from today</div>
+      </div>
+    </div>
+
+    <div class="intro-columns">
+      <div class="intro-col focus">
+        <h3>&#128204; Priority Focus Areas</h3>
+        <div class="intro-item">
+          <div class="ii-dot red"></div>
+          <div><strong>Algorithms &amp; Programming (AAP)</strong> <span class="ii-pct">30%</span><br>
+          Pseudocode tracing, lists, procedures, Boolean logic — identified as weak spot. Highest exam weight.</div>
+        </div>
+        <div class="intro-item">
+          <div class="ii-dot amber"></div>
+          <div><strong>Impact of Computing (IOC)</strong> <span class="ii-pct">30%</span><br>
+          Privacy, security, bias, legal/ethical — scenario questions. Largely memorization, learnable fast.</div>
+        </div>
+        <div class="intro-item">
+          <div class="ii-dot amber"></div>
+          <div><strong>Data (DAT)</strong> <span class="ii-pct">18%</span><br>
+          Binary, compression, metadata — math-adjacent, should leverage existing strength.</div>
+        </div>
+      </div>
+      <div class="intro-col strengths">
+        <h3>&#10003; Favorable Starting Points</h3>
+        <div class="intro-item">
+          <div class="ii-dot green"></div>
+          <div><strong>Strong math foundation</strong><br>Binary arithmetic, data analysis, and algorithm efficiency questions reward math thinking.</div>
+        </div>
+        <div class="intro-item">
+          <div class="ii-dot green"></div>
+          <div><strong>Completed full course (UC Scout)</strong><br>All concepts have been covered — this is review and consolidation, not learning from scratch.</div>
+        </div>
+        <div class="intro-item">
+          <div class="ii-dot amber"></div>
+          <div><strong>Computing Systems &amp; Networks (CSN)</strong> <span class="ii-pct">12%</span><br>Lowest weight; factual (IP, DNS, fault tolerance). Cover in Week 3.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="intro-insight">
+      <strong>Key Insight — AAP is the make-or-break big idea:</strong> At 30% of the exam, AAP questions are also the hardest to answer by intuition. The exam uses <em>College Board's own pseudocode</em> (not Python/JavaScript) with <strong>1-based list indexing</strong>. A student who can fluently trace CB pseudocode gains a significant edge. Weeks 1–2 front-load this entirely.
+    </div>
+  </div>
+
+  <!-- Flexibility note -->
+  <div class="flex-note">
+    <span class="fn-icon">&#128336;</span>
+    <span><strong>Flexible by design</strong> — check tasks off in any order. Missed a day? Pick up where you left off. The plan doesn't penalize skipping or jumping ahead. Exception: CPT tasks in Week 1 must be done before Apr 30 — that deadline is real.</span>
+  </div>
+
+  <!-- Big Ideas Profile -->
+  <div class="profile-card">
+    <h2>Big Ideas — Exam Weight &amp; Priority</h2>
+    <table class="bi-table">
+      <thead>
+        <tr>
+          <th>Big Idea</th>
+          <th>Code</th>
+          <th>Exam %</th>
+          <th style="width:140px">Weight</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Algorithms &amp; Programming</td>
+          <td><strong>AAP</strong></td>
+          <td>~30%</td>
+          <td class="bi-bar-wrap"><div class="bi-bar"><div class="bi-bar-fill" style="width:100%;background:var(--red)"></div></div></td>
+          <td><span class="tag tag-red">HIGH — weak spot</span></td>
+        </tr>
+        <tr>
+          <td>Impact of Computing</td>
+          <td><strong>IOC</strong></td>
+          <td>~30%</td>
+          <td class="bi-bar-wrap"><div class="bi-bar"><div class="bi-bar-fill" style="width:100%;background:var(--amber)"></div></div></td>
+          <td><span class="tag tag-amber">HIGH — memorization</span></td>
+        </tr>
+        <tr>
+          <td>Data</td>
+          <td><strong>DAT</strong></td>
+          <td>~18%</td>
+          <td class="bi-bar-wrap"><div class="bi-bar"><div class="bi-bar-fill" style="width:60%;background:var(--amber)"></div></div></td>
+          <td><span class="tag tag-amber">MEDIUM — math helps</span></td>
+        </tr>
+        <tr>
+          <td>Computing Systems &amp; Networks</td>
+          <td><strong>CSN</strong></td>
+          <td>~12%</td>
+          <td class="bi-bar-wrap"><div class="bi-bar"><div class="bi-bar-fill" style="width:40%;background:var(--blue)"></div></div></td>
+          <td><span class="tag tag-blue">MEDIUM — factual</span></td>
+        </tr>
+        <tr>
+          <td>Creative Development</td>
+          <td><strong>CRD</strong></td>
+          <td>~10%</td>
+          <td class="bi-bar-wrap"><div class="bi-bar"><div class="bi-bar-fill" style="width:33%;background:var(--gray-400)"></div></div></td>
+          <td><span class="tag tag-gray">LOW — definitional</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Daily Routine -->
+  <div class="routine-card">
+    <h2>Daily Routine — 15 min every day</h2>
+    <div class="routine-grid">
+      <span class="routine-time">0:00–8:00</span>
+      <span>Do the day's task: trace code / read a lesson / answer 4–5 practice questions from AP Classroom or Khan Academy</span>
+      <span class="routine-time">8:00–13:00</span>
+      <span><strong>Review every wrong answer</strong> — read the explanation, write the mistake pattern in 1 sentence. This is the most skipped and most valuable step.</span>
+      <span class="routine-time">13:00–15:00</span>
+      <span>Re-read the pseudocode cheat sheet for 2 min (Strategy Guide below). Reinforce one syntax rule you're shaky on.</span>
+    </div>
+  </div>
+
+  <!-- Strategy / Cheat Sheet -->
+  <div class="strategy-card">
+    <div class="strategy-header" onclick="toggleStrategy(this)">
+      <h2>&#128218; Strategy Guide + Pseudocode Cheat Sheet — Read Before Week 1</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="strategy-body">
+
+      <div class="strat-section">
+        <h3>Exam Format &amp; Timing</h3>
+        <ul>
+          <li>70 questions in 120 minutes = ~103 seconds per question. Most questions are short — you'll finish.</li>
+          <li>No penalty for wrong answers. Never leave a blank.</li>
+          <li>Flag hard questions and skip — return at the end. Don't spend 3+ minutes on any single question.</li>
+          <li>AAP pseudocode questions take longer to trace. Budget ~2 min for these, ~1 min for IOC/DAT/CSN.</li>
+        </ul>
+      </div>
+
+      <div class="strat-section">
+        <h3>CB Pseudocode — Complete Reference</h3>
+        <div class="trap-box">
+          <strong>Trap #1 — List indices start at 1, not 0.</strong> If a list has 4 items, they are at positions 1, 2, 3, 4. This trips up anyone who has coded in Python or JavaScript.
+        </div>
+        <table class="pseudo-table" style="margin-top:10px">
+          <thead><tr><th>Construct</th><th>Syntax</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Assignment</td><td><code>x ← 5</code></td><td>Left arrow, not equals</td></tr>
+            <tr><td>Display</td><td><code>DISPLAY(x)</code></td><td>Shows value on screen</td></tr>
+            <tr><td>Input</td><td><code>x ← INPUT()</code></td><td>Reads user input into x</td></tr>
+            <tr><td>If / else</td><td><code>IF (cond) { } ELSE { }</code></td><td>ELSE block is optional</td></tr>
+            <tr><td>Repeat N times</td><td><code>REPEAT n TIMES { }</code></td><td>Runs body exactly n times</td></tr>
+            <tr><td>Repeat until</td><td><code>REPEAT UNTIL (cond) { }</code></td><td>Stops when cond is TRUE</td></tr>
+            <tr><td>For each item</td><td><code>FOR EACH item IN list { }</code></td><td>Iterates over every element</td></tr>
+            <tr><td>List access</td><td><code>list[i]</code></td><td>Index starts at <strong>1</strong></td></tr>
+            <tr><td>Append</td><td><code>APPEND(list, val)</code></td><td>Adds val to end</td></tr>
+            <tr><td>Insert</td><td><code>INSERT(list, i, val)</code></td><td>Inserts val at position i</td></tr>
+            <tr><td>Remove</td><td><code>REMOVE(list, i)</code></td><td>Removes item at position i</td></tr>
+            <tr><td>Length</td><td><code>LENGTH(list)</code></td><td>Number of items in list</td></tr>
+            <tr><td>Procedure</td><td><code>PROCEDURE name(p1, p2) { }</code></td><td>Define a named block</td></tr>
+            <tr><td>Return</td><td><code>RETURN val</code></td><td>Exits procedure with value</td></tr>
+            <tr><td>Boolean AND</td><td><code>a AND b</code></td><td>True only if both true</td></tr>
+            <tr><td>Boolean OR</td><td><code>a OR b</code></td><td>True if at least one true</td></tr>
+            <tr><td>Boolean NOT</td><td><code>NOT a</code></td><td>Flips true/false</td></tr>
+            <tr><td>Mod</td><td><code>a MOD b</code></td><td>Remainder of a ÷ b</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="strat-section">
+        <h3>How to Trace Pseudocode (AAP Strategy)</h3>
+        <ul>
+          <li>Write out a variable table on paper. Column per variable, row per line of code.</li>
+          <li>Never try to trace in your head for loops or lists — always write values down.</li>
+          <li>For loops: track the iteration counter + every variable that changes inside the loop.</li>
+          <li>REPEAT UNTIL stops when condition becomes TRUE (common confusion: it's not WHILE, it's UNTIL).</li>
+          <li>Procedure calls: substitute the argument values into the parameter names, then trace the body.</li>
+        </ul>
+        <div class="code-block"><span class="code-comment">-- Example: what does this display? --</span>
+nums ← [3, 1, 4, 1, 5]
+total ← 0
+FOR EACH n IN nums
+{
+   total ← total + n
+}
+DISPLAY(total)   <span class="code-comment">-- Answer: 14</span></div>
+      </div>
+
+      <div class="strat-section">
+        <h3>IOC — Scenario Questions</h3>
+        <ul>
+          <li>Most IOC questions are "which of the following IS / IS NOT an example of X?" — pattern match, don't overthink.</li>
+          <li>Privacy: PII = any data that can identify a specific individual (name, SSN, location history, IP address).</li>
+          <li>Security: encryption makes data unreadable without a key; authentication verifies identity.</li>
+          <li>Bias in algorithms: training data reflects historical biases &rarr; outputs perpetuate them.</li>
+          <li>Copyright vs Creative Commons: CC licenses allow sharing under specified conditions; copyrighted work requires permission.</li>
+          <li>Digital divide: unequal access to technology by geography, income, age, disability.</li>
+        </ul>
+      </div>
+
+      <div class="strat-section">
+        <h3>DAT — Data Representation</h3>
+        <ul>
+          <li>Binary: each bit is 0 or 1. n bits can represent 2<sup>n</sup> values. 8 bits = 1 byte = 256 values.</li>
+          <li>To convert decimal to binary: repeatedly divide by 2, read remainders bottom-up.</li>
+          <li>Overflow: when a number exceeds the available bits — the result "wraps around" and is wrong.</li>
+          <li>Lossless compression: exact original recoverable (ZIP, PNG). Lossy: some data discarded (JPEG, MP3).</li>
+          <li>Metadata: data about data — file size, creation date, GPS in a photo. Often collected without user awareness.</li>
+        </ul>
+      </div>
+
+      <div class="strat-section">
+        <h3>CSN — Internet &amp; Networks</h3>
+        <ul>
+          <li>Packets: data is split into packets, routed independently, reassembled at destination.</li>
+          <li>IP = addressing (where to send). TCP = reliable delivery (confirms receipt, re-sends lost packets).</li>
+          <li>DNS: translates domain names (google.com) into IP addresses.</li>
+          <li>HTTP/HTTPS: protocol for web requests. HTTPS adds encryption via TLS/SSL.</li>
+          <li>Fault tolerance: the internet routes around failed nodes — redundant paths are the key design principle.</li>
+          <li>Bandwidth: max data per second. Latency: delay. High bandwidth ≠ low latency.</li>
+          <li>Parallel computing: tasks split across multiple processors run faster — but only up to the sequential bottleneck (Amdahl's Law concept, not by name).</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════ WEEK 1: CPT + AAP FOUNDATIONS ═══════════════ -->
+  <div class="week-card" id="week-card-1">
+    <div class="week-header urgent">
+      <div class="week-num-wrap">
+        <div class="week-num">Week 1</div>
+      </div>
+      <div class="week-info">
+        <div class="week-title">CPT Submission + AAP Foundations</div>
+        <div class="week-dates">Apr 20–26</div>
+        <div class="week-goal">Priority: lock in CPT before Apr 30. Start AAP with CB pseudocode fundamentals.</div>
+      </div>
+      <div class="week-prog">
+        <div class="week-prog-bar"><div class="week-prog-fill week-header urgent" id="wp-1" style="width:0%"></div></div>
+        <div class="week-prog-label" id="wl-1">0/7</div>
+      </div>
+    </div>
+    <div class="task-list">
+
+      <div class="task-item urgent-task" id="ti-1-1">
+        <span class="task-day">Sun</span>
+        <input type="checkbox" class="task-check" data-id="1-1" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">&#9888; CPT: Log into AP Digital Portfolio — review all 3 draft components. Write down exactly what's missing or incomplete for PC, Video, and PPR.</div>
+          <div class="task-links"><a class="task-link red" href="https://digitalportfolio.collegeboard.org" target="_blank">AP Digital Portfolio &rarr;</a></div>
+          <div class="task-note">Status shows: PC = Draft In, V = Draft In, PPR = Draft In. Deadline is Apr 30.</div>
+        </div>
+      </div>
+
+      <div class="task-item urgent-task" id="ti-1-2">
+        <span class="task-day">Mon</span>
+        <input type="checkbox" class="task-check" data-id="1-2" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">&#9888; CPT: Finalize Program Code — run the program end-to-end, confirm it works without errors. Review requirements: must include user input, a list, an algorithm, and a student-developed procedure.</div>
+          <div class="task-links"><a class="task-link red" href="https://digitalportfolio.collegeboard.org" target="_blank">AP Digital Portfolio &rarr;</a></div>
+        </div>
+      </div>
+
+      <div class="task-item urgent-task" id="ti-1-3">
+        <span class="task-day">Tue</span>
+        <input type="checkbox" class="task-check" data-id="1-3" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">&#9888; CPT: Finalize and upload Video — must be &le;1 minute, &le;30MB, showing the program running with input and output visible. No narration required, no student's face. Upload to Digital Portfolio.</div>
+          <div class="task-links"><a class="task-link red" href="https://digitalportfolio.collegeboard.org" target="_blank">AP Digital Portfolio &rarr;</a></div>
+          <div class="task-note">Accepted formats: .mp4, .wmv, .avi, .mov. Record screen with QuickTime (Mac) or Xbox Game Bar (Windows).</div>
+        </div>
+      </div>
+
+      <div class="task-item urgent-task" id="ti-1-4">
+        <span class="task-day">Wed</span>
+        <input type="checkbox" class="task-check" data-id="1-4" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">&#9888; CPT: Write / finalize PPR (Personal Project Reference) — 2 prompts. Prompt 1: identify a list in your code and explain how it manages complexity. Prompt 2: identify an algorithm with sequencing, selection, AND iteration — give line numbers.</div>
+          <div class="task-links">
+            <a class="task-link red" href="https://digitalportfolio.collegeboard.org" target="_blank">AP Digital Portfolio &rarr;</a>
+            <a class="task-link" href="https://apcentral.collegeboard.org/courses/ap-computer-science-principles/exam" target="_blank">CB CPT Scoring Guidelines &rarr;</a>
+          </div>
+          <div class="task-note">PPR is typed directly in the portal. Reference specific line numbers in your code. No page limit, but be concise.</div>
+        </div>
+      </div>
+
+      <div class="task-item urgent-task" id="ti-1-5">
+        <span class="task-day">Thu</span>
+        <input type="checkbox" class="task-check" data-id="1-5" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">&#9888; CPT: Submit all 3 components in AP Digital Portfolio. Confirm that all 3 show "Complete" (checkmark). Take a screenshot as confirmation. Done — this is 30% locked in.</div>
+          <div class="task-links"><a class="task-link red" href="https://digitalportfolio.collegeboard.org" target="_blank">AP Digital Portfolio &rarr;</a></div>
+          <div class="task-note">Once submitted, components cannot be changed. Double-check before clicking Submit.</div>
+        </div>
+      </div>
+
+      <div class="task-item" id="ti-1-6">
+        <span class="task-day">Fri</span>
+        <input type="checkbox" class="task-check" data-id="1-6" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">AAP Start: Open the Strategy Guide cheat sheet above and read the pseudocode reference table. Then trace these 2 examples on paper: (1) a loop that sums a list, (2) a conditional that finds the largest of 3 numbers. Write out each variable's value at each step.</div>
+          <div class="task-links"><a class="task-link" href="https://www.khanacademy.org/computing/ap-computer-science-principles/programming-101" target="_blank">KA: Programming Unit &rarr;</a></div>
+        </div>
+      </div>
+
+      <div class="task-item" id="ti-1-7">
+        <span class="task-day">Sat</span>
+        <input type="checkbox" class="task-check" data-id="1-7" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">AAP: Variables, expressions, conditionals — do AP Classroom Unit 3 Progress Check MCQ Part A (if available). Otherwise, do 5 questions from KA Programming unit. Review every wrong answer.</div>
+          <div class="task-links">
+            <a class="task-link" href="https://apclassroom.collegeboard.org" target="_blank">AP Classroom (Unit 3 Progress Check) &rarr;</a>
+            <a class="task-link" href="https://www.khanacademy.org/computing/ap-computer-science-principles/programming-101" target="_blank">KA: Programming &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════ WEEK 2: AAP ADVANCED + PRACTICE TEST ═══════════════ -->
+  <div class="week-card" id="week-card-2">
+    <div class="week-header prog">
+      <div class="week-num-wrap">
+        <div class="week-num">Week 2</div>
+      </div>
+      <div class="week-info">
+        <div class="week-title">AAP Advanced + Practice Test</div>
+        <div class="week-dates">Apr 27–May 3</div>
+        <div class="week-goal">Complete AAP coverage: lists, procedures, algorithms, Boolean. End with a full timed practice exam.</div>
+      </div>
+      <div class="week-prog">
+        <div class="week-prog-bar"><div class="week-prog-fill" id="wp-2" style="width:0%"></div></div>
+        <div class="week-prog-label" id="wl-2">0/7</div>
+      </div>
+    </div>
+    <div class="task-list">
+
+      <div class="task-item" id="ti-2-1">
+        <span class="task-day">Sun</span>
+        <input type="checkbox" class="task-check" data-id="2-1" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">AAP: Loops — REPEAT n TIMES vs REPEAT UNTIL. Key question: what is the value of a variable after the loop ends? Trace 4 loop examples on paper. Note: REPEAT UNTIL stops when condition is TRUE.</div>
+          <div class="task-links"><a class="task-link" href="https://www.khanacademy.org/computing/ap-computer-science-principles/programming-101" target="_blank">KA: Programming — Iteration &rarr;</a></div>
+        </div>
+      </div>
+
+      <div class="task-item" id="ti-2-2">
+        <span class="task-day">Mon</span>
+        <input type="checkbox" class="task-check" data-id="2-2" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">AAP: Lists — indexing (STARTS AT 1, not 0), APPEND, INSERT, REMOVE, LENGTH. Trace 4–5 list manipulation examples. Practice: given a list before and after operations, identify which operations ran.</div>
+          <div class="task-links"><a class="task-link" href="https://www.khanacademy.org/computing/ap-computer-science-principles/programming-101" target="_blank">KA: Programming — Lists &rarr;</a></div>
+          <div class="task-note">Trap: list[1] is the FIRST item. list[LENGTH(list)] is the LAST item.</div>
+        </div>
+      </div>
+
+      <div class="task-item" id="ti-2-3">
+        <span class="task-day">Tue</span>
+        <input type="checkbox" class="task-check" data-id="2-3" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">AAP: Procedures &amp; functions — parameters, return values, abstraction. Trace 3–4 procedure call examples. Key: when a procedure is called, substitute argument values into parameter names and trace the body.</div>
+          <div class="task-links">
+            <a class="task-link" href="https://www.khanacademy.org/computing/ap-computer-science-principles/programming-101" target="_blank">KA: Programming — Procedures &rarr;</a>
+            <a class="task-link" href="https://apclassroom.collegeboard.org" target="_blank">AP Classroom: Unit 3 MCQ &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-item urgent-task" id="ti-2-4">
+        <span class="task-day">Wed</span>
+        <input type="checkbox" class="task-check" data-id="2-4" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">CPT DEADLINE CHECK: Log into AP Digital Portfolio and confirm all 3 components show "Complete" (checkmark). If anything is still "Draft In" — stop and submit it today. Deadline is April 30.</div>
+          <div class="task-links"><a class="task-link red" href="https://digitalportfolio.collegeboard.org" target="_blank">AP Digital Portfolio &rarr;</a></div>
+          <div class="task-note">If already submitted from Week 1, just confirm status and move on. Then do 4–5 AAP algorithm questions: linear search vs binary search — when does each apply?</div>
+        </div>
+      </div>
+
+      <div class="task-item" id="ti-2-5">
+        <span class="task-day">Thu</span>
+        <input type="checkbox" class="task-check" data-id="2-5" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">AAP: Boolean logic — AND / OR / NOT, truth tables. Practice: for each expression, evaluate whether it's TRUE or FALSE given specific variable values. Also cover algorithm efficiency: why is binary search faster than linear search on sorted data?</div>
+          <div class="task-links"><a class="task-link" href="https://www.khanacademy.org/computing/ap-computer-science-principles/algorithms-101" target="_blank">KA: Algorithms &rarr;</a></div>
+        </div>
+      </div>
+
+      <div class="task-item" id="ti-2-6">
+        <span class="task-day">Fri</span>
+        <input type="checkbox" class="task-check" data-id="2-6" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">AAP mixed review: 5 pseudocode tracing questions — mix of loops, lists, and procedures. Review all wrong answers from the week. Light prep for practice test tomorrow: re-read the pseudocode reference table and exam strategy section above.</div>
+          <div class="task-links"><a class="task-link" href="https://apclassroom.collegeboard.org" target="_blank">AP Classroom: Mixed AAP Questions &rarr;</a></div>
+          <div class="task-note">No new concepts today. The goal is consolidation and rest before tomorrow's timed test.</div>
+        </div>
+      </div>
+
+      <div class="task-item" id="ti-2-7">
+        <span class="task-day">Sat</span>
+        <input type="checkbox" class="task-check" data-id="2-7" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">&#127381; PRACTICE TEST: College Board 2021 AP CSP Released Exam — 70 questions, 120 minutes, fully timed. Quiet room, no interruptions. Mark questions you're unsure about. Enter your results in the panel below.</div>
+          <div class="task-links">
+            <a class="task-link" href="https://apcentral.collegeboard.org/courses/ap-computer-science-principles/exam" target="_blank">CB Released Exam (AP Central) &rarr;</a>
+            <a class="task-link" href="https://apclassroom.collegeboard.org" target="_blank">AP Classroom: Full Practice &rarr;</a>
+          </div>
+          <div class="task-note">Treat it like the real thing. Budget ~103 sec/question. Skip hard ones and return. Never leave a blank.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════ SCORE PANEL ═══════════════ -->
+  <div class="score-panel" id="score-panel-1">
+    <div class="score-panel-header">
+      <h3>&#128202; Practice Test Results — May 3</h3>
+      <span>Enter after practice test &middot; Saves automatically</span>
+    </div>
+    <div class="score-panel-body">
+
+      <div class="sp-row">
+        <div class="sp-group">
+          <label>Questions Correct</label>
+          <input type="number" id="t1-correct" min="0" max="70" step="1" placeholder="—" oninput="updateScorePanel()">
+          <div class="input-hint">Out of 70</div>
+        </div>
+        <div class="sp-group">
+          <label>Total Questions</label>
+          <input type="number" id="t1-total" value="70" readonly style="background:var(--gray-50);color:var(--gray-400);font-size:24px;font-weight:700;text-align:center;width:100%;border:1px solid var(--gray-200);border-radius:8px;padding:8px 12px;">
+          <div class="input-hint">Fixed</div>
+        </div>
+      </div>
+
+      <div class="sp-computed" id="sp-computed" style="display:none">
+        <div class="computed-item">
+          <div class="c-label">Score %</div>
+          <div class="c-value" id="sp-pct">—</div>
+        </div>
+        <div class="computed-item">
+          <div class="c-label">AP Score Est.</div>
+          <div class="c-value" id="sp-ap">—</div>
+        </div>
+        <div class="computed-item">
+          <div class="c-label">Wrong Answers</div>
+          <div class="c-value" id="sp-wrong">—</div>
+        </div>
+      </div>
+
+      <div class="sp-divider">Which Big Ideas felt hardest? (select all that apply)</div>
+      <div class="bi-check-grid">
+        <label class="bi-check-item" id="bi-aap-label">
+          <input type="checkbox" id="bi-aap" onchange="updateScorePanel()"> Algorithms &amp; Programming (AAP)
+        </label>
+        <label class="bi-check-item" id="bi-ioc-label">
+          <input type="checkbox" id="bi-ioc" onchange="updateScorePanel()"> Impact of Computing (IOC)
+        </label>
+        <label class="bi-check-item" id="bi-dat-label">
+          <input type="checkbox" id="bi-dat" onchange="updateScorePanel()"> Data (DAT)
+        </label>
+        <label class="bi-check-item" id="bi-csn-label">
+          <input type="checkbox" id="bi-csn" onchange="updateScorePanel()"> Computing Systems &amp; Networks (CSN)
+        </label>
+      </div>
+
+      <div class="recommendation-box">
+        <div class="rec-title">Week 3 Focus Recommendation</div>
+        <div class="rec-body" id="sp-rec-body">Enter your score and select any areas that felt hard to get a data-driven recommendation for Week 3 focus order.</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════ WEEK 3: IOC + DAT + CSN ═══════════════ -->
+  <div class="week-card" id="week-card-3">
+    <div class="week-header concept">
+      <div class="week-num-wrap">
+        <div class="week-num">Week 3</div>
+      </div>
+      <div class="week-info">
+        <div class="week-title">IOC + DAT + CSN — Conceptual Coverage</div>
+        <div class="week-dates">May 4–10</div>
+        <div class="week-goal">Cover the remaining 60% of exam content: impact, data, and networks. Mostly pattern recognition and vocab.</div>
+      </div>
+      <div class="week-prog">
+        <div class="week-prog-bar"><div class="week-prog-fill" id="wp-3" style="width:0%"></div></div>
+        <div class="week-prog-label" id="wl-3">0/7</div>
+      </div>
+    </div>
+    <div class="task-list">
+
+      <div class="task-item" id="ti-3-1">
+        <span class="task-day">Sun</span>
+        <input type="checkbox" class="task-check" data-id="3-1" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">Review practice test wrong answers — for every missed question, identify which big idea it belongs to and write one sentence explaining why the correct answer is right. This is the most valuable 15 min of the whole plan.</div>
+          <div class="task-note">Don't focus on score — focus on pattern. "I missed 4 IOC questions about privacy" is actionable. "I got 58/70" is not.</div>
+        </div>
+      </div>
+
+      <div class="task-item" id="ti-3-2">
+        <span class="task-day">Mon</span>
+        <input type="checkbox" class="task-check" data-id="3-2" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">IOC: Privacy &amp; Security — PII, encryption, authentication, phishing, malware. Do 5 AP Classroom IOC questions. Key pattern: "Which is an example of PII?" and "Which action reduces the risk of unauthorized access?"</div>
+          <div class="task-links">
+            <a class="task-link" href="https://apclassroom.collegeboard.org" target="_blank">AP Classroom: Unit 5 &amp; 6 Progress Check &rarr;</a>
+            <a class="task-link" href="https://www.khanacademy.org/computing/ap-computer-science-principles/online-data-security-106" target="_blank">KA: Online Data Security &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-item" id="ti-3-3">
+        <span class="task-day">Tue</span>
+        <input type="checkbox" class="task-check" data-id="3-3" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">IOC: Societal Impact — digital divide, accessibility, algorithmic bias, copyright vs Creative Commons, computing's environmental impact. Do 5 AP Classroom IOC questions.</div>
+          <div class="task-links">
+            <a class="task-link" href="https://apclassroom.collegeboard.org" target="_blank">AP Classroom: Unit 7 Progress Check &rarr;</a>
+            <a class="task-link" href="https://www.khanacademy.org/computing/ap-computer-science-principles/impacts-of-computing-106" target="_blank">KA: Impacts of Computing &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-item" id="ti-3-4">
+        <span class="task-day">Wed</span>
+        <input type="checkbox" class="task-check" data-id="3-4" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">DAT: Binary &amp; Data Representation — convert decimal &harr; binary (practice 4–5 conversions), understand overflow, distinguish lossless vs lossy compression, know what metadata is. Do 5 AP Classroom DAT questions.</div>
+          <div class="task-links">
+            <a class="task-link" href="https://apclassroom.collegeboard.org" target="_blank">AP Classroom: Unit 2 Progress Check &rarr;</a>
+            <a class="task-link" href="https://www.khanacademy.org/computing/ap-computer-science-principles/digital-information-2" target="_blank">KA: Digital Information &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-item" id="ti-3-5">
+        <span class="task-day">Thu</span>
+        <input type="checkbox" class="task-check" data-id="3-5" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">CSN: Internet &amp; Networks — packets, IP, TCP, DNS, HTTP/HTTPS, bandwidth vs latency, fault tolerance via redundancy. Do 5 AP Classroom CSN questions. Key: the internet is designed to route around failures.</div>
+          <div class="task-links">
+            <a class="task-link" href="https://apclassroom.collegeboard.org" target="_blank">AP Classroom: Unit 4 Progress Check &rarr;</a>
+            <a class="task-link" href="https://www.khanacademy.org/computing/ap-computer-science-principles/the-internet-106" target="_blank">KA: The Internet &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-item" id="ti-3-6">
+        <span class="task-day">Fri</span>
+        <input type="checkbox" class="task-check" data-id="3-6" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">CSN + DAT: Parallel &amp; distributed computing, data analysis (using data to draw conclusions, identifying correlation vs causation), simulation. Do 5 mixed questions. Review all wrong answers this week — write 1 sentence per mistake.</div>
+          <div class="task-links">
+            <a class="task-link" href="https://apclassroom.collegeboard.org" target="_blank">AP Classroom: Mixed Units &rarr;</a>
+            <a class="task-link" href="https://www.khanacademy.org/computing/ap-computer-science-principles/data-analysis-101" target="_blank">KA: Data Analysis &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-item" id="ti-3-7">
+        <span class="task-day">Sat</span>
+        <input type="checkbox" class="task-check" data-id="3-7" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">Mixed drill: 10 questions from AP Classroom spanning IOC + DAT + CSN — use the "Personal Progress Checks" for Units 2, 4, 5, 6, 7. Review every wrong answer before moving on.</div>
+          <div class="task-links"><a class="task-link" href="https://apclassroom.collegeboard.org" target="_blank">AP Classroom: Personal Progress Checks &rarr;</a></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════ FINAL STRETCH ═══════════════ -->
+  <div class="week-card" id="week-card-4">
+    <div class="week-header wind">
+      <div class="week-num-wrap">
+        <div class="week-num">Final</div>
+      </div>
+      <div class="week-info">
+        <div class="week-title">CRD Review + Rest</div>
+        <div class="week-dates">May 11–13</div>
+        <div class="week-goal">Close out the last big idea, do one final targeted drill, then rest. No cramming the night before.</div>
+      </div>
+      <div class="week-prog">
+        <div class="week-prog-bar"><div class="week-prog-fill" id="wp-4" style="width:0%"></div></div>
+        <div class="week-prog-label" id="wl-4">0/3</div>
+      </div>
+    </div>
+    <div class="task-list">
+
+      <div class="task-item" id="ti-4-1">
+        <span class="task-day">Sun</span>
+        <input type="checkbox" class="task-check" data-id="4-1" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">CRD: Creative Development — program development process (design, code, test), debugging strategies, abstraction (hiding complexity behind a name), collaboration. Do 5 AP Classroom CRD questions. Low weight but worth knowing the vocab.</div>
+          <div class="task-links">
+            <a class="task-link" href="https://apclassroom.collegeboard.org" target="_blank">AP Classroom: Unit 1 Progress Check &rarr;</a>
+            <a class="task-link" href="https://www.khanacademy.org/computing/ap-computer-science-principles/programming-101" target="_blank">KA: Abstraction &amp; Program Design &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-item" id="ti-4-2">
+        <span class="task-day">Mon</span>
+        <input type="checkbox" class="task-check" data-id="4-2" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">Targeted review: revisit the big idea you found hardest on the practice test. Do 5 focused questions on that topic only. Review all wrong answers. Then re-read the cheat sheet one final time.</div>
+          <div class="task-links"><a class="task-link" href="https://apclassroom.collegeboard.org" target="_blank">AP Classroom: Targeted Practice &rarr;</a></div>
+          <div class="task-note">If no clear weak spot from the practice test, default to AAP pseudocode tracing — 5 trace problems on paper.</div>
+        </div>
+      </div>
+
+      <div class="task-item" id="ti-4-3">
+        <span class="task-day">Tue</span>
+        <input type="checkbox" class="task-check" data-id="4-3" onchange="taskChanged(this)">
+        <div class="task-content">
+          <div class="task-text">Rest day — 10 min max. Reread the pseudocode reference table in the cheat sheet above. No new questions. Sleep well. Exam is tomorrow.</div>
+          <div class="task-note">Exam tip: eat before, bring ID, arrive early. 70 questions / 120 min = skip hard ones and return. Never leave a blank.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════ EXAM DAY ═══════════════ -->
+  <div class="exam-card">
+    <h2>May 14 — AP CS Principles Exam</h2>
+    <p>70 multiple choice questions &nbsp;·&nbsp; 120 minutes &nbsp;·&nbsp; No penalty for wrong answers</p>
+    <div class="exam-tips">
+      <div class="exam-tip">
+        <strong>Pacing</strong>
+        ~103 sec per question. Skip anything that takes &gt;2 min. Return at the end. You'll finish.
+      </div>
+      <div class="exam-tip">
+        <strong>Pseudocode trap</strong>
+        List indices start at 1. REPEAT UNTIL stops when condition is TRUE. Write variable tables for loops.
+      </div>
+      <div class="exam-tip">
+        <strong>Never blank</strong>
+        No penalty for wrong answers. Guess on anything you can't answer — eliminate 1–2 choices first.
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ── Constants ──
+const TOTAL_TASKS = 24;
+const WEEK_TASKS = { 1: 7, 2: 7, 3: 7, 4: 3 };
+// Week date ranges [start, end] as [month, day] pairs (2026)
+const WEEK_DATES = {
+  1: { start: new Date(2026,3,20), end: new Date(2026,3,26) },
+  2: { start: new Date(2026,3,27), end: new Date(2026,4,3) },
+  3: { start: new Date(2026,4,4),  end: new Date(2026,4,10) },
+  4: { start: new Date(2026,4,11), end: new Date(2026,4,13) }
+};
+const EXAM_DATE = new Date(2026,4,14);
+
+// Task date map: taskId -> Date
+const TASK_DATES = {
+  '1-1': new Date(2026,3,20), '1-2': new Date(2026,3,21), '1-3': new Date(2026,3,22),
+  '1-4': new Date(2026,3,23), '1-5': new Date(2026,3,24), '1-6': new Date(2026,3,25),
+  '1-7': new Date(2026,3,26),
+  '2-1': new Date(2026,3,27), '2-2': new Date(2026,3,28), '2-3': new Date(2026,3,29),
+  '2-4': new Date(2026,3,30), '2-5': new Date(2026,4,1),  '2-6': new Date(2026,4,2),
+  '2-7': new Date(2026,4,3),
+  '3-1': new Date(2026,4,4),  '3-2': new Date(2026,4,5),  '3-3': new Date(2026,4,6),
+  '3-4': new Date(2026,4,7),  '3-5': new Date(2026,4,8),  '3-6': new Date(2026,4,9),
+  '3-7': new Date(2026,4,10),
+  '4-1': new Date(2026,4,11), '4-2': new Date(2026,4,12), '4-3': new Date(2026,4,13)
+};
+
+const LS = 'apcs2026_';
+
+// ── Init ──
+window.addEventListener('DOMContentLoaded', () => {
+  loadAll();
+  updateToday();
+  updateOverallProgress();
+  for (let w = 1; w <= 4; w++) updateWeekProgress(w);
+  loadScorePanel();
+  loadCPTBanner();
+
+  const nameEl = document.getElementById('user-name');
+  const savedName = localStorage.getItem(LS + 'name');
+  if (savedName) nameEl.value = savedName;
+  nameEl.addEventListener('input', () => localStorage.setItem(LS + 'name', nameEl.value));
+});
+
+function loadAll() {
+  document.querySelectorAll('.task-check').forEach(cb => {
+    const id = cb.dataset.id;
+    const checked = localStorage.getItem(LS + 'task_' + id) === '1';
+    cb.checked = checked;
+    if (checked) cb.closest('.task-item').classList.add('done');
+  });
+}
+
+function taskChanged(cb) {
+  const id = cb.dataset.id;
+  localStorage.setItem(LS + 'task_' + id, cb.checked ? '1' : '0');
+  const item = cb.closest('.task-item');
+  if (cb.checked) item.classList.add('done');
+  else item.classList.remove('done');
+  const week = parseInt(id.split('-')[0]);
+  updateWeekProgress(week);
+  updateOverallProgress();
+}
+
+function updateOverallProgress() {
+  let done = 0;
+  document.querySelectorAll('.task-check').forEach(cb => { if (cb.checked) done++; });
+  const pct = Math.round(done / TOTAL_TASKS * 100);
+  document.getElementById('overall-fill').style.width = pct + '%';
+  document.getElementById('overall-label').textContent = done + ' / ' + TOTAL_TASKS + ' tasks';
+}
+
+function updateWeekProgress(w) {
+  const total = WEEK_TASKS[w];
+  let done = 0;
+  for (let t = 1; t <= total; t++) {
+    if (localStorage.getItem(LS + 'task_' + w + '-' + t) === '1') done++;
+  }
+  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+  const fill = document.getElementById('wp-' + w);
+  const label = document.getElementById('wl-' + w);
+  if (fill) fill.style.width = pct + '%';
+  if (label) label.textContent = done + '/' + total;
+}
+
+function updateToday() {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const daysOut = Math.ceil((EXAM_DATE - today) / 86400000);
+  const daysEl = document.getElementById('days-out');
+  if (daysEl) daysEl.textContent = daysOut > 0 ? daysOut : 'Today!';
+
+  const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  let todayTask = null;
+  let todayWeek = null;
+  for (const [id, d] of Object.entries(TASK_DATES)) {
+    const taskDate = new Date(d); taskDate.setHours(0,0,0,0);
+    if (taskDate.getTime() === today.getTime()) {
+      todayTask = id;
+      todayWeek = parseInt(id.split('-')[0]);
+      break;
+    }
+  }
+
+  // Highlight today's task
+  if (todayTask) {
+    const el = document.getElementById('ti-' + todayTask.replace('-', '-'));
+    if (el) { el.classList.add('today-task'); el.classList.remove('urgent-task'); }
+  }
+
+  // Highlight current week card
+  for (let w = 1; w <= 4; w++) {
+    const wd = WEEK_DATES[w];
+    const s = new Date(wd.start); s.setHours(0,0,0,0);
+    const e = new Date(wd.end); e.setHours(23,59,59,999);
+    const card = document.getElementById('week-card-' + w);
+    if (card && today >= s && today <= e) {
+      card.classList.add('current-week');
+      const wrap = card.querySelector('.week-num-wrap');
+      if (wrap && !wrap.querySelector('.now-badge')) {
+        const badge = document.createElement('span');
+        badge.className = 'now-badge';
+        badge.textContent = 'NOW';
+        wrap.appendChild(badge);
+      }
+    }
+  }
+
+  // Today strip
+  const strip = document.getElementById('today-strip');
+  if (today < EXAM_DATE) {
+    const weekLabel = todayWeek ? 'Week ' + todayWeek : '';
+    strip.textContent = dayNames[today.getDay()] + ' ' + monthNames[today.getMonth()] + ' ' + today.getDate()
+      + (weekLabel ? ' · ' + weekLabel : '')
+      + (daysOut > 0 ? ' · ' + daysOut + ' days to exam' : ' · Exam day!');
+    strip.style.display = '';
+  }
+}
+
+// ── Strategy toggle ──
+function toggleStrategy(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.chevron');
+  const isOpen = body.classList.contains('open');
+  if (isOpen) {
+    body.classList.remove('open');
+    header.classList.remove('open');
+    chevron.classList.remove('open');
+  } else {
+    body.classList.add('open');
+    header.classList.add('open');
+    chevron.classList.add('open');
+  }
+}
+
+// ── CPT Banner ──
+function dismissCPT() {
+  localStorage.setItem(LS + 'cpt_dismissed', '1');
+  document.getElementById('cpt-banner').classList.add('dismissed');
+}
+function loadCPTBanner() {
+  if (localStorage.getItem(LS + 'cpt_dismissed') === '1') {
+    const banner = document.getElementById('cpt-banner');
+    if (banner) banner.classList.add('dismissed');
+  }
+}
+
+// ── Score Panel ──
+function updateScorePanel() {
+  const correct = parseInt(document.getElementById('t1-correct').value) || null;
+  const computed = document.getElementById('sp-computed');
+  const recBody = document.getElementById('sp-rec-body');
+
+  const aap = document.getElementById('bi-aap').checked;
+  const ioc = document.getElementById('bi-ioc').checked;
+  const dat = document.getElementById('bi-dat').checked;
+  const csn = document.getElementById('bi-csn').checked;
+
+  // Style selected checkboxes
+  ['aap','ioc','dat','csn'].forEach(id => {
+    const label = document.getElementById('bi-' + id + '-label');
+    const cb = document.getElementById('bi-' + id);
+    if (label) label.classList.toggle('selected', cb.checked);
+  });
+
+  // Save to localStorage
+  if (correct !== null) localStorage.setItem(LS + 'sp_correct', correct);
+  localStorage.setItem(LS + 'sp_aap', aap ? '1' : '0');
+  localStorage.setItem(LS + 'sp_ioc', ioc ? '1' : '0');
+  localStorage.setItem(LS + 'sp_dat', dat ? '1' : '0');
+  localStorage.setItem(LS + 'sp_csn', csn ? '1' : '0');
+
+  if (correct !== null) {
+    computed.style.display = '';
+    const pct = Math.round(correct / 70 * 100);
+    const pctEl = document.getElementById('sp-pct');
+    pctEl.textContent = pct + '%';
+    pctEl.className = 'c-value ' + (pct >= 70 ? 'good' : pct >= 55 ? 'ok' : 'low');
+
+    // Rough AP score estimate (5-point scale)
+    // Based on typical CB score distributions: ~70%+ = 4-5, 55-69% = 3, 40-54% = 2, <40% = 1
+    // This is approximate — actual cutoffs vary by year
+    let apEst = pct >= 72 ? '4–5' : pct >= 56 ? '3' : pct >= 40 ? '2' : '1–2';
+    const apEl = document.getElementById('sp-ap');
+    apEl.textContent = apEst;
+    apEl.className = 'c-value ' + (pct >= 72 ? 'good' : pct >= 56 ? 'ok' : 'low');
+
+    const wrongEl = document.getElementById('sp-wrong');
+    wrongEl.textContent = (70 - correct);
+    wrongEl.className = 'c-value ' + (70 - correct <= 15 ? 'good' : 70 - correct <= 25 ? 'ok' : 'low');
+  }
+
+  // Recommendation
+  const hard = [];
+  if (aap) hard.push('AAP (pseudocode tracing — highest weight, hardest to gain by reading alone)');
+  if (ioc) hard.push('IOC (re-read privacy, security, and societal impact vocab)');
+  if (dat) hard.push('DAT (binary conversions and compression types)');
+  if (csn) hard.push('CSN (packet routing, protocols, fault tolerance)');
+
+  if (hard.length === 0 && correct === null) {
+    recBody.textContent = 'Enter your score and select any areas that felt hard to get a data-driven recommendation for Week 3 focus order.';
+  } else if (hard.length === 0) {
+    recBody.innerHTML = '<strong>No major weak spots flagged.</strong> Follow Week 3 as written: IOC Mon–Tue, DAT Wed, CSN Thu–Fri. If AAP still felt uncertain, add 5 more pseudocode traces on Sunday before starting IOC.';
+  } else {
+    const items = hard.map(h => '<li style="margin-bottom:5px">' + h + '</li>').join('');
+    recBody.innerHTML = '<strong>Focus areas for Week 3:</strong><ul style="padding-left:18px;margin-top:6px">' + items + '</ul>'
+      + '<p style="margin-top:8px;color:var(--gray-600)">Start Sunday\'s review session with your weakest area. AP Classroom Personal Progress Checks for each unit are the closest available proxy to real exam questions.</p>';
+  }
+}
+
+function loadScorePanel() {
+  const saved = localStorage.getItem(LS + 'sp_correct');
+  if (saved) {
+    document.getElementById('t1-correct').value = saved;
+  }
+  ['aap','ioc','dat','csn'].forEach(id => {
+    const val = localStorage.getItem(LS + 'sp_' + id);
+    if (val === '1') document.getElementById('bi-' + id).checked = true;
+  });
+  updateScorePanel();
+}
+</script>
+</body>
+</html>

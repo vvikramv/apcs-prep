@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AP CSP Flashcards</title>
+<style>
+:root {
+  --teal: #0d9488; --teal-light: #f0fdfa; --teal-dark: #134e4a;
+  --indigo: #4f46e5; --indigo-light: #eef2ff;
+  --green: #059669; --green-light: #ecfdf5;
+  --red: #dc2626; --red-light: #fef2f2;
+  --amber: #d97706; --amber-light: #fffbeb;
+  --blue: #2563eb; --blue-light: #eff6ff;
+  --purple: #7c3aed; --purple-light: #f5f3ff;
+  --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+  --gray-400: #9ca3af; --gray-600: #4b5563; --gray-700: #374151; --gray-900: #111827;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--gray-50); color: var(--gray-900); display: flex; flex-direction: column; }
+
+/* ── Header ── */
+.app-header { background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%); padding: 14px 16px 10px; color: white; flex-shrink: 0; }
+.app-header h1 { font-size: 17px; font-weight: 700; }
+.app-header p  { font-size: 12px; opacity: 0.75; margin-top: 2px; }
+.overall-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.overall-bar-wrap { flex: 1; height: 6px; background: rgba(255,255,255,0.25); border-radius: 3px; overflow: hidden; }
+.overall-bar-fill { height: 100%; background: white; border-radius: 3px; transition: width 0.4s; }
+.overall-label { font-size: 12px; opacity: 0.9; white-space: nowrap; }
+
+/* ── Category Tabs ── */
+.cat-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 12px 16px 8px; background: white; border-bottom: 1px solid var(--gray-200); flex-shrink: 0; scrollbar-width: none; }
+.cat-scroll::-webkit-scrollbar { display: none; }
+.cat-btn { flex-shrink: 0; padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--gray-200); background: white; font-size: 13px; font-weight: 600; color: var(--gray-600); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; }
+.cat-btn.active { border-color: transparent; color: white; }
+.cat-btn .cat-count { font-size: 11px; opacity: 0.75; }
+
+/* Category colors */
+.cat-btn[data-cat="all"].active       { background: var(--teal); }
+.cat-btn[data-cat="aap-syn"].active   { background: var(--blue); }
+.cat-btn[data-cat="aap-trace"].active { background: var(--indigo); }
+.cat-btn[data-cat="ioc"].active       { background: var(--red); }
+.cat-btn[data-cat="dat"].active       { background: var(--amber); }
+.cat-btn[data-cat="csn"].active       { background: var(--green); }
+.cat-btn[data-cat="crd"].active       { background: var(--purple); }
+
+/* ── Card Area ── */
+.card-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; overflow: hidden; }
+
+/* ── Flip Card ── */
+.flip-wrap { width: 100%; max-width: 420px; perspective: 1000px; cursor: pointer; }
+.flip-inner { position: relative; width: 100%; transition: transform 0.45s cubic-bezier(.4,0,.2,1); transform-style: preserve-3d; }
+.flip-inner.flipped { transform: rotateY(180deg); }
+.card-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; width: 100%; border-radius: 16px; padding: 28px 24px; min-height: 220px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.10); }
+.card-front { background: white; }
+.card-back  { background: var(--gray-50); border: 2px solid var(--gray-200); position: absolute; top: 0; left: 0; transform: rotateY(180deg); }
+.card-cat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 14px; }
+.card-question { font-size: 18px; font-weight: 700; line-height: 1.4; color: var(--gray-900); }
+.card-tap-hint { font-size: 12px; color: var(--gray-400); margin-top: 16px; text-align: right; }
+.card-answer-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--gray-400); margin-bottom: 10px; }
+.card-answer { font-size: 16px; line-height: 1.55; color: var(--gray-700); }
+.card-answer code, .code-inline { font-family: 'Courier New', monospace; font-size: 14px; background: var(--gray-900); color: #86efac; padding: 2px 6px; border-radius: 4px; display: inline; white-space: nowrap; }
+.card-answer .code-block { font-family: 'Courier New', monospace; font-size: 13px; background: var(--gray-900); color: #86efac; padding: 12px 14px; border-radius: 8px; display: block; white-space: pre; line-height: 1.7; margin: 8px 0; overflow-x: auto; }
+.card-answer .note { font-size: 13px; color: var(--gray-400); margin-top: 8px; font-style: italic; }
+
+/* ── Progress within deck ── */
+.deck-progress { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; width: 100%; max-width: 420px; }
+.deck-bar-wrap { flex: 1; height: 5px; background: var(--gray-200); border-radius: 3px; overflow: hidden; }
+.deck-bar-fill { height: 100%; background: var(--teal); border-radius: 3px; transition: width 0.3s; }
+.deck-label { font-size: 12px; color: var(--gray-600); white-space: nowrap; }
+
+/* ── Action Buttons ── */
+.action-row { display: flex; gap: 10px; margin-top: 14px; width: 100%; max-width: 420px; }
+.action-row .btn { flex: 1; padding: 14px; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
+.action-row .btn:active { transform: scale(0.97); }
+.btn-again { background: var(--red-light); color: var(--red); }
+.btn-got   { background: var(--green-light); color: var(--green); }
+.btn-next  { background: var(--indigo-light); color: var(--indigo); width: 100%; }
+.action-hint { font-size: 12px; color: var(--gray-400); text-align: center; margin-top: 10px; width: 100%; max-width: 420px; }
+
+/* ── Empty / Done states ── */
+.state-card { background: white; border-radius: 16px; padding: 32px 24px; text-align: center; max-width: 380px; width: 100%; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+.state-card .state-icon { font-size: 48px; margin-bottom: 12px; }
+.state-card h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.state-card p  { font-size: 14px; color: var(--gray-600); line-height: 1.5; margin-bottom: 16px; }
+.state-btn { background: var(--teal); color: white; border: none; border-radius: 10px; padding: 12px 24px; font-size: 15px; font-weight: 700; cursor: pointer; }
+
+/* ── Bottom nav ── */
+.bottom-nav { background: white; border-top: 1px solid var(--gray-200); padding: 10px 20px 20px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+.nav-btn { background: none; border: none; font-size: 12px; color: var(--gray-400); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 8px; }
+.nav-btn .nav-icon { font-size: 20px; }
+.nav-btn.active { color: var(--teal); }
+.shuffle-btn { background: var(--gray-100); border: none; border-radius: 20px; padding: 8px 16px; font-size: 13px; font-weight: 600; color: var(--gray-700); cursor: pointer; }
+.shuffle-btn:active { background: var(--gray-200); }
+
+/* Category colors for labels */
+.cat-aap-syn   { color: var(--blue); }
+.cat-aap-trace { color: var(--indigo); }
+.cat-ioc       { color: var(--red); }
+.cat-dat       { color: var(--amber); }
+.cat-csn       { color: var(--green); }
+.cat-crd       { color: var(--purple); }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <h1>AP CSP Flashcards</h1>
+  <p>Ajay &nbsp;·&nbsp; Exam: May 14, 2026</p>
+  <div class="overall-row">
+    <div class="overall-bar-wrap"><div class="overall-bar-fill" id="overall-fill" style="width:0%"></div></div>
+    <span class="overall-label" id="overall-label">0 mastered</span>
+  </div>
+</header>
+
+<div class="cat-scroll" id="cat-scroll">
+  <button class="cat-btn active" data-cat="all" onclick="selectCat('all')">All <span class="cat-count" id="cnt-all"></span></button>
+  <button class="cat-btn" data-cat="aap-syn" onclick="selectCat('aap-syn')">AAP: Syntax <span class="cat-count" id="cnt-aap-syn"></span></button>
+  <button class="cat-btn" data-cat="aap-trace" onclick="selectCat('aap-trace')">AAP: Tracing <span class="cat-count" id="cnt-aap-trace"></span></button>
+  <button class="cat-btn" data-cat="ioc" onclick="selectCat('ioc')">IOC <span class="cat-count" id="cnt-ioc"></span></button>
+  <button class="cat-btn" data-cat="dat" onclick="selectCat('dat')">DAT <span class="cat-count" id="cnt-dat"></span></button>
+  <button class="cat-btn" data-cat="csn" onclick="selectCat('csn')">CSN <span class="cat-count" id="cnt-csn"></span></button>
+  <button class="cat-btn" data-cat="crd" onclick="selectCat('crd')">CRD <span class="cat-count" id="cnt-crd"></span></button>
+</div>
+
+<div class="card-area" id="card-area">
+  <!-- Rendered by JS -->
+</div>
+
+<div class="bottom-nav">
+  <button class="shuffle-btn" onclick="shuffleDeck()">&#128256; Shuffle</button>
+  <button class="nav-btn" onclick="resetCategory()">&#128259; Reset</button>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// CARD DATA
+// Sources:
+//   - AP CSP Course and Exam Description (CED), College Board, 2020–present
+//   - Official CB pseudocode reference (Appendix of CED)
+//   - CB Learning Objectives by Big Idea
+// Code tracing problems use official CB pseudocode notation exactly.
+// ─────────────────────────────────────────────
+const CARDS = [
+
+  // ══ AAP: PSEUDOCODE SYNTAX ══
+  // Source: CB AP CSP CED Appendix — Pseudocode Reference
+  {
+    id: 'syn-01', cat: 'aap-syn',
+    q: 'What symbol is used for assignment in CB pseudocode?',
+    a: '<code>←</code> (left arrow)<br><br>Example: <code>x ← 5</code> sets x to 5.<br><span class="note">Not = like in most programming languages.</span>'
+  },
+  {
+    id: 'syn-02', cat: 'aap-syn',
+    q: 'What index is the FIRST item of a list in CB pseudocode?',
+    a: '<strong>1</strong> — list indices start at 1, not 0.<br><br>If <code>nums ← [10, 20, 30]</code>, then <code>nums[1]</code> is <strong>10</strong> and <code>nums[3]</code> is <strong>30</strong>.<span class="note">This is the #1 exam trap for students who code in Python or JavaScript.</span>'
+  },
+  {
+    id: 'syn-03', cat: 'aap-syn',
+    q: 'What does <code>REPEAT UNTIL (condition)</code> do?',
+    a: 'Repeats the body of the loop until the condition becomes <strong>TRUE</strong>, then stops.<br><br><span class="note">It checks the condition AFTER each iteration. If the condition is true from the start, the body still runs once.</span>'
+  },
+  {
+    id: 'syn-04', cat: 'aap-syn',
+    q: 'What does <code>APPEND(list, value)</code> do?',
+    a: 'Adds <code>value</code> to the <strong>end</strong> of the list, increasing its length by 1.<br><br>Example: if <code>nums ← [1, 2]</code>, then <code>APPEND(nums, 3)</code> makes <code>nums</code> equal to <code>[1, 2, 3]</code>.'
+  },
+  {
+    id: 'syn-05', cat: 'aap-syn',
+    q: 'What does <code>INSERT(list, i, value)</code> do?',
+    a: 'Inserts <code>value</code> at position <code>i</code>, shifting all items at position ≥ i one spot to the right.<br><br>Example: <code>INSERT([1,2,3], 2, 9)</code> → <code>[1, 9, 2, 3]</code>'
+  },
+  {
+    id: 'syn-06', cat: 'aap-syn',
+    q: 'What does <code>REMOVE(list, i)</code> do?',
+    a: 'Removes the item at position <code>i</code> from the list, shifting all later items one spot to the left. The list becomes one item shorter.'
+  },
+  {
+    id: 'syn-07', cat: 'aap-syn',
+    q: 'What does <code>LENGTH(list)</code> return?',
+    a: 'The number of items currently in the list.<br><br>If <code>nums ← [5, 10, 15, 20]</code>, then <code>LENGTH(nums)</code> returns <strong>4</strong>.<br><br><span class="note">The last item is always at index <code>LENGTH(list)</code>, not <code>LENGTH(list) - 1</code>.</span>'
+  },
+  {
+    id: 'syn-08', cat: 'aap-syn',
+    q: 'What does <code>FOR EACH item IN list { }</code> do?',
+    a: 'Iterates over every element in the list in order. On each pass, <code>item</code> takes the value of the current element.<br><br>After the loop ends, <code>item</code> holds the value of the last element.'
+  },
+  {
+    id: 'syn-09', cat: 'aap-syn',
+    q: 'What do <code>AND</code>, <code>OR</code>, and <code>NOT</code> evaluate to?',
+    a: '<code>a AND b</code> → TRUE only if <strong>both</strong> a and b are true.<br><code>a OR b</code> → TRUE if <strong>at least one</strong> is true.<br><code>NOT a</code> → flips the value (TRUE→FALSE, FALSE→TRUE).<br><br><span class="note">Common trap: <code>NOT (x > 5)</code> is the same as <code>x ≤ 5</code>, not <code>x < 5</code>.</span>'
+  },
+  {
+    id: 'syn-10', cat: 'aap-syn',
+    q: 'What does <code>a MOD b</code> return?',
+    a: 'The <strong>remainder</strong> when a is divided by b.<br><br>Examples: <code>7 MOD 3</code> → 1 &nbsp;·&nbsp; <code>10 MOD 5</code> → 0 &nbsp;·&nbsp; <code>6 MOD 4</code> → 2<br><br><span class="note">Useful for: checking if a number is even (<code>n MOD 2 = 0</code>), cycling through positions.</span>'
+  },
+  {
+    id: 'syn-11', cat: 'aap-syn',
+    q: 'How do you define a procedure in CB pseudocode?',
+    a: '<div class="code-block">PROCEDURE myProc(param1, param2)\n{\n   &lt;instructions&gt;\n   RETURN value\n}</div>Parameters receive the argument values when called. <code>RETURN</code> exits the procedure and sends back a value. <code>RETURN</code> is optional if no value is needed.'
+  },
+  {
+    id: 'syn-12', cat: 'aap-syn',
+    q: 'What is the difference between <code>REPEAT n TIMES</code> and <code>REPEAT UNTIL</code>?',
+    a: '<code>REPEAT n TIMES { }</code> — runs exactly <strong>n</strong> times, regardless of any conditions.<br><br><code>REPEAT UNTIL (cond) { }</code> — runs until <strong>cond is TRUE</strong>. Number of iterations is unknown in advance.<br><br><span class="note">Use REPEAT n TIMES when count is fixed. Use REPEAT UNTIL when you\'re waiting for a condition.</span>'
+  },
+
+  // ══ AAP: CODE TRACING ══
+  // Original problems using official CB pseudocode syntax and testing
+  // the same skill types assessed by CB exam questions (CED, Big Idea 3).
+  {
+    id: 'trace-01', cat: 'aap-trace',
+    q: 'What does this display?\n\nx ← 3\ny ← x * 2 + 1\nDISPLAY(y)',
+    a: '<strong>7</strong><br><br>Step by step: x = 3 → y = 3 × 2 + 1 = 7 → DISPLAY(7)'
+  },
+  {
+    id: 'trace-02', cat: 'aap-trace',
+    q: 'What does this display?\n\nnums ← [4, 8, 15, 16]\nDISPLAY(nums[2])',
+    a: '<strong>8</strong><br><br>List indices start at 1. <code>nums[1]</code> = 4, <code>nums[2]</code> = 8.<span class="note">Common wrong answer: 15 (from 0-based thinking).</span>'
+  },
+  {
+    id: 'trace-03', cat: 'aap-trace',
+    q: 'What does this display?\n\ntotal ← 0\nREPEAT 4 TIMES\n{\n   total ← total + 3\n}\nDISPLAY(total)',
+    a: '<strong>12</strong><br><br>Each iteration adds 3 to total:<br>After 1: 3 &nbsp;·&nbsp; After 2: 6 &nbsp;·&nbsp; After 3: 9 &nbsp;·&nbsp; After 4: 12'
+  },
+  {
+    id: 'trace-04', cat: 'aap-trace',
+    q: 'What does this display?\n\nnums ← [2, 5, 3, 8, 1]\ntotal ← 0\nFOR EACH n IN nums\n{\n   total ← total + n\n}\nDISPLAY(total)',
+    a: '<strong>19</strong><br><br>2 + 5 + 3 + 8 + 1 = 19<br><br><span class="note">FOR EACH visits every element in order from index 1 to LENGTH(list).</span>'
+  },
+  {
+    id: 'trace-05', cat: 'aap-trace',
+    q: 'What does this display?\n\nx ← 10\nIF (x MOD 2 = 0)\n{\n   DISPLAY("even")\n}\nELSE\n{\n   DISPLAY("odd")\n}',
+    a: '<strong>"even"</strong><br><br>10 MOD 2 = 0, so the condition is TRUE → first branch runs.'
+  },
+  {
+    id: 'trace-06', cat: 'aap-trace',
+    q: 'What is the value of nums after these operations?\n\nnums ← [1, 2, 3]\nAPPEND(nums, 4)\nREMOVE(nums, 1)',
+    a: '<strong>[2, 3, 4]</strong><br><br>After APPEND: [1, 2, 3, 4]<br>REMOVE(nums, 1) removes item at index 1, which is 1.<br>Result: [2, 3, 4]'
+  },
+  {
+    id: 'trace-07', cat: 'aap-trace',
+    q: 'What does this display?\n\ncount ← 1\nREPEAT UNTIL (count > 4)\n{\n   count ← count + 1\n}\nDISPLAY(count)',
+    a: '<strong>5</strong><br><br>Loop runs while count ≤ 4:<br>count: 1→2→3→4→5. When count = 5, condition (5 > 4) is TRUE → loop stops.<br>DISPLAY shows 5.'
+  },
+  {
+    id: 'trace-08', cat: 'aap-trace',
+    q: 'What does this procedure return when called as mystery(3, 4)?\n\nPROCEDURE mystery(a, b)\n{\n   result ← a * a + b\n   RETURN result\n}',
+    a: '<strong>13</strong><br><br>a = 3, b = 4<br>result = 3 × 3 + 4 = 9 + 4 = 13<br>RETURN 13'
+  },
+  {
+    id: 'trace-09', cat: 'aap-trace',
+    q: 'What does this display?\n\nx ← 5\nIF (x > 3 AND x < 10)\n{\n   DISPLAY("in range")\n}\nELSE\n{\n   DISPLAY("out of range")\n}',
+    a: '<strong>"in range"</strong><br><br>x = 5: (5 > 3) is TRUE, (5 < 10) is TRUE → TRUE AND TRUE = TRUE → first branch.'
+  },
+  {
+    id: 'trace-10', cat: 'aap-trace',
+    q: 'What does this display?\n\nnums ← [10, 20, 30]\nINSERT(nums, 2, 99)\nDISPLAY(nums[3])',
+    a: '<strong>20</strong><br><br>After INSERT(nums, 2, 99): [10, 99, 20, 30]<br><code>nums[3]</code> is now 20 (it was shifted right).<span class="note">INSERT shifts existing items at position ≥ i to the right.</span>'
+  },
+  {
+    id: 'trace-11', cat: 'aap-trace',
+    q: 'What does this display?\n\nPROCEDURE double(n)\n{\n   RETURN n * 2\n}\n\nresult ← double(double(3))\nDISPLAY(result)',
+    a: '<strong>12</strong><br><br>Inner call: double(3) → 6<br>Outer call: double(6) → 12<br>result = 12'
+  },
+  {
+    id: 'trace-12', cat: 'aap-trace',
+    q: 'What is the largest value stored in max after this runs?\n\nnums ← [4, 9, 2, 7, 1]\nmax ← nums[1]\nFOR EACH n IN nums\n{\n   IF (n > max)\n   {\n      max ← n\n   }\n}',
+    a: '<strong>9</strong><br><br>This is the "find maximum" algorithm. max starts at 4, then updates whenever a larger value is found: 4 → 9. After visiting all elements, max = 9.'
+  },
+
+  // ══ IOC: IMPACT OF COMPUTING ══
+  // Source: CB AP CSP CED — Big Idea 5: Impact of Computing (IOC)
+  // Learning objectives: IOC-1, IOC-2
+  {
+    id: 'ioc-01', cat: 'ioc',
+    q: 'What is PII?',
+    a: '<strong>Personally Identifiable Information</strong> — any data that can be used to identify a specific individual.<br><br>Examples: name + address, Social Security number, biometric data (fingerprints), location history, IP address, email address combined with other data.'
+  },
+  {
+    id: 'ioc-02', cat: 'ioc',
+    q: 'Is an IP address considered PII?',
+    a: '<strong>Yes</strong> — an IP address can be used to identify or locate a specific device or individual, so it is considered PII.<br><br><span class="note">CB exam questions often test edge cases of PII. When in doubt: if it can narrow down who or where someone is, it\'s likely PII.</span>'
+  },
+  {
+    id: 'ioc-03', cat: 'ioc',
+    q: 'What is the digital divide?',
+    a: 'The unequal access to computing technology and the internet across different populations.<br><br>Caused by differences in: <strong>income</strong>, <strong>geography</strong> (rural vs urban), <strong>age</strong>, <strong>disability</strong>, education level, and infrastructure availability.'
+  },
+  {
+    id: 'ioc-04', cat: 'ioc',
+    q: 'What is phishing?',
+    a: 'A deceptive technique where an attacker pretends to be a trusted entity (a bank, a website) to trick a user into revealing sensitive information like passwords or credit card numbers.<br><br>Usually delivered via email or fake websites.'
+  },
+  {
+    id: 'ioc-05', cat: 'ioc',
+    q: 'What is the difference between symmetric and asymmetric encryption?',
+    a: '<strong>Symmetric</strong>: the same key is used to both encrypt and decrypt. Faster, but key must be shared securely.<br><br><strong>Asymmetric (public-key)</strong>: a public key encrypts the data; only the matching private key can decrypt it. Used in HTTPS.'
+  },
+  {
+    id: 'ioc-06', cat: 'ioc',
+    q: 'What is algorithmic bias? Give an example.',
+    a: 'When an algorithm produces systematically unfair or discriminatory results, often because it was trained on biased historical data.<br><br>Example: a hiring algorithm trained on past hiring decisions may learn to favor certain demographics, replicating past bias at scale.'
+  },
+  {
+    id: 'ioc-07', cat: 'ioc',
+    q: 'What is the difference between copyright and a Creative Commons license?',
+    a: '<strong>Copyright</strong>: work is protected by default. Others need explicit permission to use, reproduce, or distribute.<br><br><strong>Creative Commons</strong>: creator grants usage rights in advance under specific conditions (e.g., attribution required, no commercial use, no derivatives).<br><br>CC licenses reduce friction for sharing while keeping some protections.'
+  },
+  {
+    id: 'ioc-08', cat: 'ioc',
+    q: 'What is multifactor authentication (MFA)?',
+    a: 'A security method requiring <strong>two or more</strong> forms of verification to access an account:<br><br>1. Something you <strong>know</strong> (password)<br>2. Something you <strong>have</strong> (phone/authenticator app)<br>3. Something you <strong>are</strong> (biometrics)<br><br>MFA significantly reduces the risk of unauthorized access even if a password is compromised.'
+  },
+  {
+    id: 'ioc-09', cat: 'ioc',
+    q: 'What is the difference between malware, ransomware, and a virus?',
+    a: '<strong>Malware</strong>: any malicious software (umbrella term).<br><strong>Virus</strong>: malware that attaches to legitimate files and spreads when those files are shared.<br><strong>Ransomware</strong>: malware that encrypts a victim\'s files and demands payment for the decryption key.'
+  },
+  {
+    id: 'ioc-10', cat: 'ioc',
+    q: 'What is "computing innovation" according to College Board? Does it have to be a program?',
+    a: 'A <strong>computing innovation</strong> is anything that includes a computer or program as an integral part of its function.<br><br>It does <strong>not</strong> have to be a software program — it can be a physical device (smart thermostat), an app, or a system (GPS navigation).<br><br><span class="note">CB tests this definition directly. "Does a computing innovation have to be a program?" — No.</span>'
+  },
+  {
+    id: 'ioc-11', cat: 'ioc',
+    q: 'What is the difference between open-source and proprietary software?',
+    a: '<strong>Open-source</strong>: source code is publicly available; anyone can view, modify, or distribute it (usually under a license like MIT or GPL).<br><br><strong>Proprietary</strong>: source code is private; users may use the software but cannot modify or redistribute it.<br><br>Open-source enables collaboration and transparency; proprietary software often has commercial restrictions.'
+  },
+  {
+    id: 'ioc-12', cat: 'ioc',
+    q: 'Can the same computing innovation have both beneficial and harmful effects?',
+    a: '<strong>Yes</strong> — this is a key CB concept. Nearly every computing innovation has intended benefits AND unintended harmful effects.<br><br>Example: social media enables connection and communication (benefit) but also spreads misinformation and affects mental health (harm).<br><br><span class="note">Exam questions often ask you to identify BOTH a benefit AND a harm of the same technology.</span>'
+  },
+
+  // ══ DAT: DATA ══
+  // Source: CB AP CSP CED — Big Idea 2: Data (DAT)
+  // Learning objectives: DAT-1, DAT-2
+  {
+    id: 'dat-01', cat: 'dat',
+    q: 'How many different values can n bits represent?',
+    a: '<strong>2<sup>n</sup></strong> values.<br><br>Examples: 1 bit → 2 values (0, 1) &nbsp;·&nbsp; 2 bits → 4 &nbsp;·&nbsp; 8 bits → 256 &nbsp;·&nbsp; 16 bits → 65,536<br><br><span class="note">Adding 1 bit doubles the number of values you can represent.</span>'
+  },
+  {
+    id: 'dat-02', cat: 'dat',
+    q: 'Convert the decimal number 13 to binary.',
+    a: '<strong>1101</strong><br><br>Method (divide by 2, read remainders bottom-up):<br>13 ÷ 2 = 6 R <strong>1</strong><br>6 ÷ 2 = 3 R <strong>0</strong><br>3 ÷ 2 = 1 R <strong>1</strong><br>1 ÷ 2 = 0 R <strong>1</strong><br>Read upward: <strong>1101</strong><br><br>Check: 8+4+0+1 = 13 ✓'
+  },
+  {
+    id: 'dat-03', cat: 'dat',
+    q: 'What is overflow in data representation?',
+    a: 'Overflow occurs when a calculation produces a number that exceeds the maximum value representable by the available number of bits.<br><br>The result "wraps around" and becomes an incorrect (often very small or negative) value.<br><br>Example: if 8 bits can hold values 0–255, then 255 + 1 overflows to 0.'
+  },
+  {
+    id: 'dat-04', cat: 'dat',
+    q: 'What is the difference between lossless and lossy data compression?',
+    a: '<strong>Lossless</strong>: the exact original data can be perfectly reconstructed after decompression. No data is discarded.<br>Examples: ZIP, PNG, FLAC<br><br><strong>Lossy</strong>: some data is permanently discarded to achieve higher compression. Original cannot be fully recovered.<br>Examples: JPEG, MP3, MP4<br><br><span class="note">Lossy is acceptable when small quality loss is unnoticeable (photos, music). Never use lossy for text or code.</span>'
+  },
+  {
+    id: 'dat-05', cat: 'dat',
+    q: 'What is metadata? Give two examples.',
+    a: 'Metadata is <strong>data about data</strong> — descriptive information attached to a file or message, not the content itself.<br><br>Examples:<br>• A photo\'s metadata: GPS location, camera model, date/time, file size<br>• An email\'s metadata: sender, recipient, timestamp, subject line<br><br><span class="note">Metadata can reveal sensitive information even when the content is private or encrypted.</span>'
+  },
+  {
+    id: 'dat-06', cat: 'dat',
+    q: 'What is the binary value of 10 in decimal?',
+    a: '<strong>1010</strong><br><br>10 = 8 + 2 = 1010 in binary.<br><br>Verify: 1×8 + 0×4 + 1×2 + 0×1 = 8 + 0 + 2 + 0 = 10 ✓'
+  },
+  {
+    id: 'dat-07', cat: 'dat',
+    q: 'What is the difference between correlation and causation in data analysis?',
+    a: '<strong>Correlation</strong>: two variables tend to change together — but one does not necessarily cause the other.<br><br><strong>Causation</strong>: one variable directly causes a change in another.<br><br>Classic example: ice cream sales and drowning rates both rise in summer (correlated), but ice cream does not cause drowning — both are caused by hot weather.<br><br><span class="note">CB questions often ask you to identify whether a claim is correlation or causation.</span>'
+  },
+  {
+    id: 'dat-08', cat: 'dat',
+    q: 'What is "cleaning" data? Why is it important?',
+    a: 'Data cleaning is the process of identifying and correcting errors, inconsistencies, duplicates, or missing values in a dataset before analysis.<br><br>Why it matters: analysis of dirty data produces unreliable or misleading results — "garbage in, garbage out."'
+  },
+
+  // ══ CSN: COMPUTING SYSTEMS & NETWORKS ══
+  // Source: CB AP CSP CED — Big Idea 4: Computing Systems and Networks (CSN)
+  // Learning objectives: CSN-1, CSN-2
+  {
+    id: 'csn-01', cat: 'csn',
+    q: 'What is a packet in internet communication?',
+    a: 'A small chunk of data that is transmitted independently across a network.<br><br>Large messages are broken into packets, each sent separately (possibly via different routes), and reassembled at the destination.<br><br><span class="note">This is why internet data can still arrive even if some network paths fail — packets reroute around failures.</span>'
+  },
+  {
+    id: 'csn-02', cat: 'csn',
+    q: 'What are the roles of IP and TCP?',
+    a: '<strong>IP (Internet Protocol)</strong>: handles <strong>addressing</strong> — determines the source and destination address and routes packets accordingly.<br><br><strong>TCP (Transmission Control Protocol)</strong>: handles <strong>reliable delivery</strong> — confirms packets arrived, requests re-transmission of lost packets, and reassembles them in order.'
+  },
+  {
+    id: 'csn-03', cat: 'csn',
+    q: 'What does DNS do?',
+    a: '<strong>Domain Name System</strong> — translates human-readable domain names (like google.com) into numerical IP addresses (like 142.250.80.46) that computers use to communicate.<br><br>Without DNS you would have to memorize IP addresses for every website.'
+  },
+  {
+    id: 'csn-04', cat: 'csn',
+    q: 'What is the difference between HTTP and HTTPS?',
+    a: '<strong>HTTP</strong>: HyperText Transfer Protocol — standard protocol for web communication. Data is sent in plain text (unencrypted).<br><br><strong>HTTPS</strong>: HTTP with TLS/SSL encryption added. Data is encrypted between browser and server, preventing eavesdropping and tampering.<br><br>HTTPS is required for any site handling sensitive data (logins, payments).'
+  },
+  {
+    id: 'csn-05', cat: 'csn',
+    q: 'What is fault tolerance, and how does the internet achieve it?',
+    a: 'Fault tolerance is the ability of a system to continue functioning even when parts of it fail.<br><br>The internet achieves it through <strong>redundant paths</strong> — packets can be rerouted through alternate nodes if a path goes down. No single point of failure can bring down the whole network.<br><br><span class="note">This was a deliberate design goal from the ARPANET era.</span>'
+  },
+  {
+    id: 'csn-06', cat: 'csn',
+    q: 'What is the difference between bandwidth and latency?',
+    a: '<strong>Bandwidth</strong>: the maximum amount of data that can be transmitted per second (like the width of a pipe). Higher = more data at once.<br><br><strong>Latency</strong>: the delay between sending and receiving data (like the length of the pipe). Lower = faster response.<br><br><span class="note">High bandwidth does NOT mean low latency. A video call needs both — high bandwidth for quality, low latency for real-time feel.</span>'
+  },
+  {
+    id: 'csn-07', cat: 'csn',
+    q: 'What is the difference between sequential and parallel computing?',
+    a: '<strong>Sequential</strong>: tasks are performed one after another, in order. Only one operation at a time.<br><br><strong>Parallel</strong>: multiple tasks are performed simultaneously across multiple processors or cores.<br><br>Parallel computing can solve problems faster, but only for tasks that can be broken into independent sub-tasks. Tasks that depend on each other must still run sequentially.'
+  },
+  {
+    id: 'csn-08', cat: 'csn',
+    q: 'What does it mean for a problem to be "undecidable"?',
+    a: 'An <strong>undecidable problem</strong> is one for which no algorithm can be written that will always give a correct yes/no answer for every possible input.<br><br>The classic example: the <strong>Halting Problem</strong> — it is impossible to write a program that can determine, for every possible program and input, whether that program will eventually halt or run forever.<br><br><span class="note">Undecidable ≠ hard. It means provably impossible — no computer, no matter how fast, can solve it in general.</span>'
+  },
+
+  // ══ CRD: CREATIVE DEVELOPMENT ══
+  // Source: CB AP CSP CED — Big Idea 1: Creative Development (CRD)
+  // Learning objectives: CRD-1, CRD-2
+  {
+    id: 'crd-01', cat: 'crd',
+    q: 'What is abstraction in programming? Give an example.',
+    a: 'Abstraction is hiding complexity behind a simpler interface or name, allowing a programmer to use something without needing to understand its internal details.<br><br>Example: calling <code>SORT(list)</code> sorts the list. The programmer doesn\'t need to know HOW the sorting algorithm works — just what it does.'
+  },
+  {
+    id: 'crd-02', cat: 'crd',
+    q: 'What is the purpose of procedural abstraction?',
+    a: 'Procedural abstraction (using procedures/functions) allows:<br>• Code to be written once and reused many times<br>• Complex operations to be called by a simple name<br>• Programs to be easier to read, debug, and modify<br><br>It also manages complexity by hiding implementation details from the rest of the program.'
+  },
+  {
+    id: 'crd-03', cat: 'crd',
+    q: 'What is iterative development in programming?',
+    a: 'A development approach where a program is built and improved through repeated cycles of:<br><br>1. <strong>Design</strong> — plan a feature or fix<br>2. <strong>Implement</strong> — write the code<br>3. <strong>Test</strong> — check if it works<br>4. <strong>Refine</strong> — improve based on results<br><br>Most real programs are built iteratively, not in a single pass.'
+  },
+  {
+    id: 'crd-04', cat: 'crd',
+    q: 'What is the difference between a syntax error and a logic error?',
+    a: '<strong>Syntax error</strong>: code violates the rules of the language — the program cannot run at all. Example: missing a closing bracket.<br><br><strong>Logic error</strong>: code runs without crashing but produces incorrect output because the algorithm is wrong. These are harder to find.<br><br><span class="note">A third type: <strong>runtime error</strong> — code looks correct but crashes during execution (e.g., dividing by zero).</span>'
+  },
+  {
+    id: 'crd-05', cat: 'crd',
+    q: 'What does it mean for a program to be "correct"?',
+    a: 'A program is correct when it produces the expected output for all valid inputs — not just the test cases the programmer thought of.<br><br>Testing can show the presence of bugs but cannot prove their complete absence. This is why thorough testing (including edge cases) is essential.'
+  }
+];
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+const LS = 'apcs_fc_';
+let currentCat = 'all';
+let deck = [];
+let deckIdx = 0;
+let isFlipped = false;
+
+const CAT_LABELS = {
+  'all': 'All', 'aap-syn': 'AAP: Syntax', 'aap-trace': 'AAP: Tracing',
+  'ioc': 'IOC', 'dat': 'DAT', 'csn': 'CSN', 'crd': 'CRD'
+};
+const CAT_CLASS = {
+  'aap-syn': 'cat-aap-syn', 'aap-trace': 'cat-aap-trace',
+  'ioc': 'cat-ioc', 'dat': 'cat-dat', 'csn': 'cat-csn', 'crd': 'cat-crd', 'all': 'cat-aap-syn'
+};
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  updateCatCounts();
+  selectCat('all');
+  updateOverall();
+});
+
+function getMastered(id) { return localStorage.getItem(LS + 'mastered_' + id) === '1'; }
+function setMastered(id, v) { localStorage.setItem(LS + 'mastered_' + id, v ? '1' : '0'); }
+
+function updateOverall() {
+  const total = CARDS.length;
+  const done = CARDS.filter(c => getMastered(c.id)).length;
+  const pct = Math.round(done / total * 100);
+  document.getElementById('overall-fill').style.width = pct + '%';
+  document.getElementById('overall-label').textContent = done + ' / ' + total + ' mastered';
+}
+
+function updateCatCounts() {
+  const cats = ['all','aap-syn','aap-trace','ioc','dat','csn','crd'];
+  cats.forEach(cat => {
+    const cards = cat === 'all' ? CARDS : CARDS.filter(c => c.cat === cat);
+    const remaining = cards.filter(c => !getMastered(c.id)).length;
+    const el = document.getElementById('cnt-' + cat);
+    if (el) el.textContent = remaining > 0 ? '(' + remaining + ')' : '✓';
+  });
+}
+
+// ─────────────────────────────────────────────
+// CATEGORY SELECTION
+// ─────────────────────────────────────────────
+function selectCat(cat) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  buildDeck();
+}
+
+function buildDeck() {
+  const source = currentCat === 'all' ? CARDS : CARDS.filter(c => c.cat === currentCat);
+  // Unmastered first, then mastered
+  const unmastered = source.filter(c => !getMastered(c.id));
+  const mastered   = source.filter(c =>  getMastered(c.id));
+  deck = [...unmastered, ...mastered];
+  deckIdx = 0;
+  isFlipped = false;
+  renderCard();
+}
+
+function shuffleDeck() {
+  const source = currentCat === 'all' ? CARDS : CARDS.filter(c => c.cat === currentCat);
+  deck = [...source].sort(() => Math.random() - 0.5);
+  deckIdx = 0;
+  isFlipped = false;
+  renderCard();
+}
+
+// ─────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────
+function renderCard() {
+  const area = document.getElementById('card-area');
+  if (deck.length === 0) {
+    area.innerHTML = `<div class="state-card">
+      <div class="state-icon">&#128218;</div>
+      <h2>No cards here</h2>
+      <p>This category has no cards yet.</p>
+      <button class="state-btn" onclick="selectCat('all')">Show all cards</button>
+    </div>`;
+    return;
+  }
+
+  if (deckIdx >= deck.length) {
+    const total = deck.length;
+    const mastered = deck.filter(c => getMastered(c.id)).length;
+    area.innerHTML = `<div class="state-card">
+      <div class="state-icon">&#127881;</div>
+      <h2>Deck complete!</h2>
+      <p>${mastered} of ${total} cards mastered in this session.</p>
+      <button class="state-btn" onclick="resetCategory()" style="margin-bottom:10px;display:block;width:100%">&#128259; Restart deck</button>
+      <button class="state-btn" onclick="shuffleDeck()" style="background:var(--indigo);display:block;width:100%">&#128256; Shuffle &amp; restart</button>
+    </div>`;
+    return;
+  }
+
+  const card = deck[deckIdx];
+  const mastered = getMastered(card.id);
+  const catLabel = CAT_LABELS[card.cat] || card.cat;
+  const catClass = CAT_CLASS[card.cat] || '';
+  const progress = deckIdx + 1;
+  const pct = Math.round(deckIdx / deck.length * 100);
+  const qFormatted = card.q.replace(/\n/g, '<br>').replace(/`([^`]+)`/g, '<code>$1</code>');
+
+  area.innerHTML = `
+    <div class="deck-progress">
+      <div class="deck-bar-wrap"><div class="deck-bar-fill" style="width:${pct}%"></div></div>
+      <span class="deck-label">${progress} / ${deck.length}</span>
+    </div>
+
+    <div class="flip-wrap" onclick="flipCard()" id="flip-wrap">
+      <div class="flip-inner${isFlipped ? ' flipped' : ''}" id="flip-inner">
+        <div class="card-face card-front">
+          <div class="card-cat-label ${catClass}">${catLabel}</div>
+          <div class="card-question">${qFormatted}</div>
+          <div class="card-tap-hint">Tap to reveal &#8595;</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-cat-label ${catClass}">${catLabel} — Answer</div>
+          <div class="card-answer-label">Answer</div>
+          <div class="card-answer">${card.a}</div>
+          ${mastered ? '<div class="note" style="margin-top:10px;color:var(--green);font-style:normal;font-weight:700">&#10003; Mastered</div>' : ''}
+        </div>
+      </div>
+    </div>
+
+    <div class="action-row" id="action-row" style="${isFlipped ? '' : 'visibility:hidden'}">
+      <button class="btn btn-again" onclick="markAgain(event)">&#128257; Review again</button>
+      <button class="btn btn-got" onclick="markGot(event)">&#10003; Got it</button>
+    </div>
+    <div class="action-hint">${isFlipped ? 'Tap card to flip back' : 'Tap card to see answer'}</div>
+  `;
+}
+
+function flipCard() {
+  isFlipped = !isFlipped;
+  const inner = document.getElementById('flip-inner');
+  const actionRow = document.getElementById('action-row');
+  if (inner) inner.classList.toggle('flipped', isFlipped);
+  if (actionRow) actionRow.style.visibility = isFlipped ? 'visible' : 'hidden';
+  const hint = document.querySelector('.action-hint');
+  if (hint) hint.textContent = isFlipped ? 'Tap card to flip back' : 'Tap card to see answer';
+}
+
+function markGot(e) {
+  e.stopPropagation();
+  const card = deck[deckIdx];
+  setMastered(card.id, true);
+  deckIdx++;
+  isFlipped = false;
+  updateCatCounts();
+  updateOverall();
+  renderCard();
+}
+
+function markAgain(e) {
+  e.stopPropagation();
+  const card = deck[deckIdx];
+  setMastered(card.id, false);
+  // Move card to end of deck
+  deck.splice(deckIdx, 1);
+  deck.push(card);
+  isFlipped = false;
+  updateCatCounts();
+  updateOverall();
+  renderCard();
+}
+
+function resetCategory() {
+  // Clear mastered for current category
+  const source = currentCat === 'all' ? CARDS : CARDS.filter(c => c.cat === currentCat);
+  source.forEach(c => setMastered(c.id, false));
+  updateCatCounts();
+  updateOverall();
+  buildDeck();
+}
+</script>
+</body>
+</html>
