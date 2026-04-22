@@ -6,37 +6,59 @@
 <title>AP CSP Flashcards</title>
 <style>
 :root {
-  --teal: #0d9488; --teal-light: #f0fdfa; --teal-dark: #134e4a;
+  --teal: #0d9488; --teal-light: #f0fdfa; --teal-dark: #134e4a; --teal-mid: #99f6e4;
   --indigo: #4f46e5; --indigo-light: #eef2ff;
-  --green: #059669; --green-light: #ecfdf5;
-  --red: #dc2626; --red-light: #fef2f2;
-  --amber: #d97706; --amber-light: #fffbeb;
-  --blue: #2563eb; --blue-light: #eff6ff;
-  --purple: #7c3aed; --purple-light: #f5f3ff;
+  --green: #059669; --green-light: #d1fae5;
+  --red: #dc2626; --red-light: #fee2e2;
+  --amber: #d97706; --amber-light: #fef3c7;
+  --blue: #2563eb; --blue-light: #dbeafe;
+  --purple: #7c3aed; --purple-light: #ede9fe;
   --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
   --gray-400: #9ca3af; --gray-600: #4b5563; --gray-700: #374151; --gray-900: #111827;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--gray-50); color: var(--gray-900); display: flex; flex-direction: column; }
+html { height: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-900);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
 
-/* ── Header ── */
-.app-header { background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%); padding: 14px 16px 10px; color: white; flex-shrink: 0; }
-.app-header h1 { font-size: 17px; font-weight: 700; }
-.app-header p  { font-size: 12px; opacity: 0.75; margin-top: 2px; }
-.overall-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
-.overall-bar-wrap { flex: 1; height: 6px; background: rgba(255,255,255,0.25); border-radius: 3px; overflow: hidden; }
+/* ── Fixed Header ── */
+.app-header {
+  background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%);
+  padding: 12px 16px 10px;
+  color: white;
+  flex-shrink: 0;
+}
+.header-top { display: flex; align-items: baseline; justify-content: space-between; }
+.app-header h1 { font-size: 16px; font-weight: 700; }
+.header-sub { font-size: 12px; opacity: 0.7; }
+.overall-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.overall-bar-wrap { flex: 1; height: 5px; background: rgba(255,255,255,0.25); border-radius: 3px; overflow: hidden; }
 .overall-bar-fill { height: 100%; background: white; border-radius: 3px; transition: width 0.4s; }
-.overall-label { font-size: 12px; opacity: 0.9; white-space: nowrap; }
+.overall-label { font-size: 11px; opacity: 0.85; white-space: nowrap; }
 
 /* ── Category Tabs ── */
-.cat-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 12px 16px 8px; background: white; border-bottom: 1px solid var(--gray-200); flex-shrink: 0; scrollbar-width: none; }
+.cat-scroll {
+  display: flex; gap: 7px; overflow-x: auto; padding: 10px 14px 8px;
+  background: white; border-bottom: 1px solid var(--gray-200);
+  flex-shrink: 0; scrollbar-width: none;
+}
 .cat-scroll::-webkit-scrollbar { display: none; }
-.cat-btn { flex-shrink: 0; padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--gray-200); background: white; font-size: 13px; font-weight: 600; color: var(--gray-600); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; }
+.cat-btn {
+  flex-shrink: 0; padding: 5px 12px; border-radius: 20px;
+  border: 1.5px solid var(--gray-200); background: white;
+  font-size: 12px; font-weight: 600; color: var(--gray-600); cursor: pointer;
+  display: flex; align-items: center; gap: 5px; transition: all 0.15s;
+  white-space: nowrap;
+}
 .cat-btn.active { border-color: transparent; color: white; }
-.cat-btn .cat-count { font-size: 11px; opacity: 0.75; }
-
-/* Category colors */
+.cat-count { font-size: 10px; opacity: 0.8; }
 .cat-btn[data-cat="all"].active       { background: var(--teal); }
 .cat-btn[data-cat="aap-syn"].active   { background: var(--blue); }
 .cat-btn[data-cat="aap-trace"].active { background: var(--indigo); }
@@ -45,870 +67,906 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .cat-btn[data-cat="csn"].active       { background: var(--green); }
 .cat-btn[data-cat="crd"].active       { background: var(--purple); }
 
-/* ── Card Area ── */
-.card-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; overflow: hidden; }
+/* ── Scrollable Question Area ── */
+.question-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px 8px;
+  -webkit-overflow-scrolling: touch;
+}
+.deck-progress { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.deck-bar-wrap { flex: 1; height: 4px; background: var(--gray-200); border-radius: 2px; overflow: hidden; }
+.deck-bar-fill { height: 100%; background: var(--teal); border-radius: 2px; transition: width 0.3s; }
+.deck-label { font-size: 11px; color: var(--gray-600); white-space: nowrap; }
 
-/* ── Flip Card ── */
-.flip-wrap { width: 100%; max-width: 420px; perspective: 1000px; cursor: pointer; }
-.flip-inner { position: relative; width: 100%; transition: transform 0.45s cubic-bezier(.4,0,.2,1); transform-style: preserve-3d; }
-.flip-inner.flipped { transform: rotateY(180deg); }
-.card-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; width: 100%; border-radius: 16px; padding: 28px 24px; min-height: 220px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.10); }
-.card-front { background: white; }
-.card-back  { background: var(--gray-50); border: 2px solid var(--gray-200); position: absolute; top: 0; left: 0; transform: rotateY(180deg); }
-.card-cat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 14px; }
-.card-question { font-size: 18px; font-weight: 700; line-height: 1.4; color: var(--gray-900); }
-.card-tap-hint { font-size: 12px; color: var(--gray-400); margin-top: 16px; text-align: right; }
-.card-answer-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--gray-400); margin-bottom: 10px; }
-.card-answer { font-size: 16px; line-height: 1.55; color: var(--gray-700); }
-.card-answer code, .code-inline { font-family: 'Courier New', monospace; font-size: 14px; background: var(--gray-900); color: #86efac; padding: 2px 6px; border-radius: 4px; display: inline; white-space: nowrap; }
-.card-answer .code-block { font-family: 'Courier New', monospace; font-size: 13px; background: var(--gray-900); color: #86efac; padding: 12px 14px; border-radius: 8px; display: block; white-space: pre; line-height: 1.7; margin: 8px 0; overflow-x: auto; }
-.card-answer .note { font-size: 13px; color: var(--gray-400); margin-top: 8px; font-style: italic; }
+.cat-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+  margin-bottom: 10px; display: block;
+}
+.cat-label.aap-syn   { color: var(--blue); }
+.cat-label.aap-trace { color: var(--indigo); }
+.cat-label.ioc       { color: var(--red); }
+.cat-label.dat       { color: var(--amber); }
+.cat-label.csn       { color: var(--green); }
+.cat-label.crd       { color: var(--purple); }
 
-/* ── Progress within deck ── */
-.deck-progress { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; width: 100%; max-width: 420px; }
-.deck-bar-wrap { flex: 1; height: 5px; background: var(--gray-200); border-radius: 3px; overflow: hidden; }
-.deck-bar-fill { height: 100%; background: var(--teal); border-radius: 3px; transition: width 0.3s; }
-.deck-label { font-size: 12px; color: var(--gray-600); white-space: nowrap; }
+.question-text {
+  font-size: 17px; font-weight: 700; line-height: 1.45;
+  color: var(--gray-900); margin-bottom: 10px;
+}
+.question-code {
+  font-family: 'Courier New', monospace; font-size: 13px;
+  background: var(--gray-900); color: #86efac;
+  padding: 12px 14px; border-radius: 10px;
+  white-space: pre; line-height: 1.75;
+  overflow-x: auto; margin-bottom: 10px;
+  display: block;
+}
+.explanation-box {
+  background: var(--teal-light); border-left: 3px solid var(--teal);
+  border-radius: 6px; padding: 10px 12px;
+  font-size: 13px; color: var(--gray-700); line-height: 1.55;
+  margin-top: 10px;
+}
+.explanation-box .exp-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--teal); margin-bottom: 5px;
+}
 
-/* ── Action Buttons ── */
-.action-row { display: flex; gap: 10px; margin-top: 14px; width: 100%; max-width: 420px; }
-.action-row .btn { flex: 1; padding: 14px; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
-.action-row .btn:active { transform: scale(0.97); }
-.btn-again { background: var(--red-light); color: var(--red); }
-.btn-got   { background: var(--green-light); color: var(--green); }
-.btn-next  { background: var(--indigo-light); color: var(--indigo); width: 100%; }
-.action-hint { font-size: 12px; color: var(--gray-400); text-align: center; margin-top: 10px; width: 100%; max-width: 420px; }
+/* ── Fixed Bottom Choice Area ── */
+.choice-area {
+  flex-shrink: 0;
+  background: white;
+  border-top: 1px solid var(--gray-200);
+  padding: 10px 14px 20px;
+}
+.choice-btn {
+  display: flex; align-items: flex-start; gap: 10px;
+  width: 100%; padding: 10px 12px; margin-bottom: 7px;
+  border: 1.5px solid var(--gray-200); border-radius: 10px;
+  background: white; cursor: pointer; text-align: left;
+  font-size: 13px; color: var(--gray-700); line-height: 1.4;
+  transition: border-color 0.15s, background 0.15s;
+}
+.choice-btn:last-child { margin-bottom: 0; }
+.choice-btn:active { background: var(--gray-50); }
+.choice-letter {
+  font-size: 12px; font-weight: 800; color: var(--gray-400);
+  flex-shrink: 0; width: 18px; padding-top: 1px;
+}
+.choice-btn.correct {
+  border-color: var(--green); background: var(--green-light);
+}
+.choice-btn.correct .choice-letter { color: var(--green); }
+.choice-btn.wrong {
+  border-color: var(--red); background: var(--red-light);
+}
+.choice-btn.wrong .choice-letter { color: var(--red); }
+.choice-btn.disabled { cursor: default; opacity: 0.6; }
+.choice-btn.disabled:active { background: white; }
 
-/* ── Empty / Done states ── */
-.state-card { background: white; border-radius: 16px; padding: 32px 24px; text-align: center; max-width: 380px; width: 100%; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
-.state-card .state-icon { font-size: 48px; margin-bottom: 12px; }
+.next-row { display: flex; gap: 8px; margin-top: 8px; }
+.btn-next { flex: 1; padding: 12px; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; }
+.btn-mastered { background: var(--green-light); color: var(--green); }
+.btn-review   { background: var(--amber-light); color: var(--amber); }
+
+/* ── State screens ── */
+.state-screen {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.state-card {
+  background: white; border-radius: 16px; padding: 32px 24px;
+  text-align: center; max-width: 340px; width: 100%;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+.state-icon { font-size: 48px; margin-bottom: 14px; }
 .state-card h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
 .state-card p  { font-size: 14px; color: var(--gray-600); line-height: 1.5; margin-bottom: 16px; }
-.state-btn { background: var(--teal); color: white; border: none; border-radius: 10px; padding: 12px 24px; font-size: 15px; font-weight: 700; cursor: pointer; }
+.state-btn {
+  display: block; width: 100%; background: var(--teal); color: white;
+  border: none; border-radius: 10px; padding: 12px;
+  font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 8px;
+}
+.state-btn.secondary { background: var(--indigo); }
 
-/* ── Bottom nav ── */
-.bottom-nav { background: white; border-top: 1px solid var(--gray-200); padding: 10px 20px 20px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
-.nav-btn { background: none; border: none; font-size: 12px; color: var(--gray-400); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 8px; }
-.nav-btn .nav-icon { font-size: 20px; }
-.nav-btn.active { color: var(--teal); }
-.shuffle-btn { background: var(--gray-100); border: none; border-radius: 20px; padding: 8px 16px; font-size: 13px; font-weight: 600; color: var(--gray-700); cursor: pointer; }
-.shuffle-btn:active { background: var(--gray-200); }
-
-/* Category colors for labels */
-.cat-aap-syn   { color: var(--blue); }
-.cat-aap-trace { color: var(--indigo); }
-.cat-ioc       { color: var(--red); }
-.cat-dat       { color: var(--amber); }
-.cat-csn       { color: var(--green); }
-.cat-crd       { color: var(--purple); }
+/* ── Shuffle row ── */
+.bottom-bar {
+  flex-shrink: 0; background: white; border-top: 1px solid var(--gray-100);
+  padding: 8px 16px 16px; display: flex; gap: 8px;
+}
+.bar-btn {
+  flex: 1; background: var(--gray-100); border: none; border-radius: 8px;
+  padding: 8px; font-size: 12px; font-weight: 600; color: var(--gray-700); cursor: pointer;
+}
+.bar-btn:active { background: var(--gray-200); }
 </style>
 </head>
 <body>
 
 <header class="app-header">
-  <h1>AP CSP Flashcards</h1>
-  <p>Ajay &nbsp;·&nbsp; Exam: May 14, 2026</p>
+  <div class="header-top">
+    <h1>AP CSP Flashcards</h1>
+    <span class="header-sub">Exam: May 14, 2026</span>
+  </div>
   <div class="overall-row">
     <div class="overall-bar-wrap"><div class="overall-bar-fill" id="overall-fill" style="width:0%"></div></div>
-    <span class="overall-label" id="overall-label">0 mastered</span>
+    <span class="overall-label" id="overall-label">0 / 108 mastered</span>
   </div>
 </header>
 
 <div class="cat-scroll" id="cat-scroll">
-  <button class="cat-btn active" data-cat="all" onclick="selectCat('all')">All <span class="cat-count" id="cnt-all"></span></button>
-  <button class="cat-btn" data-cat="aap-syn" onclick="selectCat('aap-syn')">AAP: Syntax <span class="cat-count" id="cnt-aap-syn"></span></button>
-  <button class="cat-btn" data-cat="aap-trace" onclick="selectCat('aap-trace')">AAP: Tracing <span class="cat-count" id="cnt-aap-trace"></span></button>
-  <button class="cat-btn" data-cat="ioc" onclick="selectCat('ioc')">IOC <span class="cat-count" id="cnt-ioc"></span></button>
-  <button class="cat-btn" data-cat="dat" onclick="selectCat('dat')">DAT <span class="cat-count" id="cnt-dat"></span></button>
-  <button class="cat-btn" data-cat="csn" onclick="selectCat('csn')">CSN <span class="cat-count" id="cnt-csn"></span></button>
-  <button class="cat-btn" data-cat="crd" onclick="selectCat('crd')">CRD <span class="cat-count" id="cnt-crd"></span></button>
+  <button class="cat-btn active" data-cat="all"       onclick="selectCat('all')">All <span class="cat-count" id="cnt-all"></span></button>
+  <button class="cat-btn" data-cat="aap-syn"          onclick="selectCat('aap-syn')">AAP: Syntax <span class="cat-count" id="cnt-aap-syn"></span></button>
+  <button class="cat-btn" data-cat="aap-trace"        onclick="selectCat('aap-trace')">AAP: Tracing <span class="cat-count" id="cnt-aap-trace"></span></button>
+  <button class="cat-btn" data-cat="ioc"              onclick="selectCat('ioc')">IOC <span class="cat-count" id="cnt-ioc"></span></button>
+  <button class="cat-btn" data-cat="dat"              onclick="selectCat('dat')">DAT <span class="cat-count" id="cnt-dat"></span></button>
+  <button class="cat-btn" data-cat="csn"              onclick="selectCat('csn')">CSN <span class="cat-count" id="cnt-csn"></span></button>
+  <button class="cat-btn" data-cat="crd"              onclick="selectCat('crd')">CRD <span class="cat-count" id="cnt-crd"></span></button>
 </div>
 
-<div class="card-area" id="card-area">
-  <!-- Rendered by JS -->
-</div>
-
-<div class="bottom-nav">
-  <button class="shuffle-btn" onclick="shuffleDeck()">&#128256; Shuffle</button>
-  <button class="nav-btn" onclick="resetCategory()">&#128259; Reset</button>
+<div id="main-content" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+  <!-- rendered by JS -->
 </div>
 
 <script>
 // ─────────────────────────────────────────────
 // CARD DATA
 // Sources:
-//   - AP CSP Course and Exam Description (CED), College Board, 2020–present
-//   - Official CB pseudocode reference (Appendix of CED)
-//   - CB Learning Objectives by Big Idea
-// Code tracing problems use official CB pseudocode notation exactly.
+//   CB AP CSP Course and Exam Description (CED), College Board
+//   Official CB pseudocode reference (CED Appendix)
+//   CB Learning Objectives: AAP-1..4, IOC-1..2, DAT-1..2, CSN-1..2, CRD-1..2
+// choices[0] is always the correct answer. Array is shuffled at render time.
+// exp = explanation shown after answering.
+// code = true renders q in a monospace code block.
 // ─────────────────────────────────────────────
 const CARDS = [
 
-  // ══ AAP: PSEUDOCODE SYNTAX ══
-  // Source: CB AP CSP CED Appendix — Pseudocode Reference
-  {
-    id: 'syn-01', cat: 'aap-syn',
-    q: 'What symbol is used for assignment in CB pseudocode?',
-    a: '<code>←</code> (left arrow)<br><br>Example: <code>x ← 5</code> sets x to 5.<br><span class="note">Not = like in most programming languages.</span>'
-  },
-  {
-    id: 'syn-02', cat: 'aap-syn',
-    q: 'What index is the FIRST item of a list in CB pseudocode?',
-    a: '<strong>1</strong> — list indices start at 1, not 0.<br><br>If <code>nums ← [10, 20, 30]</code>, then <code>nums[1]</code> is <strong>10</strong> and <code>nums[3]</code> is <strong>30</strong>.<span class="note">This is the #1 exam trap for students who code in Python or JavaScript.</span>'
-  },
-  {
-    id: 'syn-03', cat: 'aap-syn',
-    q: 'What does <code>REPEAT UNTIL (condition)</code> do?',
-    a: 'Repeats the body of the loop until the condition becomes <strong>TRUE</strong>, then stops.<br><br><span class="note">It checks the condition AFTER each iteration. If the condition is true from the start, the body still runs once.</span>'
-  },
-  {
-    id: 'syn-04', cat: 'aap-syn',
-    q: 'What does <code>APPEND(list, value)</code> do?',
-    a: 'Adds <code>value</code> to the <strong>end</strong> of the list, increasing its length by 1.<br><br>Example: if <code>nums ← [1, 2]</code>, then <code>APPEND(nums, 3)</code> makes <code>nums</code> equal to <code>[1, 2, 3]</code>.'
-  },
-  {
-    id: 'syn-05', cat: 'aap-syn',
-    q: 'What does <code>INSERT(list, i, value)</code> do?',
-    a: 'Inserts <code>value</code> at position <code>i</code>, shifting all items at position ≥ i one spot to the right.<br><br>Example: <code>INSERT([1,2,3], 2, 9)</code> → <code>[1, 9, 2, 3]</code>'
-  },
-  {
-    id: 'syn-06', cat: 'aap-syn',
-    q: 'What does <code>REMOVE(list, i)</code> do?',
-    a: 'Removes the item at position <code>i</code> from the list, shifting all later items one spot to the left. The list becomes one item shorter.'
-  },
-  {
-    id: 'syn-07', cat: 'aap-syn',
-    q: 'What does <code>LENGTH(list)</code> return?',
-    a: 'The number of items currently in the list.<br><br>If <code>nums ← [5, 10, 15, 20]</code>, then <code>LENGTH(nums)</code> returns <strong>4</strong>.<br><br><span class="note">The last item is always at index <code>LENGTH(list)</code>, not <code>LENGTH(list) - 1</code>.</span>'
-  },
-  {
-    id: 'syn-08', cat: 'aap-syn',
-    q: 'What does <code>FOR EACH item IN list { }</code> do?',
-    a: 'Iterates over every element in the list in order. On each pass, <code>item</code> takes the value of the current element.<br><br>After the loop ends, <code>item</code> holds the value of the last element.'
-  },
-  {
-    id: 'syn-09', cat: 'aap-syn',
-    q: 'What do <code>AND</code>, <code>OR</code>, and <code>NOT</code> evaluate to?',
-    a: '<code>a AND b</code> → TRUE only if <strong>both</strong> a and b are true.<br><code>a OR b</code> → TRUE if <strong>at least one</strong> is true.<br><code>NOT a</code> → flips the value (TRUE→FALSE, FALSE→TRUE).<br><br><span class="note">Common trap: <code>NOT (x > 5)</code> is the same as <code>x ≤ 5</code>, not <code>x < 5</code>.</span>'
-  },
-  {
-    id: 'syn-10', cat: 'aap-syn',
-    q: 'What does <code>a MOD b</code> return?',
-    a: 'The <strong>remainder</strong> when a is divided by b.<br><br>Examples: <code>7 MOD 3</code> → 1 &nbsp;·&nbsp; <code>10 MOD 5</code> → 0 &nbsp;·&nbsp; <code>6 MOD 4</code> → 2<br><br><span class="note">Useful for: checking if a number is even (<code>n MOD 2 = 0</code>), cycling through positions.</span>'
-  },
-  {
-    id: 'syn-11', cat: 'aap-syn',
-    q: 'How do you define a procedure in CB pseudocode?',
-    a: '<div class="code-block">PROCEDURE myProc(param1, param2)\n{\n   &lt;instructions&gt;\n   RETURN value\n}</div>Parameters receive the argument values when called. <code>RETURN</code> exits the procedure and sends back a value. <code>RETURN</code> is optional if no value is needed.'
-  },
-  {
-    id: 'syn-12', cat: 'aap-syn',
-    q: 'What is the difference between <code>REPEAT n TIMES</code> and <code>REPEAT UNTIL</code>?',
-    a: '<code>REPEAT n TIMES { }</code> — runs exactly <strong>n</strong> times, regardless of any conditions.<br><br><code>REPEAT UNTIL (cond) { }</code> — runs until <strong>cond is TRUE</strong>. Number of iterations is unknown in advance.<br><br><span class="note">Use REPEAT n TIMES when count is fixed. Use REPEAT UNTIL when you\'re waiting for a condition.</span>'
-  },
+// ══ AAP: PSEUDOCODE SYNTAX ══
+{id:'syn-01',cat:'aap-syn',
+ q:'What symbol is used for assignment in CB pseudocode?',
+ choices:['← (left arrow), e.g. x ← 5','= (equals sign), e.g. x = 5','→ (right arrow), e.g. x → 5',':= (colon-equals), e.g. x := 5'],
+ exp:'CB pseudocode uses ← for assignment — not = like Python/JavaScript. This is a common source of confusion on the exam.'},
 
-  // ══ AAP: CODE TRACING ══
-  // Original problems using official CB pseudocode syntax and testing
-  // the same skill types assessed by CB exam questions (CED, Big Idea 3).
-  {
-    id: 'trace-01', cat: 'aap-trace',
-    q: 'What does this display?\n\nx ← 3\ny ← x * 2 + 1\nDISPLAY(y)',
-    a: '<strong>7</strong><br><br>Step by step: x = 3 → y = 3 × 2 + 1 = 7 → DISPLAY(7)'
-  },
-  {
-    id: 'trace-02', cat: 'aap-trace',
-    q: 'What does this display?\n\nnums ← [4, 8, 15, 16]\nDISPLAY(nums[2])',
-    a: '<strong>8</strong><br><br>List indices start at 1. <code>nums[1]</code> = 4, <code>nums[2]</code> = 8.<span class="note">Common wrong answer: 15 (from 0-based thinking).</span>'
-  },
-  {
-    id: 'trace-03', cat: 'aap-trace',
-    q: 'What does this display?\n\ntotal ← 0\nREPEAT 4 TIMES\n{\n   total ← total + 3\n}\nDISPLAY(total)',
-    a: '<strong>12</strong><br><br>Each iteration adds 3 to total:<br>After 1: 3 &nbsp;·&nbsp; After 2: 6 &nbsp;·&nbsp; After 3: 9 &nbsp;·&nbsp; After 4: 12'
-  },
-  {
-    id: 'trace-04', cat: 'aap-trace',
-    q: 'What does this display?\n\nnums ← [2, 5, 3, 8, 1]\ntotal ← 0\nFOR EACH n IN nums\n{\n   total ← total + n\n}\nDISPLAY(total)',
-    a: '<strong>19</strong><br><br>2 + 5 + 3 + 8 + 1 = 19<br><br><span class="note">FOR EACH visits every element in order from index 1 to LENGTH(list).</span>'
-  },
-  {
-    id: 'trace-05', cat: 'aap-trace',
-    q: 'What does this display?\n\nx ← 10\nIF (x MOD 2 = 0)\n{\n   DISPLAY("even")\n}\nELSE\n{\n   DISPLAY("odd")\n}',
-    a: '<strong>"even"</strong><br><br>10 MOD 2 = 0, so the condition is TRUE → first branch runs.'
-  },
-  {
-    id: 'trace-06', cat: 'aap-trace',
-    q: 'What is the value of nums after these operations?\n\nnums ← [1, 2, 3]\nAPPEND(nums, 4)\nREMOVE(nums, 1)',
-    a: '<strong>[2, 3, 4]</strong><br><br>After APPEND: [1, 2, 3, 4]<br>REMOVE(nums, 1) removes item at index 1, which is 1.<br>Result: [2, 3, 4]'
-  },
-  {
-    id: 'trace-07', cat: 'aap-trace',
-    q: 'What does this display?\n\ncount ← 1\nREPEAT UNTIL (count > 4)\n{\n   count ← count + 1\n}\nDISPLAY(count)',
-    a: '<strong>5</strong><br><br>Loop runs while count ≤ 4:<br>count: 1→2→3→4→5. When count = 5, condition (5 > 4) is TRUE → loop stops.<br>DISPLAY shows 5.'
-  },
-  {
-    id: 'trace-08', cat: 'aap-trace',
-    q: 'What does this procedure return when called as mystery(3, 4)?\n\nPROCEDURE mystery(a, b)\n{\n   result ← a * a + b\n   RETURN result\n}',
-    a: '<strong>13</strong><br><br>a = 3, b = 4<br>result = 3 × 3 + 4 = 9 + 4 = 13<br>RETURN 13'
-  },
-  {
-    id: 'trace-09', cat: 'aap-trace',
-    q: 'What does this display?\n\nx ← 5\nIF (x > 3 AND x < 10)\n{\n   DISPLAY("in range")\n}\nELSE\n{\n   DISPLAY("out of range")\n}',
-    a: '<strong>"in range"</strong><br><br>x = 5: (5 > 3) is TRUE, (5 < 10) is TRUE → TRUE AND TRUE = TRUE → first branch.'
-  },
-  {
-    id: 'trace-10', cat: 'aap-trace',
-    q: 'What does this display?\n\nnums ← [10, 20, 30]\nINSERT(nums, 2, 99)\nDISPLAY(nums[3])',
-    a: '<strong>20</strong><br><br>After INSERT(nums, 2, 99): [10, 99, 20, 30]<br><code>nums[3]</code> is now 20 (it was shifted right).<span class="note">INSERT shifts existing items at position ≥ i to the right.</span>'
-  },
-  {
-    id: 'trace-11', cat: 'aap-trace',
-    q: 'What does this display?\n\nPROCEDURE double(n)\n{\n   RETURN n * 2\n}\n\nresult ← double(double(3))\nDISPLAY(result)',
-    a: '<strong>12</strong><br><br>Inner call: double(3) → 6<br>Outer call: double(6) → 12<br>result = 12'
-  },
-  {
-    id: 'trace-12', cat: 'aap-trace',
-    q: 'What is the largest value stored in max after this runs?\n\nnums ← [4, 9, 2, 7, 1]\nmax ← nums[1]\nFOR EACH n IN nums\n{\n   IF (n > max)\n   {\n      max ← n\n   }\n}',
-    a: '<strong>9</strong><br><br>This is the "find maximum" algorithm. max starts at 4, then updates whenever a larger value is found: 4 → 9. After visiting all elements, max = 9.'
-  },
+{id:'syn-02',cat:'aap-syn',
+ q:'What index refers to the FIRST item of a list in CB pseudocode?',
+ choices:['1 — list indices start at 1','0 — list indices start at 0','-1 — the first item uses a negative index','It depends on how the list was created'],
+ exp:'CB pseudocode is 1-indexed. If nums ← [10,20,30], then nums[1] = 10 and nums[3] = 30. This is the #1 exam trap for anyone who codes in Python or JavaScript.'},
 
-  // ══ IOC: IMPACT OF COMPUTING ══
-  // Source: CB AP CSP CED — Big Idea 5: Impact of Computing (IOC)
-  // Learning objectives: IOC-1, IOC-2
-  {
-    id: 'ioc-01', cat: 'ioc',
-    q: 'What is PII?',
-    a: '<strong>Personally Identifiable Information</strong> — any data that can be used to identify a specific individual.<br><br>Examples: name + address, Social Security number, biometric data (fingerprints), location history, IP address, email address combined with other data.'
-  },
-  {
-    id: 'ioc-02', cat: 'ioc',
-    q: 'Is an IP address considered PII?',
-    a: '<strong>Yes</strong> — an IP address can be used to identify or locate a specific device or individual, so it is considered PII.<br><br><span class="note">CB exam questions often test edge cases of PII. When in doubt: if it can narrow down who or where someone is, it\'s likely PII.</span>'
-  },
-  {
-    id: 'ioc-03', cat: 'ioc',
-    q: 'What is the digital divide?',
-    a: 'The unequal access to computing technology and the internet across different populations.<br><br>Caused by differences in: <strong>income</strong>, <strong>geography</strong> (rural vs urban), <strong>age</strong>, <strong>disability</strong>, education level, and infrastructure availability.'
-  },
-  {
-    id: 'ioc-04', cat: 'ioc',
-    q: 'What is phishing?',
-    a: 'A deceptive technique where an attacker pretends to be a trusted entity (a bank, a website) to trick a user into revealing sensitive information like passwords or credit card numbers.<br><br>Usually delivered via email or fake websites.'
-  },
-  {
-    id: 'ioc-05', cat: 'ioc',
-    q: 'What is the difference between symmetric and asymmetric encryption?',
-    a: '<strong>Symmetric</strong>: the same key is used to both encrypt and decrypt. Faster, but key must be shared securely.<br><br><strong>Asymmetric (public-key)</strong>: a public key encrypts the data; only the matching private key can decrypt it. Used in HTTPS.'
-  },
-  {
-    id: 'ioc-06', cat: 'ioc',
-    q: 'What is algorithmic bias? Give an example.',
-    a: 'When an algorithm produces systematically unfair or discriminatory results, often because it was trained on biased historical data.<br><br>Example: a hiring algorithm trained on past hiring decisions may learn to favor certain demographics, replicating past bias at scale.'
-  },
-  {
-    id: 'ioc-07', cat: 'ioc',
-    q: 'What is the difference between copyright and a Creative Commons license?',
-    a: '<strong>Copyright</strong>: work is protected by default. Others need explicit permission to use, reproduce, or distribute.<br><br><strong>Creative Commons</strong>: creator grants usage rights in advance under specific conditions (e.g., attribution required, no commercial use, no derivatives).<br><br>CC licenses reduce friction for sharing while keeping some protections.'
-  },
-  {
-    id: 'ioc-08', cat: 'ioc',
-    q: 'What is multifactor authentication (MFA)?',
-    a: 'A security method requiring <strong>two or more</strong> forms of verification to access an account:<br><br>1. Something you <strong>know</strong> (password)<br>2. Something you <strong>have</strong> (phone/authenticator app)<br>3. Something you <strong>are</strong> (biometrics)<br><br>MFA significantly reduces the risk of unauthorized access even if a password is compromised.'
-  },
-  {
-    id: 'ioc-09', cat: 'ioc',
-    q: 'What is the difference between malware, ransomware, and a virus?',
-    a: '<strong>Malware</strong>: any malicious software (umbrella term).<br><strong>Virus</strong>: malware that attaches to legitimate files and spreads when those files are shared.<br><strong>Ransomware</strong>: malware that encrypts a victim\'s files and demands payment for the decryption key.'
-  },
-  {
-    id: 'ioc-10', cat: 'ioc',
-    q: 'What is "computing innovation" according to College Board? Does it have to be a program?',
-    a: 'A <strong>computing innovation</strong> is anything that includes a computer or program as an integral part of its function.<br><br>It does <strong>not</strong> have to be a software program — it can be a physical device (smart thermostat), an app, or a system (GPS navigation).<br><br><span class="note">CB tests this definition directly. "Does a computing innovation have to be a program?" — No.</span>'
-  },
-  {
-    id: 'ioc-11', cat: 'ioc',
-    q: 'What is the difference between open-source and proprietary software?',
-    a: '<strong>Open-source</strong>: source code is publicly available; anyone can view, modify, or distribute it (usually under a license like MIT or GPL).<br><br><strong>Proprietary</strong>: source code is private; users may use the software but cannot modify or redistribute it.<br><br>Open-source enables collaboration and transparency; proprietary software often has commercial restrictions.'
-  },
-  {
-    id: 'ioc-12', cat: 'ioc',
-    q: 'Can the same computing innovation have both beneficial and harmful effects?',
-    a: '<strong>Yes</strong> — this is a key CB concept. Nearly every computing innovation has intended benefits AND unintended harmful effects.<br><br>Example: social media enables connection and communication (benefit) but also spreads misinformation and affects mental health (harm).<br><br><span class="note">Exam questions often ask you to identify BOTH a benefit AND a harm of the same technology.</span>'
-  },
+{id:'syn-03',cat:'aap-syn',
+ q:'When does REPEAT UNTIL (condition) stop executing?',
+ choices:['When the condition becomes TRUE','When the condition becomes FALSE','After running the body exactly once if condition starts true','After a fixed number of iterations'],
+ exp:'REPEAT UNTIL stops when condition is TRUE. It checks after each iteration, so the body always runs at least once even if condition is initially true.'},
 
-  // ══ DAT: DATA ══
-  // Source: CB AP CSP CED — Big Idea 2: Data (DAT)
-  // Learning objectives: DAT-1, DAT-2
-  {
-    id: 'dat-01', cat: 'dat',
-    q: 'How many different values can n bits represent?',
-    a: '<strong>2<sup>n</sup></strong> values.<br><br>Examples: 1 bit → 2 values (0, 1) &nbsp;·&nbsp; 2 bits → 4 &nbsp;·&nbsp; 8 bits → 256 &nbsp;·&nbsp; 16 bits → 65,536<br><br><span class="note">Adding 1 bit doubles the number of values you can represent.</span>'
-  },
-  {
-    id: 'dat-02', cat: 'dat',
-    q: 'Convert the decimal number 13 to binary.',
-    a: '<strong>1101</strong><br><br>Method (divide by 2, read remainders bottom-up):<br>13 ÷ 2 = 6 R <strong>1</strong><br>6 ÷ 2 = 3 R <strong>0</strong><br>3 ÷ 2 = 1 R <strong>1</strong><br>1 ÷ 2 = 0 R <strong>1</strong><br>Read upward: <strong>1101</strong><br><br>Check: 8+4+0+1 = 13 ✓'
-  },
-  {
-    id: 'dat-03', cat: 'dat',
-    q: 'What is overflow in data representation?',
-    a: 'Overflow occurs when a calculation produces a number that exceeds the maximum value representable by the available number of bits.<br><br>The result "wraps around" and becomes an incorrect (often very small or negative) value.<br><br>Example: if 8 bits can hold values 0–255, then 255 + 1 overflows to 0.'
-  },
-  {
-    id: 'dat-04', cat: 'dat',
-    q: 'What is the difference between lossless and lossy data compression?',
-    a: '<strong>Lossless</strong>: the exact original data can be perfectly reconstructed after decompression. No data is discarded.<br>Examples: ZIP, PNG, FLAC<br><br><strong>Lossy</strong>: some data is permanently discarded to achieve higher compression. Original cannot be fully recovered.<br>Examples: JPEG, MP3, MP4<br><br><span class="note">Lossy is acceptable when small quality loss is unnoticeable (photos, music). Never use lossy for text or code.</span>'
-  },
-  {
-    id: 'dat-05', cat: 'dat',
-    q: 'What is metadata? Give two examples.',
-    a: 'Metadata is <strong>data about data</strong> — descriptive information attached to a file or message, not the content itself.<br><br>Examples:<br>• A photo\'s metadata: GPS location, camera model, date/time, file size<br>• An email\'s metadata: sender, recipient, timestamp, subject line<br><br><span class="note">Metadata can reveal sensitive information even when the content is private or encrypted.</span>'
-  },
-  {
-    id: 'dat-06', cat: 'dat',
-    q: 'What is the binary value of 10 in decimal?',
-    a: '<strong>1010</strong><br><br>10 = 8 + 2 = 1010 in binary.<br><br>Verify: 1×8 + 0×4 + 1×2 + 0×1 = 8 + 0 + 2 + 0 = 10 ✓'
-  },
-  {
-    id: 'dat-07', cat: 'dat',
-    q: 'What is the difference between correlation and causation in data analysis?',
-    a: '<strong>Correlation</strong>: two variables tend to change together — but one does not necessarily cause the other.<br><br><strong>Causation</strong>: one variable directly causes a change in another.<br><br>Classic example: ice cream sales and drowning rates both rise in summer (correlated), but ice cream does not cause drowning — both are caused by hot weather.<br><br><span class="note">CB questions often ask you to identify whether a claim is correlation or causation.</span>'
-  },
-  {
-    id: 'dat-08', cat: 'dat',
-    q: 'What is "cleaning" data? Why is it important?',
-    a: 'Data cleaning is the process of identifying and correcting errors, inconsistencies, duplicates, or missing values in a dataset before analysis.<br><br>Why it matters: analysis of dirty data produces unreliable or misleading results — "garbage in, garbage out."'
-  },
+{id:'syn-04',cat:'aap-syn',
+ q:'What does APPEND(list, value) do?',
+ choices:['Adds value to the END of the list','Adds value to the BEGINNING of the list','Replaces the LAST item with value','Inserts value at the middle of the list'],
+ exp:'APPEND adds to the end, increasing list length by 1. Example: APPEND([1,2],3) → [1,2,3].'},
 
-  // ══ CSN: COMPUTING SYSTEMS & NETWORKS ══
-  // Source: CB AP CSP CED — Big Idea 4: Computing Systems and Networks (CSN)
-  // Learning objectives: CSN-1, CSN-2
-  {
-    id: 'csn-01', cat: 'csn',
-    q: 'What is a packet in internet communication?',
-    a: 'A small chunk of data that is transmitted independently across a network.<br><br>Large messages are broken into packets, each sent separately (possibly via different routes), and reassembled at the destination.<br><br><span class="note">This is why internet data can still arrive even if some network paths fail — packets reroute around failures.</span>'
-  },
-  {
-    id: 'csn-02', cat: 'csn',
-    q: 'What are the roles of IP and TCP?',
-    a: '<strong>IP (Internet Protocol)</strong>: handles <strong>addressing</strong> — determines the source and destination address and routes packets accordingly.<br><br><strong>TCP (Transmission Control Protocol)</strong>: handles <strong>reliable delivery</strong> — confirms packets arrived, requests re-transmission of lost packets, and reassembles them in order.'
-  },
-  {
-    id: 'csn-03', cat: 'csn',
-    q: 'What does DNS do?',
-    a: '<strong>Domain Name System</strong> — translates human-readable domain names (like google.com) into numerical IP addresses (like 142.250.80.46) that computers use to communicate.<br><br>Without DNS you would have to memorize IP addresses for every website.'
-  },
-  {
-    id: 'csn-04', cat: 'csn',
-    q: 'What is the difference between HTTP and HTTPS?',
-    a: '<strong>HTTP</strong>: HyperText Transfer Protocol — standard protocol for web communication. Data is sent in plain text (unencrypted).<br><br><strong>HTTPS</strong>: HTTP with TLS/SSL encryption added. Data is encrypted between browser and server, preventing eavesdropping and tampering.<br><br>HTTPS is required for any site handling sensitive data (logins, payments).'
-  },
-  {
-    id: 'csn-05', cat: 'csn',
-    q: 'What is fault tolerance, and how does the internet achieve it?',
-    a: 'Fault tolerance is the ability of a system to continue functioning even when parts of it fail.<br><br>The internet achieves it through <strong>redundant paths</strong> — packets can be rerouted through alternate nodes if a path goes down. No single point of failure can bring down the whole network.<br><br><span class="note">This was a deliberate design goal from the ARPANET era.</span>'
-  },
-  {
-    id: 'csn-06', cat: 'csn',
-    q: 'What is the difference between bandwidth and latency?',
-    a: '<strong>Bandwidth</strong>: the maximum amount of data that can be transmitted per second (like the width of a pipe). Higher = more data at once.<br><br><strong>Latency</strong>: the delay between sending and receiving data (like the length of the pipe). Lower = faster response.<br><br><span class="note">High bandwidth does NOT mean low latency. A video call needs both — high bandwidth for quality, low latency for real-time feel.</span>'
-  },
-  {
-    id: 'csn-07', cat: 'csn',
-    q: 'What is the difference between sequential and parallel computing?',
-    a: '<strong>Sequential</strong>: tasks are performed one after another, in order. Only one operation at a time.<br><br><strong>Parallel</strong>: multiple tasks are performed simultaneously across multiple processors or cores.<br><br>Parallel computing can solve problems faster, but only for tasks that can be broken into independent sub-tasks. Tasks that depend on each other must still run sequentially.'
-  },
-  {
-    id: 'csn-08', cat: 'csn',
-    q: 'What does it mean for a problem to be "undecidable"?',
-    a: 'An <strong>undecidable problem</strong> is one for which no algorithm can be written that will always give a correct yes/no answer for every possible input.<br><br>The classic example: the <strong>Halting Problem</strong> — it is impossible to write a program that can determine, for every possible program and input, whether that program will eventually halt or run forever.<br><br><span class="note">Undecidable ≠ hard. It means provably impossible — no computer, no matter how fast, can solve it in general.</span>'
-  },
+{id:'syn-05',cat:'aap-syn',
+ q:'What does INSERT([1,2,3], 2, 99) produce?',
+ choices:['[1, 99, 2, 3] — inserts 99 at position 2, shifting others right','[1, 2, 99, 3] — replaces position 2 with 99','[1, 2, 3, 99] — appends 99 after position 2','[99, 1, 2, 3] — inserts 99 before everything'],
+ exp:'INSERT(list, i, val) inserts val at position i and shifts existing items at i and beyond one spot to the right.'},
 
-  // ══ CRD: CREATIVE DEVELOPMENT ══
-  // Source: CB AP CSP CED — Big Idea 1: Creative Development (CRD)
-  // Learning objectives: CRD-1, CRD-2
-  {
-    id: 'crd-01', cat: 'crd',
-    q: 'What is abstraction in programming? Give an example.',
-    a: 'Abstraction is hiding complexity behind a simpler interface or name, allowing a programmer to use something without needing to understand its internal details.<br><br>Example: calling <code>SORT(list)</code> sorts the list. The programmer doesn\'t need to know HOW the sorting algorithm works — just what it does.'
-  },
-  {
-    id: 'crd-02', cat: 'crd',
-    q: 'What is the purpose of procedural abstraction?',
-    a: 'Procedural abstraction (using procedures/functions) allows:<br>• Code to be written once and reused many times<br>• Complex operations to be called by a simple name<br>• Programs to be easier to read, debug, and modify<br><br>It also manages complexity by hiding implementation details from the rest of the program.'
-  },
-  {
-    id: 'crd-03', cat: 'crd',
-    q: 'What is iterative development in programming?',
-    a: 'A development approach where a program is built and improved through repeated cycles of:<br><br>1. <strong>Design</strong> — plan a feature or fix<br>2. <strong>Implement</strong> — write the code<br>3. <strong>Test</strong> — check if it works<br>4. <strong>Refine</strong> — improve based on results<br><br>Most real programs are built iteratively, not in a single pass.'
-  },
-  {
-    id: 'crd-04', cat: 'crd',
-    q: 'What is the difference between a syntax error and a logic error?',
-    a: '<strong>Syntax error</strong>: code violates the rules of the language — the program cannot run at all. Example: missing a closing bracket.<br><br><strong>Logic error</strong>: code runs without crashing but produces incorrect output because the algorithm is wrong. These are harder to find.<br><br><span class="note">A third type: <strong>runtime error</strong> — code looks correct but crashes during execution (e.g., dividing by zero).</span>'
-  },
-  {
-    id: 'crd-05', cat: 'crd',
-    q: 'What does it mean for a program to be "correct"?',
-    a: 'A program is correct when it produces the expected output for all valid inputs — not just the test cases the programmer thought of.<br><br>Testing can show the presence of bugs but cannot prove their complete absence. This is why thorough testing (including edge cases) is essential.'
-  },
+{id:'syn-06',cat:'aap-syn',
+ q:'What does REMOVE([10,20,30], 2) produce?',
+ choices:['[10, 30] — removes the item at index 2 (value 20)','[10, 20] — removes the last item','[20, 30] — removes the item at index 1','[10, 0, 30] — replaces index 2 with a blank'],
+ exp:'REMOVE(list, i) removes the item at position i and shifts later items left. List becomes one shorter.'},
 
-  // ══ AAP: PSEUDOCODE SYNTAX (additional) ══
-  // Source: CB AP CSP CED Appendix — Pseudocode Reference
-  {
-    id: 'syn-13', cat: 'aap-syn',
-    q: 'What does <code>RANDOM(a, b)</code> return?',
-    a: 'A random integer between <code>a</code> and <code>b</code>, <strong>inclusive</strong> — meaning both a and b are possible results.<br><br>Example: <code>RANDOM(1, 6)</code> simulates rolling a 6-sided die, returning 1, 2, 3, 4, 5, or 6 with equal probability.'
-  },
-  {
-    id: 'syn-14', cat: 'aap-syn',
-    q: 'What is the difference between a parameter and an argument?',
-    a: '<strong>Parameter</strong>: the variable name defined in the procedure header — it\'s a placeholder.<br><br><strong>Argument</strong>: the actual value passed in when the procedure is called.<br><br>Example:<br><code>PROCEDURE double(n)</code> — n is the <em>parameter</em><br><code>double(5)</code> — 5 is the <em>argument</em>; inside the procedure, n = 5'
-  },
-  {
-    id: 'syn-15', cat: 'aap-syn',
-    q: 'How do you access the <em>last</em> element of a list in CB pseudocode?',
-    a: '<code>list[LENGTH(list)]</code><br><br>Since indices start at 1 and go up to LENGTH(list), the last item is always at position LENGTH(list).<br><br><span class="note">Common mistake: using <code>list[LENGTH(list) - 1]</code> (that\'s the second-to-last, which would be correct in 0-based languages).</span>'
-  },
-  {
-    id: 'syn-16', cat: 'aap-syn',
-    q: 'What happens to a variable defined inside a procedure once the procedure finishes?',
-    a: 'Variables defined inside a procedure are <strong>local</strong> — they only exist while the procedure is running. Once it returns, those variables are gone and cannot be accessed from outside the procedure.<br><br><span class="note">Parameters are also local — they don\'t exist outside the procedure.</span>'
-  },
-  {
-    id: 'syn-17', cat: 'aap-syn',
-    q: 'What does a procedure without a <code>RETURN</code> statement do?',
-    a: 'It executes its body and then returns <strong>nothing</strong> — it cannot be used in an expression or assigned to a variable.<br><br>Such procedures are used purely for their side effects (e.g., displaying output, modifying a list).<br><br><span class="note">In CB pseudocode, only procedures with RETURN can be used like: <code>x ← myProc(5)</code></span>'
-  },
-  {
-    id: 'syn-18', cat: 'aap-syn',
-    q: 'What does <code>NOT (x > 5)</code> simplify to?',
-    a: '<code>x ≤ 5</code><br><br>NOT flips the comparison:<br>• NOT (x > 5) → x ≤ 5<br>• NOT (x = 5) → x ≠ 5<br>• NOT (x ≥ 5) → x < 5<br><br><span class="note">Exam questions often ask you to identify the equivalent condition without NOT.</span>'
-  },
-  {
-    id: 'syn-19', cat: 'aap-syn',
-    q: 'What happens if the condition in <code>REPEAT UNTIL</code> is never true?',
-    a: 'The loop runs <strong>forever</strong> — an infinite loop.<br><br>This is a logic error. The programmer must ensure that something inside the loop will eventually make the condition true.<br><br>Example: <code>REPEAT UNTIL (x = 10)</code> will loop forever if x never reaches 10.'
-  },
-  {
-    id: 'syn-20', cat: 'aap-syn',
-    q: 'In CB pseudocode, what does <code>a AND b OR c</code> evaluate — does order matter?',
-    a: '<code>AND</code> has higher precedence than <code>OR</code>, so this is read as <code>(a AND b) OR c</code>.<br><br>It is TRUE if either:<br>• Both a AND b are true, OR<br>• c is true<br><br><span class="note">Use parentheses on the exam to avoid ambiguity — CB questions are usually explicit about grouping.</span>'
-  },
+{id:'syn-07',cat:'aap-syn',
+ q:'What does LENGTH([5, 10, 15, 20]) return?',
+ choices:['4 — the number of items in the list','3 — the index of the last item','20 — the value of the last item','50 — the sum of all items'],
+ exp:'LENGTH returns the count of items. The last item is always at index LENGTH(list), NOT LENGTH(list)-1 (that would be 0-based thinking).'},
 
-  // ══ AAP: CODE TRACING (additional) ══
-  // Original problems using official CB pseudocode syntax (CED Appendix).
-  {
-    id: 'trace-13', cat: 'aap-trace',
-    q: 'What does this display?\n\nnums ← [8, 3, 7, 1, 5]\nmin ← nums[1]\nFOR EACH n IN nums\n{\n   IF (n < min)\n   {\n      min ← n\n   }\n}\nDISPLAY(min)',
-    a: '<strong>1</strong><br><br>This is the "find minimum" algorithm. min starts at 8, then updates when a smaller value is found: 8 → 3 → 1. After all elements, min = 1.'
-  },
-  {
-    id: 'trace-14', cat: 'aap-trace',
-    q: 'What does this display?\n\nnums ← [1, 4, 2, 4, 3, 4]\ncount ← 0\nFOR EACH n IN nums\n{\n   IF (n = 4)\n   {\n      count ← count + 1\n   }\n}\nDISPLAY(count)',
-    a: '<strong>3</strong><br><br>The loop counts how many times 4 appears in the list. It appears at positions 2, 4, and 6 → count = 3.'
-  },
-  {
-    id: 'trace-15', cat: 'aap-trace',
-    q: 'What does this display?\n\nx ← 1\ny ← 2\ntemp ← x\nx ← y\ny ← temp\nDISPLAY(x)\nDISPLAY(y)',
-    a: '<strong>2</strong> then <strong>1</strong><br><br>This is the classic swap using a temp variable:<br>temp = 1, x = 2, y = 1<br><br><span class="note">Without temp, you\'d lose one of the values. This pattern appears frequently on the exam.</span>'
-  },
-  {
-    id: 'trace-16', cat: 'aap-trace',
-    q: 'What does this display?\n\ni ← 1\nresult ← 0\nREPEAT UNTIL (i > 5)\n{\n   result ← result + i\n   i ← i + 1\n}\nDISPLAY(result)',
-    a: '<strong>15</strong><br><br>Sums 1 + 2 + 3 + 4 + 5 = 15. Loop runs while i ≤ 5, stopping when i = 6 (6 > 5 is TRUE).'
-  },
-  {
-    id: 'trace-17', cat: 'aap-trace',
-    q: 'What does this display?\n\nnums ← [2, 4, 6, 8]\ntotal ← 0\nFOR EACH n IN nums\n{\n   IF (n MOD 4 = 0)\n   {\n      total ← total + n\n   }\n}\nDISPLAY(total)',
-    a: '<strong>12</strong><br><br>Checks which values are divisible by 4:<br>2 MOD 4 = 2 (skip) · 4 MOD 4 = 0 (add) · 6 MOD 4 = 2 (skip) · 8 MOD 4 = 0 (add)<br>total = 4 + 8 = 12'
-  },
-  {
-    id: 'trace-18', cat: 'aap-trace',
-    q: 'What is the value of nums after this runs?\n\nnums ← [5, 10, 15]\nAPPEND(nums, 20)\nINSERT(nums, 1, 0)\nREMOVE(nums, 3)',
-    a: '<strong>[0, 5, 20]</strong> — wait, let\'s trace carefully:<br><br>Start: [5, 10, 15]<br>APPEND(nums, 20) → [5, 10, 15, 20]<br>INSERT(nums, 1, 0) → [0, 5, 10, 15, 20]<br>REMOVE(nums, 3) removes index 3 (value 10) → <strong>[0, 5, 15, 20]</strong>'
-  },
-  {
-    id: 'trace-19', cat: 'aap-trace',
-    q: 'What does this display?\n\nPROCEDURE isEven(n)\n{\n   IF (n MOD 2 = 0)\n   {\n      RETURN true\n   }\n   ELSE\n   {\n      RETURN false\n   }\n}\n\nDISPLAY(isEven(7))',
-    a: '<strong>false</strong><br><br>7 MOD 2 = 1, which is not 0, so the ELSE branch runs and returns false.'
-  },
-  {
-    id: 'trace-20', cat: 'aap-trace',
-    q: 'What does this display?\n\nx ← 10\nIF (x > 5 AND x < 8)\n{\n   DISPLAY("A")\n}\nELSE IF (x > 8 AND x < 12)\n{\n   DISPLAY("B")\n}\nELSE\n{\n   DISPLAY("C")\n}',
-    a: '<strong>"B"</strong><br><br>x = 10:<br>First condition: (10 > 5) AND (10 < 8) → TRUE AND FALSE → FALSE<br>Second condition: (10 > 8) AND (10 < 12) → TRUE AND TRUE → TRUE → display "B"'
-  },
-  {
-    id: 'trace-21', cat: 'aap-trace',
-    q: 'What does this display?\n\nPROCEDURE sumList(lst)\n{\n   total ← 0\n   FOR EACH item IN lst\n   {\n      total ← total + item\n   }\n   RETURN total\n}\n\nDISPLAY(sumList([3, 3, 3]))',
-    a: '<strong>9</strong><br><br>The procedure sums all items: 3 + 3 + 3 = 9, then returns 9. DISPLAY shows 9.'
-  },
-  {
-    id: 'trace-22', cat: 'aap-trace',
-    q: 'What does this display?\n\ncount ← 0\nnum ← 32\nREPEAT UNTIL (num = 1)\n{\n   num ← num / 2\n   count ← count + 1\n}\nDISPLAY(count)',
-    a: '<strong>5</strong><br><br>32→16→8→4→2→1 (5 divisions). Each iteration halves num and increments count. Stops when num = 1.'
-  },
+{id:'syn-08',cat:'aap-syn',
+ q:'In FOR EACH item IN list { }, which elements are visited?',
+ choices:['Every element in order from index 1 to LENGTH(list)','Only elements at odd-numbered indices','Elements in reverse order, last to first','Only elements satisfying a built-in condition'],
+ exp:'FOR EACH visits every element once, in order. After the loop, item holds the value of the last element.'},
 
-  // ══ IOC: IMPACT OF COMPUTING (additional) ══
-  // Source: CB AP CSP CED — Big Idea 5 (IOC-1, IOC-2)
-  {
-    id: 'ioc-13', cat: 'ioc',
-    q: 'What is crowdsourcing? Give an example.',
-    a: 'Obtaining input, data, or services from a large group of people (usually via the internet) rather than from a small team or company.<br><br>Examples: Wikipedia (crowd-written encyclopedia), reCAPTCHA (users identify images), Waze (users report traffic), open-source software.<br><br><span class="note">CB frames crowdsourcing as a benefit of computing — it enables tasks that no small group could accomplish alone.</span>'
-  },
-  {
-    id: 'ioc-14', cat: 'ioc',
-    q: 'What is the Internet of Things (IoT)?',
-    a: 'The network of physical devices (beyond traditional computers) that are connected to the internet and can collect and exchange data.<br><br>Examples: smart thermostats, fitness trackers, connected refrigerators, self-driving car sensors, smart city infrastructure.<br><br>IoT creates massive amounts of new data and raises new privacy/security concerns — devices may collect data without users fully realizing it.'
-  },
-  {
-    id: 'ioc-15', cat: 'ioc',
-    q: 'What is a browser cookie? Is it always harmful?',
-    a: 'A small piece of data stored in your browser by a website, used to remember information between visits.<br><br><strong>Beneficial uses</strong>: staying logged in, remembering shopping cart contents, saving preferences.<br><strong>Privacy concern</strong>: third-party tracking cookies can follow users across many websites and build detailed behavioral profiles.<br><br>Not inherently harmful, but raises consent and transparency concerns.'
-  },
-  {
-    id: 'ioc-16', cat: 'ioc',
-    q: 'What is data mining?',
-    a: 'The process of analyzing large datasets to discover patterns, correlations, and insights that weren\'t explicitly known in advance.<br><br>Examples: finding that customers who buy X tend to also buy Y, detecting fraud patterns in credit card transactions.<br><br><strong>Privacy concern</strong>: data mining can reveal sensitive information about individuals — even from data that seems anonymous — through inference and combination.'
-  },
-  {
-    id: 'ioc-17', cat: 'ioc',
-    q: 'What is a distributed denial of service (DDoS) attack?',
-    a: 'An attack that overwhelms a server or network by flooding it with a massive volume of requests simultaneously from many compromised computers (a botnet).<br><br>The server cannot handle legitimate requests and becomes unavailable to real users.<br><br><span class="note">DDoS is different from a regular DoS (denial of service) — DDoS uses many machines, making it harder to block.</span>'
-  },
-  {
-    id: 'ioc-18', cat: 'ioc',
-    q: 'What is a keylogger?',
-    a: 'Malware that secretly records every keystroke a user makes and sends the log to an attacker.<br><br>Used to steal passwords, credit card numbers, and other sensitive information — even without accessing encrypted data, because it captures input before it\'s encrypted.'
-  },
-  {
-    id: 'ioc-19', cat: 'ioc',
-    q: 'What is citizen science? How does computing enable it?',
-    a: 'Scientific research that involves volunteers (non-professional scientists) collecting or analyzing data.<br><br>Computing enables citizen science at scale: apps can collect observations from millions of people worldwide simultaneously — far more data than a small research team could gather.<br><br>Examples: bird migration tracking, galaxy classification (Galaxy Zoo), protein folding (Foldit).'
-  },
-  {
-    id: 'ioc-20', cat: 'ioc',
-    q: 'What is net neutrality?',
-    a: 'The principle that internet service providers (ISPs) should treat all internet traffic equally — not prioritizing, throttling, or blocking specific websites, services, or content.<br><br>Without net neutrality, an ISP could slow down streaming services from competitors or charge more for access to certain sites.<br><br><span class="note">CB frames this as a policy debate around access and equity — not a right/wrong question.</span>'
-  },
-  {
-    id: 'ioc-21', cat: 'ioc',
-    q: 'Give two ways computing has benefited medicine or science.',
-    a: 'Examples (any two):<br>• Genome sequencing: analyzing billions of DNA base pairs to identify disease genes — only possible with computing power<br>• Medical imaging (MRI, CT): computer algorithms enhance and interpret scans<br>• Drug discovery: simulating molecular interactions to find drug candidates faster<br>• Epidemiology: modeling disease spread (e.g., COVID-19 forecasting)<br>• Telescope data analysis: processing petabytes of astronomy data to find exoplanets'
-  },
-  {
-    id: 'ioc-22', cat: 'ioc',
-    q: 'What is a rogue access point (evil twin attack)?',
-    a: 'A fake Wi-Fi hotspot set up by an attacker to mimic a legitimate network (e.g., "Coffee Shop WiFi").<br><br>When users connect, the attacker can intercept all unencrypted traffic — capturing passwords, session tokens, and sensitive data.<br><br>Defense: use HTTPS always, verify network names, avoid public Wi-Fi for sensitive tasks, use a VPN.'
-  },
+{id:'syn-09',cat:'aap-syn',
+ q:'What is the result of: TRUE AND FALSE OR TRUE?',
+ choices:['TRUE — AND binds first: (T AND F)=F, then F OR T=T','FALSE — AND and OR cancel each other','TRUE — OR always overrides AND regardless','FALSE — because the middle value is FALSE'],
+ exp:'AND has higher precedence than OR in CB pseudocode, so this is evaluated as (TRUE AND FALSE) OR TRUE = FALSE OR TRUE = TRUE.'},
 
-  // ══ DAT: DATA (additional) ══
-  // Source: CB AP CSP CED — Big Idea 2 (DAT-1, DAT-2)
-  {
-    id: 'dat-09', cat: 'dat',
-    q: 'Convert binary <strong>1010</strong> to decimal.',
-    a: '<strong>10</strong><br><br>Read right to left (position 0, 1, 2, 3):<br>0 × 1 = 0<br>1 × 2 = 2<br>0 × 4 = 0<br>1 × 8 = 8<br>Total: 8 + 2 = <strong>10</strong>'
-  },
-  {
-    id: 'dat-10', cat: 'dat',
-    q: 'Convert binary <strong>11001</strong> to decimal.',
-    a: '<strong>25</strong><br><br>1×16 + 1×8 + 0×4 + 0×2 + 1×1 = 16 + 8 + 1 = <strong>25</strong>'
-  },
-  {
-    id: 'dat-11', cat: 'dat',
-    q: 'What is run-length encoding? Give an example.',
-    a: 'A simple lossless compression technique that replaces consecutive repeated values with a count and the value.<br><br>Example: <code>AAAABBBCCDDDDDD</code> → <code>4A3B2C6D</code><br><br>Effective when data has long runs of the same value (e.g., simple images with large solid areas). Inefficient for random or varied data.'
-  },
-  {
-    id: 'dat-12', cat: 'dat',
-    q: 'What is the difference between analog and digital data?',
-    a: '<strong>Analog</strong>: continuous values with infinite precision — like sound waves, temperature, or light. Can take any value in a range.<br><br><strong>Digital</strong>: discrete values represented as binary numbers. Computers only process digital data.<br><br>Converting analog to digital (sampling) introduces some information loss — the resolution depends on how many bits are used per sample.'
-  },
-  {
-    id: 'dat-13', cat: 'dat',
-    q: 'Why is binary search faster than linear search? When can you use it?',
-    a: '<strong>Linear search</strong>: checks every element in order — O(n), must check up to all n items.<br><br><strong>Binary search</strong>: compares the middle element and eliminates half the list each step — O(log n). Much faster for large lists.<br><br><strong>Requirement</strong>: the list must be <strong>sorted</strong>. Binary search cannot be used on unsorted data.'
-  },
-  {
-    id: 'dat-14', cat: 'dat',
-    q: 'What is sampling in the context of digitizing audio?',
-    a: 'Measuring the amplitude (height) of a sound wave at regular intervals and storing each measurement as a binary number.<br><br>Higher <strong>sampling rate</strong> = more measurements per second = better audio quality but larger file size.<br>More <strong>bits per sample</strong> = finer amplitude precision = better dynamic range.<br><br>CD quality: 44,100 samples/sec, 16 bits/sample.'
-  },
-  {
-    id: 'dat-15', cat: 'dat',
-    q: 'What is "big data"? What makes it challenging?',
-    a: 'Datasets so large or complex that traditional data processing tools cannot handle them effectively.<br><br>Characterized by the "3 Vs":<br>• <strong>Volume</strong>: massive size (terabytes to petabytes)<br>• <strong>Velocity</strong>: generated at high speed (real-time streams)<br>• <strong>Variety</strong>: many formats (text, images, sensor data)<br><br>Requires distributed computing (many machines working together) to process.'
-  },
-  {
-    id: 'dat-16', cat: 'dat',
-    q: 'How many bits are needed to represent 1,000 unique values?',
-    a: 'At least <strong>10 bits</strong>.<br><br>2<sup>10</sup> = 1,024 ≥ 1,000<br>2<sup>9</sup>  = 512 < 1,000 (not enough)<br><br>General rule: you need ⌈log₂(N)⌉ bits to represent N unique values. Always round <em>up</em>.'
-  },
+{id:'syn-10',cat:'aap-syn',
+ q:'What does 17 MOD 5 return?',
+ choices:['2 — the remainder when 17 is divided by 5','3 — the integer quotient of 17 ÷ 5','3.4 — the decimal result of 17 ÷ 5','0 — because 17 is not evenly divisible by 5'],
+ exp:'MOD returns the remainder. 17 = 3×5 + 2, so 17 MOD 5 = 2. Useful for checking even/odd: n MOD 2 = 0 means even.'},
 
-  // ══ CSN: COMPUTING SYSTEMS & NETWORKS (additional) ══
-  // Source: CB AP CSP CED — Big Idea 4 (CSN-1, CSN-2)
-  {
-    id: 'csn-09', cat: 'csn',
-    q: 'What is the difference between the internet and the World Wide Web?',
-    a: '<strong>Internet</strong>: the global physical network of interconnected computers — the infrastructure (cables, routers, protocols).<br><br><strong>World Wide Web</strong>: a service that runs <em>on top of</em> the internet — web pages and hyperlinks accessed via HTTP/HTTPS using a browser.<br><br>The web is one application of the internet. Email, video calls, and file transfers also use the internet but are not the web.'
-  },
-  {
-    id: 'csn-10', cat: 'csn',
-    q: 'What does a router do?',
-    a: 'A router forwards packets between networks, directing each packet toward its destination based on its IP address.<br><br>Routers read the destination IP, consult a routing table, and send the packet to the next best hop on the path to the destination.<br><br><span class="note">The internet\'s ability to route around failed nodes is possible because routers continuously update their routing tables to find working paths.</span>'
-  },
-  {
-    id: 'csn-11', cat: 'csn',
-    q: 'What is a firewall?',
-    a: 'A security system that monitors and controls incoming and outgoing network traffic based on predetermined rules.<br><br>It acts as a barrier between a trusted internal network and untrusted external networks (like the internet), blocking traffic that matches known threat patterns or doesn\'t meet security rules.<br><br>Can be hardware-based, software-based, or both.'
-  },
-  {
-    id: 'csn-12', cat: 'csn',
-    q: 'What is cloud computing?',
-    a: 'Using remote servers hosted on the internet (instead of local hardware) to store, manage, and process data.<br><br>Benefits: accessible from anywhere, scalable on demand, no hardware maintenance, lower upfront cost.<br><br>Examples: Google Drive, iCloud, AWS, Microsoft Azure.<br><br><span class="note">CB frames cloud computing as enabling new capabilities — especially for individuals and small organizations that couldn\'t afford large computing infrastructure before.</span>'
-  },
-  {
-    id: 'csn-13', cat: 'csn',
-    q: 'What is a VPN (Virtual Private Network)?',
-    a: 'A service that encrypts all traffic between a device and a VPN server, creating a secure "tunnel" over the public internet.<br><br>Benefits:<br>• Hides internet activity from ISPs and local network observers<br>• Masks IP address from websites<br>• Secures traffic on public Wi-Fi<br><br>The VPN server sees the traffic, so trust in the VPN provider matters.'
-  },
-  {
-    id: 'csn-14', cat: 'csn',
-    q: 'What is the difference between a DoS and a DDoS attack on a network?',
-    a: '<strong>DoS (Denial of Service)</strong>: one machine floods a target with traffic to make it unavailable. Easier to block (single source IP).<br><br><strong>DDoS (Distributed DoS)</strong>: many machines (often a botnet of infected computers) simultaneously flood the target. Much harder to defend against because traffic comes from thousands of different IPs.<br><br>Both aim to exhaust server resources so legitimate users cannot connect.'
-  },
-  {
-    id: 'csn-15', cat: 'csn',
-    q: 'What is redundancy in computing systems, and why is it used?',
-    a: 'Redundancy means having duplicate components (extra servers, multiple network paths, backup power) so that if one fails, others continue working.<br><br>Purpose: <strong>fault tolerance</strong> — the system keeps operating despite failures.<br><br>Examples:<br>• Multiple network paths between cities<br>• RAID storage (data copied across multiple drives)<br>• Data centers in multiple geographic regions'
-  },
-  {
-    id: 'csn-16', cat: 'csn',
-    q: 'What is Moore\'s Law, and is it still accurate?',
-    a: 'The observation (by Gordon Moore, 1965) that the number of transistors on a chip roughly <strong>doubles every two years</strong>, leading to exponential growth in computing power at roughly constant cost.<br><br>It held remarkably well for decades, driving the computing revolution.<br><br>Today it is slowing — physical limits of silicon make further miniaturization increasingly difficult and expensive. Alternative approaches (GPUs, parallel processing, new materials) are compensating.'
-  },
+{id:'syn-11',cat:'aap-syn',
+ q:'How do you define a procedure named "add" with parameters x and y?',
+ choices:['PROCEDURE add(x, y) { RETURN x + y }','FUNCTION add(x, y) { RETURN x + y }','DEF add(x, y): return x + y','add(x, y) → { RETURN x + y }'],
+ exp:'CB pseudocode uses PROCEDURE, not FUNCTION or DEF. Parameters are listed in parentheses. RETURN is optional if no value is sent back.'},
 
-  // ══ CRD: CREATIVE DEVELOPMENT (additional) ══
-  // Source: CB AP CSP CED — Big Idea 1 (CRD-1, CRD-2)
-  {
-    id: 'crd-06', cat: 'crd',
-    q: 'What is an API? Why is it useful in program development?',
-    a: 'An <strong>Application Programming Interface</strong> — a set of specifications that allows one program to use the functionality of another without needing to know its internal implementation.<br><br>Why useful: enables reuse of complex functionality (maps, payments, weather data) without rebuilding it. Programs can be composed from existing APIs, reducing development time and errors.<br><br>Example: a weather app uses a weather service API rather than building its own forecasting system.'
-  },
-  {
-    id: 'crd-07', cat: 'crd',
-    q: 'What is a computing artifact?',
-    a: 'Anything created by a human using a computer.<br><br>Examples: programs, images, audio, video, presentations, websites, data visualizations, digital art.<br><br><span class="note">The CB AP CSP Create Performance Task asks students to create a computing artifact (a program). The definition is intentionally broad — it doesn\'t have to be software.</span>'
-  },
-  {
-    id: 'crd-08', cat: 'crd',
-    q: 'What is a software library? How does it support abstraction?',
-    a: 'A collection of pre-written, reusable procedures and functions that a programmer can call without knowing how they are implemented internally.<br><br>It supports <strong>abstraction</strong> by hiding implementation complexity behind a simple interface — the programmer only needs to know what a function does, not how.<br><br>Examples: a math library provides <code>SQRT()</code>, <code>ABS()</code>; a graphics library provides <code>drawCircle()</code>.'
-  },
-  {
-    id: 'crd-09', cat: 'crd',
-    q: 'What is the benefit of collaboration in program development?',
-    a: 'CB identifies collaboration as essential to computing because:<br>• Multiple perspectives catch more bugs and edge cases<br>• Different people bring different skills (design, logic, testing)<br>• Large programs are too complex for one person<br>• Reviewing each other\'s code improves quality<br><br><span class="note">The CB CPT can be developed collaboratively, but each student must independently write their own code section and PPR.</span>'
-  },
-  {
-    id: 'crd-10', cat: 'crd',
-    q: 'What is the purpose of program documentation?',
-    a: 'Documentation explains what code does, why decisions were made, and how to use or modify it.<br><br>Benefits:<br>• Helps other programmers (and your future self) understand the code<br>• Makes debugging easier<br>• Required for professional and team software development<br><br>Forms: inline comments, function descriptions, README files, API docs.'
-  },
-  {
-    id: 'crd-11', cat: 'crd',
-    q: 'What is modularity in program design?',
-    a: 'Breaking a program into smaller, independent, reusable components (modules or procedures), each responsible for one specific task.<br><br>Benefits:<br>• Easier to test and debug (isolate each part)<br>• Easier to modify (change one module without affecting others)<br>• Promotes reuse (a module can be used in multiple programs)<br>• Manages complexity — each piece is small enough to understand'
-  },
-  {
-    id: 'crd-12', cat: 'crd',
-    q: 'What is the difference between a general-purpose and a special-purpose computing device?',
-    a: '<strong>General-purpose</strong>: can run many different programs for many tasks — laptop, smartphone, desktop.<br><br><strong>Special-purpose</strong>: designed and optimized for one specific task — GPS device, calculator, embedded controller in a microwave, ASIC chip for Bitcoin mining.<br><br>Special-purpose devices are typically faster and more efficient for their specific task but cannot do other things.'
-  }
+{id:'syn-12',cat:'aap-syn',
+ q:'Which loop runs an unknown number of times determined by a condition?',
+ choices:['REPEAT UNTIL (condition) — runs until condition is true','REPEAT n TIMES — n can be a variable computed at runtime','FOR EACH item IN list — length is not always known','Both loop types can run an unknown number of times'],
+ exp:'REPEAT n TIMES always runs exactly n times. REPEAT UNTIL runs until the condition becomes TRUE — the count is determined by program state, not set in advance.'},
+
+{id:'syn-13',cat:'aap-syn',
+ q:'What values can RANDOM(1, 4) return?',
+ choices:['1, 2, 3, or 4 — both endpoints are included','1, 2, or 3 — the upper endpoint is excluded','2 or 3 — both endpoints are excluded','Any decimal between 1.0 and 4.0'],
+ exp:'RANDOM(a, b) returns a random integer from a to b, inclusive. RANDOM(1, 6) can return 1, 2, 3, 4, 5, or 6 — simulating a die roll.'},
+
+{id:'syn-14',cat:'aap-syn',
+ q:'In PROCEDURE double(n) called as double(5): which is the parameter, which is the argument?',
+ choices:['n is the parameter (placeholder); 5 is the argument (value passed in)','5 is the parameter; n is the argument','Both n and 5 are parameters','n is the argument; 5 is the variable'],
+ exp:'Parameter = variable name in the procedure definition (a placeholder). Argument = the actual value supplied when calling the procedure.'},
+
+{id:'syn-15',cat:'aap-syn',
+ q:'For a list with 6 items, how do you access the LAST item?',
+ choices:['list[LENGTH(list)] which equals list[6]','list[LENGTH(list)-1] which equals list[5]','list[LENGTH(list)+1] — one past the end','LAST(list) — a built-in function'],
+ exp:'Because CB lists are 1-indexed, the last item is at index LENGTH(list), not LENGTH-1. That\'s the 0-based mistake.'},
+
+{id:'syn-16',cat:'aap-syn',
+ q:'After a procedure finishes, what happens to variables defined inside it?',
+ choices:['They cease to exist — local variables only live during execution','They keep their last value and can be read from outside','They reset to 0 but remain accessible','They permanently overwrite any global variable with the same name'],
+ exp:'Variables defined inside a procedure are local — they are created when the procedure starts and destroyed when it returns. Parameters are also local.'},
+
+{id:'syn-17',cat:'aap-syn',
+ q:'What does a procedure WITHOUT a RETURN statement return?',
+ choices:['Nothing — it cannot be used in an expression or assigned to a variable','0 — the default return value','The last value computed inside the procedure','TRUE — all void procedures return true by default'],
+ exp:'Procedures without RETURN are called for side effects only (e.g., displaying output). You cannot write x ← myProc() if myProc has no RETURN.'},
+
+{id:'syn-18',cat:'aap-syn',
+ q:'What is equivalent to NOT (x > 10)?',
+ choices:['x ≤ 10','x < 10','x ≥ 10','x = 10'],
+ exp:'NOT flips the comparison: NOT(x > 10) means x is NOT greater than 10, which is x ≤ 10. Common trap: it is NOT x < 10.'},
+
+{id:'syn-19',cat:'aap-syn',
+ q:'What happens if the REPEAT UNTIL condition is NEVER true?',
+ choices:['The loop runs forever — an infinite loop (logic error)','The program stops automatically after 1,000 iterations','CB pseudocode raises a runtime error and exits','The loop runs once then stops regardless'],
+ exp:'An always-false REPEAT UNTIL condition creates an infinite loop. The programmer must ensure something inside the loop will eventually make the condition true.'},
+
+{id:'syn-20',cat:'aap-syn',
+ q:'How is "a AND b OR c" interpreted in CB pseudocode?',
+ choices:['(a AND b) OR c — AND has higher precedence than OR','a AND (b OR c) — OR has higher precedence than AND','Left to right: evaluated as ((a AND b) OR c) = (a AND (b OR c)) always','Precedence only applies when NOT is also present'],
+ exp:'AND binds tighter than OR in CB pseudocode. Use parentheses on the exam to avoid ambiguity; CB questions are usually explicit about grouping.'},
+
+// ══ AAP: CODE TRACING ══
+{id:'trace-01',cat:'aap-trace',code:true,
+ q:'x ← 3\ny ← x * 2 + 1\nDISPLAY(y)',
+ choices:['7','6','8','9'],
+ exp:'x = 3, so y = 3×2+1 = 7. DISPLAY shows 7.'},
+
+{id:'trace-02',cat:'aap-trace',code:true,
+ q:'nums ← [4, 8, 15, 16]\nDISPLAY(nums[2])',
+ choices:['8','15 (0-based index 2)','4 (first item)','16 (last item)'],
+ exp:'CB lists are 1-indexed. nums[1]=4, nums[2]=8, nums[3]=15, nums[4]=16. The answer is 8, not 15.'},
+
+{id:'trace-03',cat:'aap-trace',code:true,
+ q:'total ← 0\nREPEAT 4 TIMES\n{\n   total ← total + 3\n}\nDISPLAY(total)',
+ choices:['12','9','15','3'],
+ exp:'Each iteration adds 3: after 1→3, 2→6, 3→9, 4→12. DISPLAY shows 12.'},
+
+{id:'trace-04',cat:'aap-trace',code:true,
+ q:'nums ← [2, 5, 3, 8, 1]\ntotal ← 0\nFOR EACH n IN nums\n{\n   total ← total + n\n}\nDISPLAY(total)',
+ choices:['19','5 (length of list)','8 (largest element)','23'],
+ exp:'2+5+3+8+1 = 19. FOR EACH visits every element once in order.'},
+
+{id:'trace-05',cat:'aap-trace',code:true,
+ q:'x ← 10\nIF (x MOD 2 = 0)\n{\n   DISPLAY("even")\n}\nELSE\n{\n   DISPLAY("odd")\n}',
+ choices:['"even"','"odd"','0','1'],
+ exp:'10 MOD 2 = 0, so condition is TRUE → "even" is displayed.'},
+
+{id:'trace-06',cat:'aap-trace',code:true,
+ q:'nums ← [1, 2, 3]\nAPPEND(nums, 4)\nREMOVE(nums, 1)\n-- What is nums?',
+ choices:['[2, 3, 4]','[1, 2, 3, 4] (forgot REMOVE)','[1, 3, 4] (wrong index removed)','[2, 3, 4, 1]'],
+ exp:'APPEND → [1,2,3,4]. REMOVE(nums,1) removes index 1 (value 1) → [2,3,4].'},
+
+{id:'trace-07',cat:'aap-trace',code:true,
+ q:'count ← 1\nREPEAT UNTIL (count > 4)\n{\n   count ← count + 1\n}\nDISPLAY(count)',
+ choices:['5','4','6','1'],
+ exp:'count goes 1→2→3→4→5. When count=5, (5>4) is TRUE so loop stops. DISPLAY shows 5.'},
+
+{id:'trace-08',cat:'aap-trace',code:true,
+ q:'PROCEDURE mystery(a, b)\n{\n   RETURN a * a + b\n}\nDISPLAY(mystery(3, 4))',
+ choices:['13','7 (a+b)','12 (a×b)','16 (b×b)'],
+ exp:'a=3, b=4. result = 3×3+4 = 9+4 = 13.'},
+
+{id:'trace-09',cat:'aap-trace',code:true,
+ q:'x ← 5\nIF (x > 3 AND x < 10)\n{\n   DISPLAY("A")\n}\nELSE\n{\n   DISPLAY("B")\n}',
+ choices:['"A"','"B"','Nothing is displayed','Error — cannot compare x twice'],
+ exp:'(5>3) is TRUE and (5<10) is TRUE. TRUE AND TRUE = TRUE → "A" is displayed.'},
+
+{id:'trace-10',cat:'aap-trace',code:true,
+ q:'nums ← [10, 20, 30]\nINSERT(nums, 2, 99)\nDISPLAY(nums[3])',
+ choices:['20','99 (the inserted value)','30 (original index 3)','10'],
+ exp:'After INSERT(nums,2,99): [10,99,20,30]. nums[3] is now 20 — it was shifted right.'},
+
+{id:'trace-11',cat:'aap-trace',code:true,
+ q:'PROCEDURE double(n)\n{\n   RETURN n * 2\n}\nresult ← double(double(3))\nDISPLAY(result)',
+ choices:['12','6','9','18'],
+ exp:'Inner call: double(3)=6. Outer call: double(6)=12. DISPLAY shows 12.'},
+
+{id:'trace-12',cat:'aap-trace',code:true,
+ q:'nums ← [4, 9, 2, 7, 1]\nmax ← nums[1]\nFOR EACH n IN nums\n{\n   IF (n > max) { max ← n }\n}\n-- What is max?',
+ choices:['9','4 (starting value)','7 (second largest)','1 (last element)'],
+ exp:'Find-maximum algorithm. max starts at 4, updates to 9 when 9 is visited. Final max = 9.'},
+
+{id:'trace-13',cat:'aap-trace',code:true,
+ q:'nums ← [8, 3, 7, 1, 5]\nmin ← nums[1]\nFOR EACH n IN nums\n{\n   IF (n < min) { min ← n }\n}\nDISPLAY(min)',
+ choices:['1','8 (starting value)','3 (second smallest)','5 (last element)'],
+ exp:'Find-minimum algorithm. min starts at 8, updates to 3, then 1. Final min = 1.'},
+
+{id:'trace-14',cat:'aap-trace',code:true,
+ q:'nums ← [1, 4, 2, 4, 3, 4]\ncount ← 0\nFOR EACH n IN nums\n{\n   IF (n = 4) { count ← count + 1 }\n}\nDISPLAY(count)',
+ choices:['3','2','4 (the target value)','6 (total elements)'],
+ exp:'4 appears at positions 2, 4, and 6 → count = 3.'},
+
+{id:'trace-15',cat:'aap-trace',code:true,
+ q:'x ← 1\ny ← 2\ntemp ← x\nx ← y\ny ← temp\nDISPLAY(x)\nDISPLAY(y)',
+ choices:['2 then 1','1 then 2 (no swap)','1 then 1','2 then 2'],
+ exp:'Classic swap via temp variable. temp=1, x=2, y=1. DISPLAY(x)→2, DISPLAY(y)→1.'},
+
+{id:'trace-16',cat:'aap-trace',code:true,
+ q:'i ← 1\nresult ← 0\nREPEAT UNTIL (i > 5)\n{\n   result ← result + i\n   i ← i + 1\n}\nDISPLAY(result)',
+ choices:['15','10 (1+2+3+4)','21 (1 through 6)','6 (i\'s final value)'],
+ exp:'Sums 1+2+3+4+5 = 15. Loop stops when i=6 (6>5 is TRUE).'},
+
+{id:'trace-17',cat:'aap-trace',code:true,
+ q:'nums ← [2, 4, 6, 8]\ntotal ← 0\nFOR EACH n IN nums\n{\n   IF (n MOD 4 = 0) { total ← total + n }\n}\nDISPLAY(total)',
+ choices:['12','20 (sum of all)','4 (first match only)','8 (last match only)'],
+ exp:'2 MOD 4=2 (skip), 4 MOD 4=0 (add), 6 MOD 4=2 (skip), 8 MOD 4=0 (add). total = 4+8 = 12.'},
+
+{id:'trace-18',cat:'aap-trace',code:true,
+ q:'nums ← [5, 10, 15]\nAPPEND(nums, 20)\nINSERT(nums, 1, 0)\nREMOVE(nums, 3)\n-- What is nums?',
+ choices:['[0, 5, 15, 20]','[0, 5, 10, 20] (wrong remove)','[0, 5, 10, 15, 20] (forgot remove)','[5, 10, 15, 20] (forgot insert)'],
+ exp:'APPEND→[5,10,15,20]. INSERT(1,0)→[0,5,10,15,20]. REMOVE(3) removes index 3 (value 10)→[0,5,15,20].'},
+
+{id:'trace-19',cat:'aap-trace',code:true,
+ q:'PROCEDURE isEven(n)\n{\n   IF (n MOD 2 = 0) { RETURN true }\n   ELSE { RETURN false }\n}\nDISPLAY(isEven(7))',
+ choices:['false','true','1','0'],
+ exp:'7 MOD 2 = 1, not 0, so condition is FALSE → ELSE branch returns false.'},
+
+{id:'trace-20',cat:'aap-trace',code:true,
+ q:'x ← 10\nIF (x > 5 AND x < 8) { DISPLAY("A") }\nELSE IF (x > 8 AND x < 12) { DISPLAY("B") }\nELSE { DISPLAY("C") }',
+ choices:['"B"','"A"','"C"','Nothing — both conditions are false'],
+ exp:'First: (10>5) AND (10<8) = T AND F = FALSE. Second: (10>8) AND (10<12) = T AND T = TRUE → "B".'},
+
+{id:'trace-21',cat:'aap-trace',code:true,
+ q:'PROCEDURE sumList(lst)\n{\n   total ← 0\n   FOR EACH item IN lst { total ← total + item }\n   RETURN total\n}\nDISPLAY(sumList([3, 3, 3]))',
+ choices:['9','3','6','12'],
+ exp:'3+3+3 = 9. RETURN 9. DISPLAY shows 9.'},
+
+{id:'trace-22',cat:'aap-trace',code:true,
+ q:'count ← 0\nnum ← 32\nREPEAT UNTIL (num = 1)\n{\n   num ← num / 2\n   count ← count + 1\n}\nDISPLAY(count)',
+ choices:['5','6','4','32'],
+ exp:'32→16→8→4→2→1 (5 halvings). count = 5.'},
+
+// ══ IOC: IMPACT OF COMPUTING ══
+{id:'ioc-01',cat:'ioc',
+ q:'What is PII?',
+ choices:['Data that can identify a specific individual (name, SSN, IP address, biometrics)','Any data stored digitally, regardless of sensitivity','Only government-issued ID numbers like SSN or passport','Data encrypted by a third party to protect identity'],
+ exp:'PII = Personally Identifiable Information. Any data that can single out or locate an individual counts — including IP addresses, location history, and combinations of seemingly harmless fields.'},
+
+{id:'ioc-02',cat:'ioc',
+ q:'Is an IP address considered PII?',
+ choices:['Yes — it can identify or locate a specific device or individual','No — IP addresses are public and cannot identify individuals','Only if combined with a physical name and address','Only static IP addresses, not dynamic ones'],
+ exp:'Yes. An IP address can identify or geolocate a device, making it PII. CB exam questions test edge cases like this.'},
+
+{id:'ioc-03',cat:'ioc',
+ q:'What is the digital divide?',
+ choices:['Unequal access to technology due to income, geography, age, or disability','The gap between analog and digital technology','Speed difference between wired and wireless connections','The difference between the number of computers and number of users'],
+ exp:'The digital divide describes how access to computing and the internet is not equal across populations — driven by economic, geographic, and social factors.'},
+
+{id:'ioc-04',cat:'ioc',
+ q:'What is phishing?',
+ choices:['Deceiving users into revealing sensitive info by impersonating a trusted entity','Software that intercepts network traffic to capture passwords','Malware that encrypts files and demands ransom','Flooding a server with requests to make it unavailable'],
+ exp:'Phishing uses social engineering — fake emails, websites, or messages — to trick users. It does not require exploiting software vulnerabilities.'},
+
+{id:'ioc-05',cat:'ioc',
+ q:'What is the key difference between symmetric and asymmetric encryption?',
+ choices:['Symmetric: one shared key for both sides; asymmetric: public key encrypts, private key decrypts','Symmetric is slower and less secure; asymmetric uses a single shared key','Both use the same key — only key length differs','Asymmetric is for local files; symmetric is for internet traffic'],
+ exp:'HTTPS uses asymmetric encryption to exchange keys, then symmetric for the session. Asymmetric is slower but solves the key-sharing problem.'},
+
+{id:'ioc-06',cat:'ioc',
+ q:'What is algorithmic bias?',
+ choices:['Unfair results from an algorithm trained on historically biased data','Intentional discrimination programmed by a malicious developer','Random errors introduced by hardware imperfections','Slower performance when processing data from certain groups'],
+ exp:'Bias enters through training data that reflects historical inequities. The algorithm learns and then amplifies those patterns at scale — often unintentionally.'},
+
+{id:'ioc-07',cat:'ioc',
+ q:'How does a Creative Commons license differ from standard copyright?',
+ choices:['Copyright restricts use by default; CC grants usage rights in advance under specified conditions','Creative Commons is more restrictive than standard copyright','Both require explicit written permission before any use','CC applies only to government-produced works'],
+ exp:'CC licenses let creators specify in advance how their work can be used (attribution required, no commercial use, etc.). Standard copyright restricts all use unless permission is granted.'},
+
+{id:'ioc-08',cat:'ioc',
+ q:'What is multifactor authentication (MFA)?',
+ choices:['Verification requiring 2+ factors: something you know, have, or are','A very long password (12+ characters) with special characters','Using two different passwords for the same account','Changing your password every 30 days automatically'],
+ exp:'MFA combines: something you know (password), something you have (phone/token), something you are (biometrics). Compromising one factor is not enough.'},
+
+{id:'ioc-09',cat:'ioc',
+ q:'What is the correct relationship among malware, virus, and ransomware?',
+ choices:['Malware = broad term; virus = self-replicating; ransomware = encrypts files for ransom','Ransomware is another name for a virus; malware only refers to spyware','Viruses encrypt files; ransomware spreads via email attachments','All three are interchangeable terms for the same threat'],
+ exp:'Malware is the umbrella term for all malicious software. Viruses and ransomware are specific types of malware.'},
+
+{id:'ioc-10',cat:'ioc',
+ q:'According to CB, does a computing innovation have to be a software program?',
+ choices:['No — it can be any device, app, or system where a program is an integral component','Yes — only software applications count as computing innovations','Yes — only innovations distributed through a recognized app store','No — but it must replace a previously manual task'],
+ exp:'CB\'s definition is intentionally broad. A smart thermostat, GPS device, or medical imaging system all qualify as computing innovations.'},
+
+{id:'ioc-11',cat:'ioc',
+ q:'What is the key difference between open-source and proprietary software?',
+ choices:['Open-source: public code, freely modifiable; proprietary: private code, restricted use','Open-source is always free to use commercially without restriction','Proprietary software has viewable but non-modifiable code','Open-source requires a paid license; proprietary is always free'],
+ exp:'Open-source enables transparency, collaboration, and community improvement. Proprietary protects trade secrets. Many open-source licenses (GPL, MIT) still impose some conditions.'},
+
+{id:'ioc-12',cat:'ioc',
+ q:'Can the same computing innovation have both beneficial AND harmful effects?',
+ choices:['Yes — nearly every innovation has both intended benefits and unintended harms','No — CB treats benefits and harms as mutually exclusive','Only innovations from private companies can have harmful effects','Harms only occur when an innovation is used illegally'],
+ exp:'This is a core CB concept. Exam questions often ask you to identify one benefit AND one potential harm of the same technology.'},
+
+{id:'ioc-13',cat:'ioc',
+ q:'What is crowdsourcing?',
+ choices:['Obtaining input, data, or work from a large public group via the internet','Hiring freelance programmers to build software faster','Distributing processing across many computers simultaneously','Collecting user data without their explicit consent'],
+ exp:'Examples: Wikipedia, reCAPTCHA, Waze traffic reports, open-source software. CB frames it as computing enabling scale that no small team could achieve.'},
+
+{id:'ioc-14',cat:'ioc',
+ q:'What is the Internet of Things (IoT)?',
+ choices:['Physical devices beyond computers connected to the internet to collect and share data','The physical cables and servers that form the internet backbone','A network of websites that automatically share data with each other','Software that simulates physical device behavior online'],
+ exp:'IoT includes smart thermostats, fitness trackers, connected appliances, and city infrastructure. It generates massive data and raises new privacy/security concerns.'},
+
+{id:'ioc-15',cat:'ioc',
+ q:'What are browser cookies, and are they always harmful?',
+ choices:['Small data files websites store to remember info between visits — useful but can enable tracking','Malicious programs installed automatically when visiting websites','Encrypted records of a user\'s passwords stored by the browser','Temporary files that auto-delete when the browser closes'],
+ exp:'Cookies are not inherently harmful. First-party cookies are useful (staying logged in). Third-party tracking cookies raise privacy concerns by following users across sites.'},
+
+{id:'ioc-16',cat:'ioc',
+ q:'What is data mining?',
+ choices:['Analyzing large datasets to discover patterns not explicitly known in advance','Illegally copying data from another company\'s servers','Manually reviewing spreadsheets to find calculation errors','Compressing data to reduce storage before archiving'],
+ exp:'Data mining can reveal sensitive inferences about individuals even from data that seems anonymous — a key privacy concern CB tests.'},
+
+{id:'ioc-17',cat:'ioc',
+ q:'What is a DDoS attack?',
+ choices:['Many compromised machines simultaneously flood a target, making it unavailable','One machine repeatedly guesses passwords until one works','Malware that encrypts files across a distributed network','A virus that spreads machine-to-machine via email attachments'],
+ exp:'DDoS = Distributed Denial of Service. A botnet of infected computers sends traffic from thousands of IPs simultaneously, making it hard to block.'},
+
+{id:'ioc-18',cat:'ioc',
+ q:'What is a keylogger?',
+ choices:['Malware that secretly records every keystroke to steal passwords and sensitive data','Software that monitors websites visited and reports to an employer','Hardware that measures typing speed for ergonomic purposes','A phishing tool that creates fake login screens'],
+ exp:'Keyloggers capture input before it\'s encrypted — so even secure HTTPS connections don\'t protect against them if the device is already compromised.'},
+
+{id:'ioc-19',cat:'ioc',
+ q:'What is citizen science, and how does computing enable it?',
+ choices:['Volunteers collect or analyze scientific data at scale — computing enables millions of contributors','Research conducted only by government-funded institutions','Science education programs using computing in K-12 schools','Studies using computer simulations instead of real experiments'],
+ exp:'Examples: Galaxy Zoo (galaxy classification), Foldit (protein folding), bird migration tracking. Computing enables scale no small research team could achieve.'},
+
+{id:'ioc-20',cat:'ioc',
+ q:'What is net neutrality?',
+ choices:['ISPs must treat all internet traffic equally — no prioritizing, throttling, or blocking','A law requiring all websites to load at the same speed','The standard ensuring packets arrive in the correct order','Policy requiring free internet service for low-income households'],
+ exp:'Without net neutrality, an ISP could slow competitors\' streaming services or charge more for certain content. CB frames this as a policy debate around access and equity.'},
+
+{id:'ioc-21',cat:'ioc',
+ q:'Which best describes how computing has benefited medicine and science?',
+ choices:['Genome sequencing, medical imaging analysis, drug simulation, and disease modeling','Replacing all lab experiments with computer-generated results','Using computers only for administrative scheduling and billing','Robots that perform surgery without any human involvement'],
+ exp:'Computing has dramatically accelerated scientific research — from processing telescope data to modeling protein folding — enabling discoveries impossible without computing power.'},
+
+{id:'ioc-22',cat:'ioc',
+ q:'What is a rogue access point (evil twin) attack?',
+ choices:['A fake Wi-Fi hotspot that intercepts traffic from users who connect to it','A legitimate router misconfigured with an incorrect password','A wireless access point operating outside its licensed frequency range','A government surveillance network disguised as public Wi-Fi'],
+ exp:'Defense: always use HTTPS, verify network names carefully, avoid public Wi-Fi for sensitive tasks, use a VPN on public networks.'},
+
+// ══ DAT: DATA ══
+{id:'dat-01',cat:'dat',
+ q:'How many different values can n bits represent?',
+ choices:['2^n — each additional bit doubles the count','n×2 — scales linearly with bits','n^2 — squaring the bit count','2×n+1 — accounting for zero'],
+ exp:'1 bit→2 values, 2 bits→4, 8 bits→256, 16 bits→65,536. Adding 1 bit always doubles capacity.'},
+
+{id:'dat-02',cat:'dat',
+ q:'What is 13 in binary?',
+ choices:['1101','1011','1110','1001'],
+ exp:'13 = 8+4+1 = 1101. Check: 1×8 + 1×4 + 0×2 + 1×1 = 13 ✓'},
+
+{id:'dat-03',cat:'dat',
+ q:'What is overflow in data representation?',
+ choices:['A number exceeds available bits, causing an incorrect wrap-around value','A program uses more memory than the computer has available','A network sends more data than its bandwidth allows','A list has more items than the programmer expected'],
+ exp:'Example: if 8 bits hold 0–255, then 255+1 overflows to 0. Overflow produces silently wrong results — a common source of software bugs.'},
+
+{id:'dat-04',cat:'dat',
+ q:'What is the key difference between lossless and lossy compression?',
+ choices:['Lossless preserves all data (ZIP, PNG); lossy permanently discards some (JPEG, MP3)','Lossless is for images only; lossy is for text files','Both lose some data — lossless just loses less','Lossy is reversible with the right decompression key'],
+ exp:'Lossless: exact original can be reconstructed. Lossy: some data is gone forever. Use lossless for text/code; lossy is acceptable for media where small quality loss is unnoticeable.'},
+
+{id:'dat-05',cat:'dat',
+ q:'What is metadata? Give an example.',
+ choices:['Data about data — e.g. a photo\'s GPS location, creation time, and file size','The actual content of a file (pixels in an image, text in a document)','Encrypted data protecting file contents from unauthorized access','Error logs generated by a program for debugging purposes'],
+ exp:'Metadata can reveal sensitive information even when content is private. A photo\'s metadata can expose location, device, and time — without viewing the photo itself.'},
+
+{id:'dat-06',cat:'dat',
+ q:'What is 10 in binary?',
+ choices:['1010','1100','0110','1001'],
+ exp:'10 = 8+2 = 1010. Check: 1×8+0×4+1×2+0×1 = 10 ✓'},
+
+{id:'dat-07',cat:'dat',
+ q:'What is the difference between correlation and causation?',
+ choices:['Correlation: variables change together; causation: one directly causes the other','Correlation always implies causation with a large enough sample size','Causation means two variables appear in the same dataset','They are the same concept, measured differently'],
+ exp:'Classic example: ice cream sales and drowning both rise in summer (correlated) but ice cream doesn\'t cause drowning — hot weather causes both. CB questions test this directly.'},
+
+{id:'dat-08',cat:'dat',
+ q:'What is data cleaning and why does it matter?',
+ choices:['Fixing errors, duplicates, and missing values in a dataset before analysis — "garbage in, garbage out"','Reducing file size by removing whitespace before storage','Encrypting sensitive fields to meet privacy regulations','Visualizing data to identify trends before storing it'],
+ exp:'Dirty data produces unreliable analysis results. Data cleaning is a prerequisite for meaningful insights from any dataset.'},
+
+{id:'dat-09',cat:'dat',
+ q:'What is binary 1010 in decimal?',
+ choices:['10','5 (1+0+1+0)','12','6'],
+ exp:'1×8 + 0×4 + 1×2 + 0×1 = 8+2 = 10.'},
+
+{id:'dat-10',cat:'dat',
+ q:'What is binary 11001 in decimal?',
+ choices:['25','19','9','28'],
+ exp:'1×16 + 1×8 + 0×4 + 0×2 + 1×1 = 16+8+1 = 25.'},
+
+{id:'dat-11',cat:'dat',
+ q:'What is run-length encoding?',
+ choices:['A lossless technique replacing consecutive repeated values with count+value (AAAAB → 4A1B)','Removing least-used characters from a file to reduce size (lossy)','Dividing a file into blocks and storing only differences between blocks','Converting data to binary before storing to reduce size'],
+ exp:'Run-length encoding is effective when data has long runs of the same value (simple images, text). Inefficient for random data. It is lossless — original is perfectly recoverable.'},
+
+{id:'dat-12',cat:'dat',
+ q:'What is the difference between analog and digital data?',
+ choices:['Analog = continuous values; digital = discrete binary values; conversion loses some precision','Analog is stored as floating-point; digital as integers in computers','Digital is more accurate because it uses more decimal places','They are interchangeable terms for non-compressed data'],
+ exp:'Sound waves are analog. Digitizing samples the wave at intervals and stores each as binary — higher sampling rate and bit depth = better quality but larger file.'},
+
+{id:'dat-13',cat:'dat',
+ q:'Why is binary search faster than linear search, and when can you use it?',
+ choices:['Binary search is O(log n) but requires a sorted list; linear search is O(n), works on any list','Binary search works on any list; linear requires sorting','Both have the same speed on sorted lists','Linear is faster because it only needs one pass'],
+ exp:'Binary search eliminates half the remaining elements each step. Requires sorted data. Linear search checks each element one by one — slower but works on unsorted data.'},
+
+{id:'dat-14',cat:'dat',
+ q:'What is audio sampling?',
+ choices:['Measuring sound wave amplitude at regular intervals and storing as binary numbers','Converting audio frequencies to visual waveforms for storage','Removing inaudible frequencies to reduce file size (lossy)','Splitting audio into equal chunks for parallel processing'],
+ exp:'Higher sampling rate (more measurements/second) and more bits/sample = better quality, larger file. CD quality: 44,100 samples/sec, 16 bits/sample.'},
+
+{id:'dat-15',cat:'dat',
+ q:'What characterizes "big data"?',
+ choices:['Volume (massive size), Velocity (high-speed generation), Variety (many formats) — too large for traditional tools','Any dataset larger than 1 GB stored on a cloud server','Data generated exclusively by IoT devices in real time','A statistical term for datasets with more than 1 million rows'],
+ exp:'Big data requires distributed computing (many machines working together). Examples: social media streams, genomic databases, sensor networks.'},
+
+{id:'dat-16',cat:'dat',
+ q:'How many bits are needed to represent 1,000 unique values?',
+ choices:['10 bits — because 2^10 = 1,024 ≥ 1,000 (2^9 = 512 is not enough)','9 bits — because 9 × 100 ≈ 1,000','8 bits — one byte is the standard unit','1,000 bits — one bit per value'],
+ exp:'Always round up: ⌈log₂(N)⌉ bits needed. 2^9=512 < 1000, so 9 bits is insufficient. 2^10=1024 ≥ 1000, so 10 bits works.'},
+
+// ══ CSN: COMPUTING SYSTEMS & NETWORKS ══
+{id:'csn-01',cat:'csn',
+ q:'What is a packet in internet communication?',
+ choices:['A small chunk of data transmitted independently, routed separately, and reassembled at destination','A complete file sent as a single unit across a network','A browser request asking a web server for a page','A bundle of cables connecting two routers'],
+ exp:'Packets can take different routes and arrive out of order — TCP reassembles them. This design allows the internet to route around failed nodes.'},
+
+{id:'csn-02',cat:'csn',
+ q:'What are the distinct roles of IP and TCP?',
+ choices:['IP handles addressing/routing; TCP ensures reliable delivery (confirms receipt, re-sends lost packets)','IP ensures reliable delivery; TCP handles addressing','Both handle addressing — they\'re redundant protocols','TCP splits data into packets; IP reassembles them at the destination'],
+ exp:'IP gets packets to the right address. TCP ensures they all arrive and are in order. Together they form the foundational internet protocol suite.'},
+
+{id:'csn-03',cat:'csn',
+ q:'What does DNS do?',
+ choices:['Translates domain names (google.com) into IP addresses computers use to communicate','Encrypts web traffic between browser and server','Routes packets along the fastest available path','Verifies website identity using a digital certificate'],
+ exp:'Without DNS you\'d memorize IP addresses for every website. DNS is like the internet\'s phone book.'},
+
+{id:'csn-04',cat:'csn',
+ q:'What is the difference between HTTP and HTTPS?',
+ choices:['HTTPS adds TLS/SSL encryption to HTTP, protecting data from eavesdropping','HTTPS is faster because it uses fewer packets','HTTP is more secure because it uses a different port','HTTPS requires a login; HTTP is publicly accessible'],
+ exp:'HTTPS encrypts the connection using TLS. Without it, anyone on the same network can read your traffic. Required for any site handling passwords or payments.'},
+
+{id:'csn-05',cat:'csn',
+ q:'What is fault tolerance, and how does the internet achieve it?',
+ choices:['Continuing to operate despite failures — achieved via redundant paths that route around failed nodes','Detecting and correcting errors in transmitted data before delivery','Limiting devices that can connect simultaneously to prevent overload','Automatically restarting servers when they crash'],
+ exp:'The internet\'s packet-switched design with multiple redundant paths was a deliberate fault-tolerance choice from the ARPANET era. No single point of failure can bring down the whole network.'},
+
+{id:'csn-06',cat:'csn',
+ q:'What is the difference between bandwidth and latency?',
+ choices:['Bandwidth = max data per second (capacity); latency = delay; high bandwidth ≠ low latency','Bandwidth measures delay; latency measures max throughput','They\'re the same — high bandwidth always means low latency','Latency only matters for wired; bandwidth only for wireless'],
+ exp:'A video call needs high bandwidth (quality) AND low latency (real-time feel). A large file download needs bandwidth but can tolerate high latency.'},
+
+{id:'csn-07',cat:'csn',
+ q:'What is the difference between sequential and parallel computing?',
+ choices:['Sequential: one operation at a time; parallel: multiple processors run tasks simultaneously','Sequential uses multiple cores; parallel uses only one','Parallel is always faster than sequential for any task','Sequential is obsolete — all modern computers are fully parallel'],
+ exp:'Parallel computing speeds up tasks that can be split into independent sub-tasks. Tasks with dependencies (step B needs step A\'s result) must still run sequentially — this limits the speedup.'},
+
+{id:'csn-08',cat:'csn',
+ q:'What is an undecidable problem?',
+ choices:['A problem for which no algorithm can always give a correct yes/no answer for every input','A problem too computationally expensive to solve in reasonable time','A problem requiring quantum computers to solve','A problem that hasn\'t been solved yet but theoretically could be'],
+ exp:'The classic example: the Halting Problem. It\'s provably impossible to write a program that correctly determines for every program+input whether it will halt or run forever. Undecidable ≠ just hard.'},
+
+{id:'csn-09',cat:'csn',
+ q:'What is the difference between the internet and the World Wide Web?',
+ choices:['Internet = the physical network infrastructure; WWW = web pages/hyperlinks running on top of it','They are synonyms — "internet" and "World Wide Web" mean the same thing','The WWW is the infrastructure; the internet is the browser software','The internet is a subset of the WWW'],
+ exp:'Email, video calls, and file transfers also use the internet but are not the web. The web is just one application that runs on the internet.'},
+
+{id:'csn-10',cat:'csn',
+ q:'What does a router do?',
+ choices:['Forwards packets between networks toward their destination based on IP addresses','Translates domain names to IP addresses for local devices','Encrypts all traffic between a local network and the internet','Stores copies of websites to speed up loading (caching)'],
+ exp:'Routers read destination IP addresses, consult routing tables, and forward packets to the next best hop. Multiple routers cooperate to deliver packets across the internet.'},
+
+{id:'csn-11',cat:'csn',
+ q:'What is a firewall?',
+ choices:['Monitors and filters network traffic based on security rules to block threats','A device that boosts Wi-Fi signal strength in large buildings','Software that encrypts all data sent over a network','A backup system that copies files when the primary server fails'],
+ exp:'Firewalls can be hardware, software, or both. They block traffic matching known threat patterns or that violates defined rules (e.g., block all incoming connections on port X).'},
+
+{id:'csn-12',cat:'csn',
+ q:'What is cloud computing?',
+ choices:['Using remote internet-hosted servers instead of local hardware for storage and processing','Storing data across many local devices in a distributed network','Running software offline that syncs to the internet only when connected','A network topology where all devices connect to a central hub'],
+ exp:'Cloud computing enables individuals and small organizations to access computing power previously requiring expensive infrastructure. Examples: Google Drive, AWS, iCloud.'},
+
+{id:'csn-13',cat:'csn',
+ q:'What does a VPN do?',
+ choices:['Encrypts all traffic between a device and a VPN server, hiding activity and masking IP address','Speeds up connections by caching frequently visited sites','Blocks all incoming connections from foreign IP addresses','Translates IP addresses across different network types'],
+ exp:'VPNs are useful on public Wi-Fi (encrypts traffic from local eavesdroppers) and for masking IP from websites. The VPN server itself can see your traffic, so provider trust matters.'},
+
+{id:'csn-14',cat:'csn',
+ q:'What is the key difference between a DoS and a DDoS attack?',
+ choices:['DoS = one machine floods a target; DDoS = many machines (botnet) flood simultaneously','DDoS is less severe because traffic is spread across more machines','DoS and DDoS are identical — "distributed" refers to where data is stored','DDoS targets software; DoS targets hardware'],
+ exp:'DDoS is harder to defend against because traffic comes from thousands of different IPs — blocking one source doesn\'t stop the attack.'},
+
+{id:'csn-15',cat:'csn',
+ q:'What is redundancy in computing systems?',
+ choices:['Duplicate components (extra paths, servers, drives) so failures don\'t stop the system','Removing unused code from software to improve performance','Compressing data to reduce storage across multiple servers','Automatically checking data for errors after every transmission'],
+ exp:'Redundancy enables fault tolerance. Examples: RAID drives (data on multiple disks), multiple data center locations, redundant network paths between cities.'},
+
+{id:'csn-16',cat:'csn',
+ q:'What does Moore\'s Law state?',
+ choices:['Transistor count on a chip doubles roughly every 2 years, driving exponential growth in computing power','Internet bandwidth doubles every 18 months as fiber improves','Software complexity doubles every 2 years as languages evolve','Hardware cost doubles every 2 years due to manufacturing complexity'],
+ exp:'Moore\'s Law held for decades, driving the computing revolution. Today it\'s slowing due to physical limits of silicon. GPUs, parallel processing, and new materials are compensating.'},
+
+// ══ CRD: CREATIVE DEVELOPMENT ══
+{id:'crd-01',cat:'crd',
+ q:'What is abstraction in programming?',
+ choices:['Hiding implementation complexity behind a simpler interface or name','Translating source code into machine code for execution','Adding comments to explain every line of code','Dividing a program into equal-sized functions for load balancing'],
+ exp:'Example: calling SORT(list) sorts the list without knowing the internal algorithm. The complexity is hidden — you only need to know what it does, not how.'},
+
+{id:'crd-02',cat:'crd',
+ q:'What is the main benefit of procedural abstraction?',
+ choices:['Code written once can be reused many times; complexity is hidden behind a simple name','Documentation is automatically generated from procedure signatures','Procedures can call themselves recursively','Procedures are compiled into binary before sharing as libraries'],
+ exp:'Procedural abstraction manages complexity (each procedure does one thing) and enables reuse (call it anywhere without rewriting). It\'s foundational to all large programs.'},
+
+{id:'crd-03',cat:'crd',
+ q:'What is iterative development?',
+ choices:['Building programs through repeated cycles of design, implement, test, and refine','Writing the full specification before writing any code','Multiple programmers working on separate features simultaneously','Running automated tests after every single line of code is written'],
+ exp:'Most real programs are built iteratively. Each cycle produces a working version that is tested and improved. Waterfall (full spec first) is the alternative.'},
+
+{id:'crd-04',cat:'crd',
+ q:'What is the difference between a syntax error and a logic error?',
+ choices:['Syntax = code cannot run (language rule violated); logic = code runs but produces wrong output','Syntax errors are caught at runtime; logic errors at compile time','Logic errors prevent the program from running; syntax errors produce wrong output','Both crash the program — the difference is when the crash occurs'],
+ exp:'A third type exists: runtime error — code looks valid but crashes during execution (e.g., dividing by zero, accessing list index out of bounds).'},
+
+{id:'crd-05',cat:'crd',
+ q:'What does it mean for a program to be "correct"?',
+ choices:['It produces expected output for ALL valid inputs — not just test cases the programmer tried','It compiles without errors and runs without crashing on any input','It passes all test cases the programmer has explicitly tried','It has been reviewed by at least one other programmer'],
+ exp:'Testing can demonstrate the presence of bugs but cannot prove their complete absence. Thorough testing including edge cases (boundary values, empty input) is essential.'},
+
+{id:'crd-06',cat:'crd',
+ q:'What is an API?',
+ choices:['A set of specifications allowing one program to use another\'s functionality without knowing its internals','A visual drag-and-drop interface for building applications','A security protocol verifying web application identity','A standard file format for sharing data between apps (like JSON)'],
+ exp:'APIs enable composition — programs built from existing services (maps, payments, weather) without reinventing them. Reduces development time and errors.'},
+
+{id:'crd-07',cat:'crd',
+ q:'What is a computing artifact?',
+ choices:['Anything created by a human using a computer — programs, images, audio, video, data visualizations','Only software programs written in a recognized language','Only physical devices like computers and tablets','Only items published or distributed to other users'],
+ exp:'CB\'s definition is intentionally broad. The AP CSP Create Performance Task asks students to create a computing artifact, which is typically a program.'},
+
+{id:'crd-08',cat:'crd',
+ q:'What is a software library, and how does it relate to abstraction?',
+ choices:['Pre-written reusable functions callable without knowing their implementation — a form of abstraction','A database of all programs ever written, searchable by function name','A collection of hardware drivers for device communication','A versioned archive of previous program releases for rollback'],
+ exp:'Libraries implement abstraction: you call sqrt() or drawCircle() without knowing or caring how they work internally. This reduces complexity and development time.'},
+
+{id:'crd-09',cat:'crd',
+ q:'What does CB identify as a key benefit of collaboration in program development?',
+ choices:['Multiple perspectives catch more bugs; different skills complement; large programs require teams','Collaboration mainly slows development due to required code reviews','The main benefit is that all collaborators can claim credit for the full program','Collaboration only benefits programs longer than 10,000 lines of code'],
+ exp:'CB emphasizes that computing is collaborative. Large programs are too complex for one person. Different backgrounds (design, logic, testing) produce better results together.'},
+
+{id:'crd-10',cat:'crd',
+ q:'What is the purpose of program documentation?',
+ choices:['Explains what code does and why, helping others (and future self) understand and modify it','Required only for programs published to an app store','Serves as the legal record of who wrote which part','Automatically generated by the compiler from function names'],
+ exp:'Good documentation explains the "why" behind decisions, not just the "what." Inline comments, README files, and API docs are all forms of documentation.'},
+
+{id:'crd-11',cat:'crd',
+ q:'What is modularity in program design?',
+ choices:['Breaking a program into independent components each handling one task — easier to test and modify','Splitting a program across multiple computers to run faster','Using a single large function for all logic to avoid overhead','Requiring all functions to have the same number of parameters'],
+ exp:'Modular programs are easier to debug (isolate each part), modify (change one module without affecting others), and reuse (a module can serve multiple programs).'},
+
+{id:'crd-12',cat:'crd',
+ q:'What is the difference between a general-purpose and special-purpose computing device?',
+ choices:['General-purpose runs many programs (laptop, phone); special-purpose is optimized for one task (GPS, ASIC chip)','General-purpose devices are always slower than special-purpose for every task','Special-purpose devices can run any program but excel at one','The distinction only applies to hardware, not software'],
+ exp:'Special-purpose devices (Bitcoin mining ASICs, graphics cards) vastly outperform general-purpose hardware at their specific task, but can\'t do other things.'}
+
 ];
 
 // ─────────────────────────────────────────────
 // STATE
 // ─────────────────────────────────────────────
-const LS = 'apcs_fc_';
+const LS = 'apcs_fc2_';
 let currentCat = 'all';
 let deck = [];
 let deckIdx = 0;
-let isFlipped = false;
+let answered = false;
+let selectedIdx = -1;
+let correctIdx = -1;
+let shuffledChoices = [];
 
 const CAT_LABELS = {
-  'all': 'All', 'aap-syn': 'AAP: Syntax', 'aap-trace': 'AAP: Tracing',
-  'ioc': 'IOC', 'dat': 'DAT', 'csn': 'CSN', 'crd': 'CRD'
+  'all':'All','aap-syn':'AAP: Syntax','aap-trace':'AAP: Tracing',
+  'ioc':'IOC','dat':'DAT','csn':'CSN','crd':'CRD'
 };
-const CAT_CLASS = {
-  'aap-syn': 'cat-aap-syn', 'aap-trace': 'cat-aap-trace',
-  'ioc': 'cat-ioc', 'dat': 'cat-dat', 'csn': 'cat-csn', 'crd': 'cat-crd', 'all': 'cat-aap-syn'
-};
+
+function getMastered(id) { return localStorage.getItem(LS+'m_'+id)==='1'; }
+function setMastered(id,v) { localStorage.setItem(LS+'m_'+id, v?'1':'0'); }
 
 // ─────────────────────────────────────────────
 // INIT
 // ─────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   updateCatCounts();
-  selectCat('all');
   updateOverall();
+  selectCat('all');
 });
 
-function getMastered(id) { return localStorage.getItem(LS + 'mastered_' + id) === '1'; }
-function setMastered(id, v) { localStorage.setItem(LS + 'mastered_' + id, v ? '1' : '0'); }
-
 function updateOverall() {
-  const total = CARDS.length;
   const done = CARDS.filter(c => getMastered(c.id)).length;
-  const pct = Math.round(done / total * 100);
-  document.getElementById('overall-fill').style.width = pct + '%';
-  document.getElementById('overall-label').textContent = done + ' / ' + CARDS.length + ' mastered';
+  const pct = Math.round(done / CARDS.length * 100);
+  document.getElementById('overall-fill').style.width = pct+'%';
+  document.getElementById('overall-label').textContent = done+' / '+CARDS.length+' mastered';
 }
 
 function updateCatCounts() {
-  const cats = ['all','aap-syn','aap-trace','ioc','dat','csn','crd'];
-  cats.forEach(cat => {
-    const cards = cat === 'all' ? CARDS : CARDS.filter(c => c.cat === cat);
-    const remaining = cards.filter(c => !getMastered(c.id)).length;
-    const el = document.getElementById('cnt-' + cat);
-    if (el) el.textContent = remaining > 0 ? '(' + remaining + ')' : '✓';
+  ['all','aap-syn','aap-trace','ioc','dat','csn','crd'].forEach(cat => {
+    const cards = cat==='all' ? CARDS : CARDS.filter(c=>c.cat===cat);
+    const rem = cards.filter(c=>!getMastered(c.id)).length;
+    const el = document.getElementById('cnt-'+cat);
+    if (el) el.textContent = rem > 0 ? '('+rem+')' : '✓';
   });
 }
 
 // ─────────────────────────────────────────────
-// CATEGORY SELECTION
+// CATEGORY + DECK
 // ─────────────────────────────────────────────
 function selectCat(cat) {
   currentCat = cat;
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat===cat));
   buildDeck();
 }
 
 function buildDeck() {
-  const source = currentCat === 'all' ? CARDS : CARDS.filter(c => c.cat === currentCat);
-  // Unmastered first, then mastered
-  const unmastered = source.filter(c => !getMastered(c.id));
-  const mastered   = source.filter(c =>  getMastered(c.id));
+  const source = currentCat==='all' ? CARDS : CARDS.filter(c=>c.cat===currentCat);
+  const unmastered = source.filter(c=>!getMastered(c.id));
+  const mastered   = source.filter(c=> getMastered(c.id));
   deck = [...unmastered, ...mastered];
   deckIdx = 0;
-  isFlipped = false;
   renderCard();
 }
 
 function shuffleDeck() {
-  const source = currentCat === 'all' ? CARDS : CARDS.filter(c => c.cat === currentCat);
-  deck = [...source].sort(() => Math.random() - 0.5);
+  const source = currentCat==='all' ? CARDS : CARDS.filter(c=>c.cat===currentCat);
+  deck = [...source].sort(()=>Math.random()-0.5);
   deckIdx = 0;
-  isFlipped = false;
   renderCard();
+}
+
+function resetCategory() {
+  const source = currentCat==='all' ? CARDS : CARDS.filter(c=>c.cat===currentCat);
+  source.forEach(c=>setMastered(c.id,false));
+  updateCatCounts();
+  updateOverall();
+  buildDeck();
 }
 
 // ─────────────────────────────────────────────
 // RENDER
 // ─────────────────────────────────────────────
 function renderCard() {
-  const area = document.getElementById('card-area');
+  const main = document.getElementById('main-content');
+
   if (deck.length === 0) {
-    area.innerHTML = `<div class="state-card">
-      <div class="state-icon">&#128218;</div>
+    main.innerHTML = `<div class="state-screen"><div class="state-card">
+      <div class="state-icon">📚</div>
       <h2>No cards here</h2>
-      <p>This category has no cards yet.</p>
+      <p>This category has no cards.</p>
       <button class="state-btn" onclick="selectCat('all')">Show all cards</button>
-    </div>`;
+    </div></div>`;
     return;
   }
 
   if (deckIdx >= deck.length) {
     const total = deck.length;
-    const mastered = deck.filter(c => getMastered(c.id)).length;
-    area.innerHTML = `<div class="state-card">
-      <div class="state-icon">&#127881;</div>
+    const mastered = deck.filter(c=>getMastered(c.id)).length;
+    main.innerHTML = `<div class="state-screen"><div class="state-card">
+      <div class="state-icon">🎉</div>
       <h2>Deck complete!</h2>
-      <p>${mastered} of ${total} cards mastered in this session.</p>
-      <button class="state-btn" onclick="resetCategory()" style="margin-bottom:10px;display:block;width:100%">&#128259; Restart deck</button>
-      <button class="state-btn" onclick="shuffleDeck()" style="background:var(--indigo);display:block;width:100%">&#128256; Shuffle &amp; restart</button>
-    </div>`;
+      <p>${mastered} of ${total} cards mastered this session.</p>
+      <button class="state-btn" onclick="resetCategory()">↺ Restart deck</button>
+      <button class="state-btn secondary" onclick="shuffleDeck()">⇄ Shuffle &amp; restart</button>
+    </div></div>`;
     return;
   }
 
   const card = deck[deckIdx];
-  const mastered = getMastered(card.id);
-  const catLabel = CAT_LABELS[card.cat] || card.cat;
-  const catClass = CAT_CLASS[card.cat] || '';
-  const progress = deckIdx + 1;
+  answered = false;
+  selectedIdx = -1;
+
+  // Shuffle choices, track correct index
+  const indices = [0,1,2,3].sort(()=>Math.random()-0.5);
+  shuffledChoices = indices.map(i=>card.choices[i]);
+  correctIdx = shuffledChoices.indexOf(card.choices[0]);
+
   const pct = Math.round(deckIdx / deck.length * 100);
-  const qFormatted = card.q.replace(/\n/g, '<br>').replace(/`([^`]+)`/g, '<code>$1</code>');
+  const letters = ['A','B','C','D'];
+  const catClass = card.cat.replace('-','');
 
-  area.innerHTML = `
-    <div class="deck-progress">
-      <div class="deck-bar-wrap"><div class="deck-bar-fill" style="width:${pct}%"></div></div>
-      <span class="deck-label">${progress} / ${deck.length}</span>
-    </div>
+  const choiceBtns = shuffledChoices.map((ch,i) =>
+    `<button class="choice-btn" id="choice-${i}" onclick="selectChoice(${i})">
+      <span class="choice-letter">${letters[i]}</span>
+      <span>${ch}</span>
+    </button>`
+  ).join('');
 
-    <div class="flip-wrap" onclick="flipCard()" id="flip-wrap">
-      <div class="flip-inner${isFlipped ? ' flipped' : ''}" id="flip-inner">
-        <div class="card-face card-front">
-          <div class="card-cat-label ${catClass}">${catLabel}</div>
-          <div class="card-question">${qFormatted}</div>
-          <div class="card-tap-hint">Tap to reveal &#8595;</div>
-        </div>
-        <div class="card-face card-back">
-          <div class="card-cat-label ${catClass}">${catLabel} — Answer</div>
-          <div class="card-answer-label">Answer</div>
-          <div class="card-answer">${card.a}</div>
-          ${mastered ? '<div class="note" style="margin-top:10px;color:var(--green);font-style:normal;font-weight:700">&#10003; Mastered</div>' : ''}
-        </div>
+  const qHtml = card.code
+    ? `<pre class="question-code">${card.q}</pre>`
+    : `<div class="question-text">${card.q}</div>`;
+
+  main.innerHTML = `
+    <div class="question-area" id="question-area">
+      <div class="deck-progress">
+        <div class="deck-bar-wrap"><div class="deck-bar-fill" style="width:${pct}%"></div></div>
+        <span class="deck-label">${deckIdx+1} / ${deck.length}</span>
       </div>
+      <span class="cat-label ${card.cat}">${CAT_LABELS[card.cat]||card.cat}</span>
+      ${qHtml}
+      <div id="explanation-area"></div>
     </div>
-
-    <div class="action-row" id="action-row" style="${isFlipped ? '' : 'visibility:hidden'}">
-      <button class="btn btn-again" onclick="markAgain(event)">&#128257; Review again</button>
-      <button class="btn btn-got" onclick="markGot(event)">&#10003; Got it</button>
+    <div class="choice-area" id="choice-area">
+      ${choiceBtns}
+      <div id="next-row"></div>
     </div>
-    <div class="action-hint">${isFlipped ? 'Tap card to flip back' : 'Tap card to see answer'}</div>
   `;
 }
 
-function flipCard() {
-  isFlipped = !isFlipped;
-  const inner = document.getElementById('flip-inner');
-  const actionRow = document.getElementById('action-row');
-  if (inner) inner.classList.toggle('flipped', isFlipped);
-  if (actionRow) actionRow.style.visibility = isFlipped ? 'visible' : 'hidden';
-  const hint = document.querySelector('.action-hint');
-  if (hint) hint.textContent = isFlipped ? 'Tap card to flip back' : 'Tap card to see answer';
+function selectChoice(idx) {
+  if (answered) return;
+  answered = true;
+  selectedIdx = idx;
+  const card = deck[deckIdx];
+
+  // Style buttons
+  for (let i = 0; i < 4; i++) {
+    const btn = document.getElementById('choice-'+i);
+    if (!btn) continue;
+    btn.classList.add('disabled');
+    if (i === correctIdx) btn.classList.add('correct');
+    else if (i === idx && idx !== correctIdx) btn.classList.add('wrong');
+  }
+
+  // Show explanation
+  const expArea = document.getElementById('explanation-area');
+  if (expArea && card.exp) {
+    expArea.innerHTML = `<div class="explanation-box">
+      <div class="exp-label">${idx===correctIdx ? '✓ Correct' : '✗ Incorrect'}</div>
+      ${card.exp}
+    </div>`;
+    // Scroll explanation into view
+    setTimeout(()=>expArea.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+  }
+
+  // Show next-row buttons
+  const isCorrect = (idx === correctIdx);
+  document.getElementById('next-row').innerHTML = isCorrect
+    ? `<button class="btn-next btn-mastered" onclick="advance(true)">✓ Got it — Next</button>`
+    : `<div class="next-row">
+        <button class="btn-next btn-review" style="flex:1" onclick="advance(false)">↺ Review again</button>
+        <button class="btn-next btn-mastered" style="flex:1" onclick="advance(true)">→ Next anyway</button>
+       </div>`;
 }
 
-function markGot(e) {
-  e.stopPropagation();
+function advance(markMastered) {
   const card = deck[deckIdx];
-  setMastered(card.id, true);
-  deckIdx++;
-  isFlipped = false;
+  setMastered(card.id, markMastered);
+  if (!markMastered) {
+    // Move to end of deck
+    deck.splice(deckIdx, 1);
+    deck.push(card);
+  } else {
+    deckIdx++;
+  }
   updateCatCounts();
   updateOverall();
   renderCard();
-}
-
-function markAgain(e) {
-  e.stopPropagation();
-  const card = deck[deckIdx];
-  setMastered(card.id, false);
-  // Move card to end of deck
-  deck.splice(deckIdx, 1);
-  deck.push(card);
-  isFlipped = false;
-  updateCatCounts();
-  updateOverall();
-  renderCard();
-}
-
-function resetCategory() {
-  // Clear mastered for current category
-  const source = currentCat === 'all' ? CARDS : CARDS.filter(c => c.cat === currentCat);
-  source.forEach(c => setMastered(c.id, false));
-  updateCatCounts();
-  updateOverall();
-  buildDeck();
 }
 </script>
 </body>
